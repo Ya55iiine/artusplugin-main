@@ -10,7 +10,7 @@
 # Python-Future
 from __future__ import print_function
 
-from __builtin__ import basestring
+from builtins import basestring
 
 # Genshi
 from genshi.builder import tag

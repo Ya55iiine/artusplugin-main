@@ -7,7 +7,7 @@
 
 """ Customizations of ticket processing. """
 
-from __builtin__ import basestring, unicode
+from builtins import basestring, unicode
 
 # Genshi
 from genshi.builder import tag

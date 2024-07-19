@@ -7,7 +7,7 @@
 
 """ OpenOffice form handling """
 
-from __builtin__ import unicode
+from builtins import unicode
 
 # ODFPY
 from odf.form import Form, Checkbox

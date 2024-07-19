@@ -7,7 +7,7 @@
 
 """ Caching (working copy) of configuration items """
 
-from __builtin__ import unicode
+from builtins import unicode
 
 # Genshi
 from genshi.builder import tag
