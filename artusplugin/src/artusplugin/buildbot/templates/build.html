@@ -1,0 +1,33 @@
+<!--!  Copyright (C) 2016 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="layout.html" />
+  <xi:include href="macros.html" />
+
+  <head>
+    <title>
+        ${title}
+    </title>
+    <script type="text/javascript" src="${chrome.htdocs_location}js/wikitoolbar.js"></script>
+    <script type="text/javascript" py:choose="">
+      jQuery(document).ready(function($) {
+        $("div.description").find("h1,h2,h3,h4,h5,h6").addAnchor("Link to this section");
+      });
+    </script>
+
+<script type="text/javascript" src="${href.chrome('artusplugin/iframe.js')}"></script>
+</head>
+
+  <body>
+      <h1>
+      </h1>
+      <iframe src="${url}?show=${builder_name}&amp;category=${category}&amp;csci_name=${csci_name}&amp;builder_name=${builder_name}&amp;username=${username}&amp;eoc_name=${eoc_name}&amp;eoc_tag_url=${eoc_tag_url}" style="overflow:visible; width:100%; display:none" id="build" name="build" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0"></iframe>
+  </body>
+</html>

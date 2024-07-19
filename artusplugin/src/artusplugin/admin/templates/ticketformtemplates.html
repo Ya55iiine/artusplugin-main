@@ -1,0 +1,131 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE HTML
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Templates</title>
+  </head>
+  <body>
+    <h2>Templates</h2>
+    <div style="text-align:justify;color:#666">
+    <p>This panel displays the directories where the templates are located.</p>
+    <p>The following rules apply:</p>
+    <ul>
+      <li>if the path starts with [/&lt;reponame&gt;]/(trunk|/branches|/tags), the directory is located in the repository (customized templates)</li>
+      <li>if the path starts with /srv/trac/&lt;projectname&gt;, it is located in the project tree on the server (default templates)</li>
+    </ul>
+    <p>When available, use the &lt;Change&gt; button to set or change the location in the repository for customization.</p>
+    <p>The expected filename for the customized template in the repository is the template reference plus the extension but without the edition, as in: <em>TY-7.3-54A.xlsm</em>.</p>
+    <p>See <a py:with="link_url=link_url['ECM'] if 'ECM' in ticket_types else link_url['FEE']" href="$link_url" title="Default templates">${source_path['ECM'] if 'ECM' in ticket_types else source_path['FEE']}</a>
+    for the complete list of default templates.</p>
+    </div>
+    <form id="template" method="post" action="" style="width: max-content">
+      <fieldset py:for="ticket_type in ('DOC', 'ECM', 'FEE')" py:if="ticket_type in ticket_types">
+        <legend>$ticket_type</legend>
+        <div class="field">
+          <p py:with="link_url=link_url[ticket_type]">
+            <table>
+              <thead>
+                <tr>
+                  <th style="text-align:left;padding-bottom:1em" py:if="ticket_type != 'FEE'"><b>Skill</b></th>
+                  <th style="text-align:left;padding-bottom:1em"><b>Templates directory</b></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width:5em" py:if="ticket_type != 'FEE'">All</td>
+                  <td style="padding-right:3em; width:66em">
+                    <a href="$link_url" title="Go and see the content of the directory (at project level)">${source_path[ticket_type]}</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </p>
+        </div>
+      </fieldset>
+      <fieldset py:for="ticket_type in ticket_types_with_forms">
+        <legend>$ticket_type</legend>
+        <div class="field">
+          <py:choose test="configurable[ticket_type]">
+            <p py:when="False" py:with="repo_url=urltracbrowse[ticket_type]">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding-bottom:1em"><b>Skill</b></th>
+                    <th style="text-align:left;padding-bottom:1em"><b>Templates directory</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="width:5em">All</td>
+                    <td style="padding-right:3em; width:66em">
+                      <a href="$repo_url" title="Go and see the content of the directory (at project level)">${source_path[ticket_type]}</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
+            <div py:otherwise="" >
+              <py:choose test="ticket_type == 'EFR' and 'SYS' in skills">
+                <p py:when="True" py:with="skill='SYS';selected_url=source_path[ticket_type][skill];repo_url=urltracbrowse[ticket_type][skill];disabled=disabled[ticket_type][skill];selected=selected[ticket_type][skill];link_url=link_url[ticket_type][skill]">
+                  <table>
+                      <thead>
+                        <tr>
+                          <th style="text-align:left;padding-bottom:1em"><b>Skill</b></th>
+                          <th style="text-align:left;padding-bottom:1em"><b>Templates directory</b></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style="width:5em">All</td>
+                          <td style="padding-right:3em" py:with="prefix=prefix[ticket_type][skill]">
+                            <a href="$link_url"><input py:with="title='Go and see the content of the directory (in the repository)' if prefix != 'srv' else 'Go and see the content of the directory (at project level)'" type="text" name="$(skill)_${ticket_type}_selected_url" readonly="true" style="background-color:#f4f4f4; height:15px; color:#b00; width: 60em" onmouseover="this.style.cursor='pointer';this.style.backgroundColor='#eee';this.style.color='#555'" onmouseout="this.style.cursor='default';this.style.backgroundColor='#f4f4f4';this.style.color='#b00'" value="$selected_url" title="$title"/></a>
+                            <input py:if="'MILESTONE_CREATE' in perm" py:with="title='Make a round-trip in order to set the appropriate revision' if prefix != 'srv' else 'Go and select the directory (in the repository) which contains the customized template'" type="button" name="repo_url" value="Change" onclick="location.href='$repo_url'" title="$title" disabled="$disabled" />
+                            <input py:if="selected" type="hidden" name="selected" value="${skill}_${ticket_type}" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </p>
+                <py:otherwise>
+                  <p>
+                    <table >
+                        <thead>
+                          <tr>
+                            <th style="text-align:left;padding-bottom:1em" py:if="'FEE' not in ticket_types"><b>Skill</b></th>
+                            <th style="text-align:left;padding-bottom:1em"><b>Templates directory</b></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr py:for="skill in skills" py:with="selected_url=source_path[ticket_type][skill];repo_url=urltracbrowse[ticket_type][skill];disabled=disabled[ticket_type][skill];selected=selected[ticket_type][skill];link_url=link_url[ticket_type][skill]">
+                            <td style="width:5em" py:if="'FEE' not in ticket_types">$skill</td>
+                            <td style="padding-right:3em" py:with="prefix=prefix[ticket_type][skill]">
+                              <a href="$link_url"><input py:with="title='Go and see the content of the directory (in the repository)' if prefix != 'srv' else 'Go and see the content of the directory (at project level)'" type="text" name="${skill}_${ticket_type}_selected_url" readonly="true" class="" style="background-color:#f4f4f4; height:15px; color:#b00; width: 60em" onmouseover="this.style.cursor='pointer';this.style.backgroundColor='#eee';this.style.color='#555'" onmouseout="this.style.cursor='default';this.style.backgroundColor='#f4f4f4';this.style.color='#b00'" value="$selected_url" title="$title"/></a>
+                              <input py:if="'MILESTONE_CREATE' in perm" py:with="title='Make a round-trip in order to set the appropriate revision' if prefix != 'srv' else 'Go and select the directory (in the repository) which contains the customized template'" type="button" name="repo_url" value="Change" onclick="location.href='$repo_url'" title="$title" disabled="$disabled" />
+                              <input py:if="selected" type="hidden" name="selected" value="${skill}_${ticket_type}" />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </p>
+                </py:otherwise>
+              </py:choose>
+            </div>
+          </py:choose>
+        </div>
+      </fieldset>
+      <div py:if="'MILESTONE_CREATE' in perm and True in [configurable[ticket_type] for ticket_type in ticket_types_with_forms]" class="buttons">
+        <input type="submit" name="cancel" value="Cancel" />
+        <input type="submit" name="apply" value="Apply changes" />
+      </div>
+    </form>
+  </body>
+</html>

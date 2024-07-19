@@ -1,0 +1,254 @@
+<!--!  Copyright (C) 2016 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Branches Management</title>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var description = $("#description").val();
+        function ObserveInputValue(){
+        	if ($("#description").val() != description){
+            	$("#save").prop("disabled", false);
+            	$("#apply").prop("disabled", true);
+        	}
+        }
+        setInterval(ObserveInputValue, 100);
+      });
+    </script>
+  </head>
+
+  <body>
+    <h2>Manage Branches</h2>
+
+    <py:choose test="view">
+      <py:when test="'detail'">
+        <h3><br /><span>Branch B${branch.id}</span></h3>
+        <form py:if="'BRANCH_VIEW' in perm" py:with="br_src_changes = (source_tag != '' and branch.source_tag != source_tag) or (source_url != '' and branch.source_url != source_url);specified = branch.source_tag not in (None, '') or branch.source_url not in (None, '')" class="mod" id="apply_branch" method="post" action="">
+          <fieldset>
+            <py:choose>
+                <legend py:when="'BRANCH_MODIFY' in perm and branch.branch_url == None">Modify Branch attributes:</legend>
+                <legend py:otherwise="">View Branch attributes:</legend>
+            </py:choose>
+            Branch Source:<br />
+                <table>
+                    <py:choose>
+                        <py:when test="'BRANCH_MODIFY' in perm and branch.branch_url == None">
+		                    <tr>
+		                        <td>
+		                            <label title="The branch is copied from a source tag"><input type="radio" name="branch_source" id="branch_source" checked="${((br_src_changes and source_tag) or (not br_src_changes and branch.source_url == None)) and 'checked' or None}" disabled="${'BRANCH_MODIFY' not in perm or None}" value="source_tag" onchange="" />Source Tag: </label>
+		                        </td>
+		                        <td>
+		                          <py:choose>
+		                            <select id="source_tag" name="source_tag" style="width:250px" onchange="document.location = get_href([['source_tag', this.options[this.selectedIndex].value], ['branch_source', 'source_tag'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['ci_source_url'])">
+                                      <option selected="${source_tag == '' or None}" value=""></option>
+		                              <optgroup py:if="milestones" label="milestones">
+		                                  <option py:for="each_tag in milestones" selected="${each_tag == source_tag or None}" value="$each_tag">$each_tag</option>
+                                      </optgroup>
+                                      <optgroup py:if="components" label="components">
+                                          <option py:for="each_tag in components" selected="${each_tag == source_tag or None}" value="$each_tag">$each_tag</option>
+                                      </optgroup>
+                                      <optgroup py:if="documents" label="documents">
+                                          <option py:for="each_tag in documents" selected="${each_tag == source_tag or None}" value="$each_tag">$each_tag</option>
+                                      </optgroup>
+		                            </select>
+		                          </py:choose>
+		                          <span py:if="all_tags">Please select the milestone tag or version tag of your choice.</span>
+		                        </td>
+		                    </tr>
+		                    <tr>
+		                        <td>
+		                            <label title="The branch is copied from a source url"><input type="radio" name="branch_source" id="branch_source" checked="${((br_src_changes and source_url) or (not br_src_changes and branch.source_url != None)) and 'checked' or None}" disabled="${'BRANCH_MODIFY' not in perm or None}" value="source_url" onclick="" />Source Url: </label>
+		                        </td>
+		                        <td>
+	                                <input type="text" name="source_url" value="$source_url" size="125" readonly="true" style="background-color:#f4f4f4" title="$source_url" />
+		                        </td>
+		                        <td>
+		                            <input type="button" name="url_select" value="Browse" style="float:left;" onclick="location.href='${get_tracbrowserurl(env, source_url, caller='B%s' % branch.id)}'" title="$source_url" />
+                                </td>
+                                <td>
+                                    <py:choose>
+                                       <span py:when="not source_url">Please browse to the url and revision of your choice.</span>
+                                       <span py:otherwise="" py:if="branch.branch_url == None">Please check the url and revision<br/>(Last changed revision: <strong>${get_last_path_rev_author(env, get_url(source_url))[2]}</strong>)</span>
+                                    </py:choose>
+		                        </td>
+		                    </tr>
+		                    <tr>
+		                        <td>
+		                            <input type="submit" id="change" name="change" value="Apply changes" disabled="${not br_src_changes or None}" />
+		                        </td>
+		                    </tr>
+                        </py:when>
+                        <py:otherwise>
+                            <tr py:if="branch.source_tag" style="white-space:nowrap">
+                                <td>
+                                    <label title="The branch is copied from a source tag">Source Tag: <a href="${get_panel_href(get_tag(branch.source_tag).review)(branch.source_tag)}" title="${get_vtag_description(get_tag(branch.source_tag))}">${branch.source_tag}</a></label>
+                                </td>
+                            </tr>
+                            <tr py:if="branch.source_url">
+                                <td>
+                                    <label title="The branch is copied from a source url">Source Url: </label>
+                                </td>
+                                <td>
+                                    <input type="text" name="source_url" value="${branch.source_url}" size="125" readonly="true" style="background-color:#f4f4f4" title="${branch.source_url}" />
+                                </td>
+                                <td>
+                                    <input type="button" name="url_select" value="Browse" style="float:left;" onclick="location.href='${get_tracbrowserurl(env, branch.source_url, caller='B%s' % branch.id)}'" title="${branch.source_url}" />
+                                </td>
+                            </tr>
+                        </py:otherwise>
+                    </py:choose>
+                </table>
+            <div class="field">
+              <fieldset>
+                <label for="description" i18n:msg="">
+                  Description (you may use <a tabindex="42" href="${href.wiki('WikiFormatting')}">WikiFormatting</a> here):
+                </label>
+                <p>
+                  <textarea id="description" name="description" class="wikitext trac-resizable" rows="6" cols="60">
+$branch.description</textarea>
+                </p>
+                <input type="submit" id="save" name="save" value="${_('Save')}" disabled="disabled" />
+              </fieldset>
+            </div>
+          </fieldset>
+          <div py:if="'BRANCH_APPLY' in perm and branch.branch_url == None and specified and not br_src_changes" class="field">
+            <fieldset class="iefix">
+              <label for="comment" i18n:msg="">
+                Comment (you may use <a tabindex="42" href="${href.wiki('WikiFormatting')}">WikiFormatting</a> here):
+              </label>
+              <p>
+                <textarea id="comment" name="comment" class="wikitext trac-resizable" rows="6" cols="60"></textarea>
+              </p>
+            </fieldset>
+          </div>
+          <py:if test="'BRANCH_APPLY' in perm and branch.branch_url == None">
+            <py:choose test="not specified or br_src_changes">
+              <p py:when="True" class="help" style="text-align:justify">
+                The 'Apply Branch' button will not be accessible as long as the branch source is not specified.
+              </p>
+              <p py:otherwise="" class="help" style="text-align:justify">
+	            When you are satisfied with the branch source, click on the 'Apply Branch' button to create the associated branch in the repository.
+	          </p>
+            </py:choose>
+          </py:if>
+          <div class="buttons">
+            <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+            <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+            <input type="submit" name="cancel" value="Cancel" />
+            <input py:if="'BRANCH_APPLY' in perm and branch.branch_url == None" type="submit" id="apply" name="apply" value="Apply Branch" title="$branch_url" onclick="return UIComponents.buttons.applyBranch.object.confirm()" disabled="${not specified or br_src_changes or None}" />
+          </div>
+        </form>
+      </py:when>
+
+      <py:otherwise>
+        <table>
+          <tr>
+            <td valign="top" style="padding-right:10px">
+              <form py:if="'BRANCH_VIEW' in perm" id="branch_table" method="post" action="" onsubmit="SaveScrollXY('branch_table')">
+                <fieldset>
+                  <legend>Existing Branches: (* = Source Tag)</legend>
+                  <table><tr>
+                    <td><label>Name is / Source Url or Tag contains:<br /><input type="text" id="filter_value" name="filter_value" value="$filter_value" size="38" title="Only the last part of the Source Url will be considered for filtering"/></label></td>
+                    <td><label><br /><input type="submit" name="update" value="Update"/></label></td>
+                    <td valign="middle" style="padding-left:20px"><label><br /></label></td>
+                  </tr></table>
+                  ($branches_nb matches)
+                  <table class="listing" id="branch_list">
+                    <thead>
+                      <tr>
+                        <th py:if="'BRANCH_DELETE' in perm" class="sel" style="vertical-align:middle"><img src="/htdocs/supprimer.png" title="Remove"></img></th>
+                        <th style="vertical-align:middle">Name</th>
+                        <th style="vertical-align:middle">Description</th>
+                        <th style="vertical-align:middle">Source Url / Source Tag</th>
+                        <th style="vertical-align:middle">Author</th>
+                        <th style="vertical-align:middle">Initial Rev</th>
+                        <th style="vertical-align:middle">Editor</th>
+                        <th style="vertical-align:middle">Last Rev</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="idx,branch in enumerate(branches, start=1)" class="${'odd' if idx % 2 else 'even'}" py:attrs="get_row_style('B%s' % branch.id, req.args)" >
+                        <td py:if="'BRANCH_DELETE' in perm">
+                          <py:choose test="">
+                              <input py:when="branch.branch_url == None or 'BRANCH_ADMIN' in perm" type="checkbox" name="sel" value="$branch.id"/>
+                              <input py:otherwise="" type="checkbox" name="sel" value="$branch.id" disabled="disabled"/>
+                          </py:choose>
+                        </td>
+                        <td class="name">
+                          <a href="${panel_href(branch.id)}">B${branch.id}</a>
+                        </td>
+                        <td id="rendered_description">
+                          <div style="width: 300px;word-wrap: break-word">
+                            ${wiki_to_oneliner(context, branch.description, shorten=False)}
+                          </div>
+                        </td>
+                        <td class="name" style="white-space:nowrap">
+                          <a py:if="branch.source_tag" href="${get_panel_href(get_tag(branch.source_tag).review)(branch.source_tag)}" title="${get_vtag_description(get_tag(branch.source_tag))}" >${branch.source_tag}</a><span py:if="branch.source_tag">&nbsp;*</span>
+                          <a py:if="branch.source_url" href="${get_tracbrowserurl(env, branch.source_url)}" title="${branch.source_url}" >${get_url(branch.source_url).split('/')[-1]}</a>
+                        </td>
+                        <td class="default">
+                          $branch.author
+                        </td>
+                        <td name="revision" class="default">
+                          <a py:if="branch.branch_url != None" py:with="branch_url=branch.branch_url;repos=get_repository(env, branch_url);rev=get_revision(branch_url);changeset=repos.get_changeset(rev)" href="${get_tracbrowserurl(env, branch_url)}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${rev}</a>
+                        </td>
+                        <td class="default">
+                          <py:if test="branch.branch_url != None">${get_last_path_rev_author(env, get_url(branch.branch_url))[3]}</py:if>
+                        </td>
+                        <td name="revision" class="default">
+                          <a py:if="branch.branch_url != None" py:with="branch_url=branch.branch_url;repos=get_repository(env, branch_url);rev=get_last_path_rev_author(env, get_url(branch.branch_url))[2];changeset=repos.get_changeset(rev)" href="${get_tracbrowserurl(env, get_url(branch_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${rev}</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="help" style="text-align:justify">
+                    <py:if test="'BRANCH_APPLY' in perm">To apply a branch to the repository, click on the branch <em>name</em>.</py:if>
+                    To browse the repository, click on the branch <em>revision</em>.
+                  </p>
+                  <div class="buttons">
+                    <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+                    <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+                    <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+                    <input py:if="'BRANCH_DELETE' in perm" type="submit" name="remove" value="Remove selected items" onclick="set_overlay()" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+
+            <td valign="top">
+              <form py:if="'BRANCH_CREATE' in perm" id="add_branch" method="post" action="" onsubmit="SaveScrollXY('add_branch')">
+                <fieldset>
+                  <legend>Add Branch:</legend>
+                  <div class="field">
+                    <label>Branch Name:<br /><input type="text" id="branch_name" name="branch_name" value="B&lt;auto-incremented number&gt;" size="26" readonly="true" style="background-color:#f4f4f4" /></label>
+                  </div>
+                  <p class="help" style="text-align:justify">
+                    <b>The choice of the branch source is done in the next step.</b>
+                  </p>
+                  <div class="buttons">
+                    <input py:if="ci_source_tag" type="hidden" name="ci_source_tag" value="$ci_source_tag" />
+                    <input py:if="ci_source_url" type="hidden" name="ci_source_url" value="$ci_source_url" />
+                    <input type="submit" name="add" value="Add"/>
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+
+          </tr>
+        </table>
+
+      </py:otherwise>
+    </py:choose>
+
+  </body>
+
+</html>

@@ -1,0 +1,531 @@
+<map version="1.0.1">
+<!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
+<node CREATED="1539265001205" ID="ID_1" MODIFIED="1539265001205" TEXT="Trac">
+<node CREATED="1539265001205" ID="ID_4" MODIFIED="1539265001205" POSITION="left" STYLE="bubble" TEXT="Configuration Management">
+<node CREATED="1539265001205" FOLDED="true" ID="ID_267" MODIFIED="1540386126555" STYLE="bubble" TEXT="Configuration Identification">
+<node CREATED="1539265001205" ID="ID_22" LINK="http://vm11.artus.dom/logmo/public/E17010_SYS_CMP.pdf#page=19" MODIFIED="1540361127081" STYLE="bubble" TEXT="Document Identification">
+<node CREATED="1539265001205" ID="ID_103" MODIFIED="1539265001205" TEXT="Program"/>
+<node CREATED="1539265001205" ID="ID_96" MODIFIED="1539352395429" TEXT="Skill (EXT, SYS, HW, FW, SW, INDUS)"/>
+<node CREATED="1539265001205" ID="ID_282" MODIFIED="1539352427396" TEXT="Parent Component (optional)"/>
+<node CREATED="1539265001205" ID="ID_283" MODIFIED="1539265001205" TEXT="Document Acronym"/>
+<node CREATED="1539265001205" ID="ID_286" MODIFIED="1539265001205" TEXT="Document Version (Edition, Revision)"/>
+<node CREATED="1539265001205" ID="ID_284" MODIFIED="1539265001205" TEXT="Status (Draft, Proposed, Released)"/>
+<node CREATED="1539265001205" ID="ID_298" MODIFIED="1539265001205" TEXT="Status Index"/>
+</node>
+<node CREATED="1539265001205" ID="ID_268" LINK="http://vm11.artus.dom/logmo/public/E17010_SYS_CMP.pdf#page=25" MODIFIED="1540361128620" STYLE="bubble" TEXT="Product/component Identification">
+<node CREATED="1539265001205" ID="ID_287" MODIFIED="1539265001205" TEXT="Program"/>
+<node CREATED="1539265001205" ID="ID_288" MODIFIED="1539265001205" TEXT="Skill (SYS, HW, FW, SW, INDUS)"/>
+<node CREATED="1539265001205" ID="ID_289" MODIFIED="1539352466996" TEXT="Parent Component (optional)"/>
+<node CREATED="1539265001205" ID="ID_290" MODIFIED="1539265001205" TEXT="Component Acronym"/>
+<node CREATED="1539265001205" ID="ID_291" MODIFIED="1539352524035" TEXT="Component Version (Standard, Edition, Revision / Modification, Amendment)"/>
+<node CREATED="1539265001205" ID="ID_295" MODIFIED="1539265001205" TEXT="Status (Engineering, Candidate, Released, Patch)"/>
+<node CREATED="1539265001205" ID="ID_300" MODIFIED="1539265001205" TEXT="Status Index"/>
+</node>
+<node CREATED="1539265001205" ID="ID_269" LINK="http://vm11.artus.dom/logmo/public/E17010_SYS_CMP.pdf#page=27" MODIFIED="1540361130132" STYLE="bubble" TEXT="Milestone Identification">
+<node CREATED="1539265001205" ID="ID_302" MODIFIED="1539265001205" TEXT="Program"/>
+<node CREATED="1539265001205" ID="ID_305" MODIFIED="1539265001205" TEXT="Skill (SYS, HW, FW, SW, INDUS)"/>
+<node CREATED="1539265001205" ID="ID_306" MODIFIED="1539265001205" TEXT="Milestone Acronym"/>
+<node CREATED="1539265001205" ID="ID_307" MODIFIED="1539265001205" TEXT="Status (Prepared, Reviewed, Accepted)"/>
+<node CREATED="1539265001205" ID="ID_311" MODIFIED="1539265001205" TEXT="Status Index"/>
+</node>
+<node CREATED="1539265001205" ID="ID_270" LINK="http://vm11.artus.dom/logmo/public/E17010_SYS_CMP.pdf#page=29" MODIFIED="1540361131315" STYLE="bubble" TEXT="Record Identification">
+<node CREATED="1539265001205" ID="ID_297" MODIFIED="1539352584247" TEXT="Depends on ticket type (ECM, DOC, PRF, EFR, ECR, MOM, RISK, AI)"/>
+<node CREATED="1539265001205" ID="ID_312" MODIFIED="1539352615223" TEXT="For MOM depends on process (Project Monitoring and Control, Change Management, Quality Assurance)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_117" MODIFIED="1540386123317" STYLE="bubble" TEXT="Document Version Management">
+<node CREATED="1539267385339" ID="ID_1986741314" MODIFIED="1540386139299" TEXT="List DOCs">
+<node CREATED="1539265001205" ID="ID_1356097841" MODIFIED="1539354651515" TEXT="Ability to list DOCs by skill"/>
+<node CREATED="1539265001205" ID="ID_1753548280" MODIFIED="1539952133326" TEXT="List export in spreadsheet compatible format (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_109" MODIFIED="1540446263268" STYLE="bubble" TEXT="Create, modify a DOC">
+<node CREATED="1539265001205" ID="ID_112" LINK="http://vm11.artus.dom/logmo/public/TRAC-DOC_Ticket-UPD_08_2017.pdf#page=9" MODIFIED="1540193136898" TEXT="Link to parent ECR, EFR, ECM, MOM"/>
+<node CREATED="1539265001205" ID="ID_404" LINK="http://vm11.artus.dom/logmo/index.php?post/104" MODIFIED="1539953060214" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_110" LINK="http://vm11.artus.dom/logmo/index.php?post/118" MODIFIED="1540188536049" TEXT="Control Category (CCx/HCx)"/>
+<node CREATED="1539268095816" ID="ID_1952911080" MODIFIED="1539268101691" TEXT="List of authors"/>
+<node CREATED="1539352713236" ID="ID_133052151" LINK="http://vm11.artus.dom/logmo/public/TRAC-DOC_Ticket-UPD_08_2017.pdf#page=14" MODIFIED="1540194211265" TEXT="Child PRF status (progress bar of closed tickets)"/>
+<node CREATED="1539353183543" ID="ID_759080622" LINK="http://vm11.artus.dom/logmo/public/TRAC-DOC_Ticket-UPD_08_2017.pdf#page=14" MODIFIED="1540194239663" TEXT="List of child PRF tickets (owner, status, resolution)"/>
+<node CREATED="1539760866905" ID="ID_721547897" LINK="http://vm11.artus.dom/logmo/index.php?post/146" MODIFIED="1540195016000" TEXT="Manage attachments (list, add, replace, delete)"/>
+<node CREATED="1539760816945" ID="ID_75243572" MODIFIED="1539761703986" TEXT="Add attachments from repository or local file system"/>
+<node CREATED="1539268173664" ID="ID_1917201754" LINK="http://vm11.artus.dom/logmo/index.php?post/139" MODIFIED="1540196027039" TEXT="Associated Word form"/>
+<node CREATED="1539265001205" ID="ID_111" LINK="http://vm11.artus.dom/logmo/public/TRAC-DOC_Ticket-UPD_08_2017.pdf#page=15" MODIFIED="1540196770268" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_113" MODIFIED="1539762873169" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_114" LINK="http://vm11.artus.dom/logmo/index.php?tpost/en/76" MODIFIED="1540197757664" TEXT="MS Office (2010/2013)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_121" MODIFIED="1539764355352" STYLE="bubble" TEXT="Automation features">
+<node CREATED="1539265001205" ID="ID_122" MODIFIED="1539355090649" TEXT="Header pre-filled with Trac data"/>
+<node CREATED="1539265001205" ID="ID_123" MODIFIED="1539265001205" TEXT="Tables update (contents, illustrations, ...)"/>
+<node CREATED="1539265001205" ID="ID_382" LINK="http://vm11.artus.dom/logmo/index.php?post/146" MODIFIED="1540215203786" TEXT="PDF conversion"/>
+<node CREATED="1539265001205" ID="ID_424" LINK="http://vm11.artus.dom/logmo/index.php?post/146" MODIFIED="1540215222941" TEXT="DOC attachments added to the PDF"/>
+<node CREATED="1539265001205" ID="ID_116674241" LINK="http://vm11.artus.dom/logmo/public/TRAC-DOC_Ticket-UPD_08_2017.pdf#page=28" MODIFIED="1540216050586" STYLE="bubble" TEXT="PDF electronic signature (Author, Checker(s), Approver(s), Timestamp)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_401" MODIFIED="1539765619907" STYLE="bubble" TEXT="Document comparison">
+<node CREATED="1539265001205" ID="ID_410" LINK="http://vm11.artus.dom/logmo/index.php?post/145" MODIFIED="1540216100880" TEXT="Compare two versions reviewed by a reviewer"/>
+<node CREATED="1539265001205" ID="ID_412" LINK="http://vm11.artus.dom/logmo/index.php?post/117" MODIFIED="1540281577252" TEXT="Compare the original and modified version"/>
+<node CREATED="1539265001205" ID="ID_411" LINK="http://vm11.artus.dom/logmo/index.php?post/117" MODIFIED="1540281582758" TEXT="Compare two revisions"/>
+</node>
+<node CREATED="1539265001205" ID="ID_118" MODIFIED="1539765627129" STYLE="bubble" TEXT="Document archiving">
+<node CREATED="1539265001205" ID="ID_425" LINK="http://vm11.artus.dom/logmo/index.php?post/121" MODIFIED="1540282102017" TEXT="Automatic archiving (online through DOC) "/>
+<node CREATED="1539265001205" ID="ID_152" MODIFIED="1539671828682" TEXT="Manual archiving (offline with TortoiseSVN)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_119" MODIFIED="1539765775807" STYLE="bubble" TEXT="Document tagging">
+<node CREATED="1539265001205" ID="ID_130" MODIFIED="1539265001205" TEXT="Subversion and Trac"/>
+<node CREATED="1539265001205" ID="ID_131" MODIFIED="1539338829311" TEXT="Tag set through DOC workflow transitions"/>
+</node>
+</node>
+<node CREATED="1540385615081" ID="ID_1942343695" MODIFIED="1540385621013" TEXT="Versions Management">
+<node CREATED="1539265001205" FOLDED="true" ID="ID_11" MODIFIED="1539673957817" STYLE="bubble" TEXT="Revision Control">
+<node CREATED="1539265001205" ID="ID_332" MODIFIED="1539265001205" TEXT="Revision properties (author, date, log)"/>
+<node CREATED="1539265001205" ID="ID_331" MODIFIED="1539672515066" TEXT="Revisions history"/>
+</node>
+<node CREATED="1539265001205" FOLDED="true" ID="ID_136" MODIFIED="1539673960675" STYLE="bubble" TEXT="Create, modify a Version Tag">
+<node CREATED="1539265001205" ID="ID_179" MODIFIED="1539265001205" TEXT="Version Tag naming helper"/>
+</node>
+<node CREATED="1539265001205" FOLDED="true" ID="ID_195" MODIFIED="1539673962207" STYLE="bubble" TEXT="List Version Tags">
+<node CREATED="1539265001205" ID="ID_196" MODIFIED="1539265001205" TEXT="Filter"/>
+</node>
+<node CREATED="1539265001205" ID="ID_421" MODIFIED="1539265001205" STYLE="bubble" TEXT="List Versions"/>
+<node CREATED="1539265001205" ID="ID_23" MODIFIED="1539681895400" STYLE="bubble" TEXT="Version Baseline Management">
+<node CREATED="1539265001205" ID="ID_187" MODIFIED="1539265001205" TEXT="Add, remove a Version Tag"/>
+<node CREATED="1539265001205" ID="ID_138" MODIFIED="1539265001205" TEXT="Detect newer, older Version Tag"/>
+<node CREATED="1539265001205" ID="ID_425814293" MODIFIED="1539682695550" TEXT="Rebase a Reqtify project on a Version Tag"/>
+<node CREATED="1539682187136" ID="ID_1201085040" MODIFIED="1539682215753" TEXT="Generate an index of a Version Tag"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_132" MODIFIED="1539353542364" STYLE="bubble" TEXT="Milestones Management">
+<node CREATED="1539265001205" FOLDED="true" ID="ID_188" MODIFIED="1539674660554" STYLE="bubble" TEXT="Create, modify a Milestone Tag">
+<node CREATED="1539265001205" ID="ID_189" MODIFIED="1539265001205" TEXT="Milestone Tag naming helper"/>
+</node>
+<node CREATED="1539265001205" ID="ID_193" MODIFIED="1539265001205" STYLE="bubble" TEXT="List Milestone Tags">
+<node CREATED="1539265001205" ID="ID_194" MODIFIED="1539265001205" TEXT="Filter"/>
+</node>
+<node CREATED="1539265001205" ID="ID_422" MODIFIED="1539265001205" STYLE="bubble" TEXT="List Milestones"/>
+<node CREATED="1539265001205" ID="ID_156" MODIFIED="1539265001205" STYLE="bubble" TEXT="Milestone Baseline Management">
+<node CREATED="1539265001205" ID="ID_192" MODIFIED="1539265001205" TEXT="Add, remove a Milestone or Version Tag"/>
+<node CREATED="1539265001205" ID="ID_158" MODIFIED="1539265001205" TEXT="Detect newer, older Milestone or Version Tag"/>
+<node CREATED="1539265001205" ID="ID_300945879" MODIFIED="1539682706944" TEXT="Rebase a Reqtify project on a Milestone Tag"/>
+<node CREATED="1539682187136" ID="ID_338039060" MODIFIED="1539682233818" TEXT="Generate an index of a Milestone Tag"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_24" MODIFIED="1539338000544" STYLE="bubble" TEXT="Document Sets Management">
+<node CREATED="1539265001205" ID="ID_358" MODIFIED="1539265001205" STYLE="bubble" TEXT="List Documents">
+<node CREATED="1539265001205" ID="ID_359" MODIFIED="1539674672349" TEXT="Name, Control Category, Independence, Version Tag, associated DOC ticket"/>
+</node>
+<node CREATED="1539265001205" ID="ID_29" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify a DRL">
+<node CREATED="1539265001205" ID="ID_164" MODIFIED="1539265001205" TEXT="Selection based on baseline or milestone"/>
+<node CREATED="1539265001205" ID="ID_165" MODIFIED="1539265001205" TEXT="Selection may be adjusted manually"/>
+</node>
+<node CREATED="1539265001205" ID="ID_30" MODIFIED="1539265001205" STYLE="bubble" TEXT="Get a Documents package (zip)">
+<node CREATED="1539265001205" ID="ID_159" MODIFIED="1539265001205" TEXT="Selection based on DRL and baseline or milestone"/>
+<node CREATED="1539265001205" ID="ID_166" MODIFIED="1539265001205" TEXT="Selection may be adjusted manually"/>
+<node CREATED="1539265001205" ID="ID_160" MODIFIED="1539265001205" TEXT="Rename PDF (include version in the name)"/>
+<node CREATED="1539265001205" ID="ID_161" MODIFIED="1539265001205" TEXT="Include in each PDF the PRFs associated with the document version"/>
+<node CREATED="1539265001205" ID="ID_162" MODIFIED="1539353687985" TEXT="Include in the zip archive the associated source files"/>
+<node CREATED="1539265001205" ID="ID_163" MODIFIED="1539265001205" TEXT="Split the zip archive (No split, 5M, 10M, 15M, 20M)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_377" MODIFIED="1539353694979" STYLE="bubble" TEXT="Branches Management">
+<node CREATED="1539265001205" ID="ID_406" MODIFIED="1539353752254" STYLE="bubble" TEXT="Create, Modify a Branch">
+<node CREATED="1539265001205" ID="ID_407" MODIFIED="1539353739431" TEXT="Branch is auto-named"/>
+<node CREATED="1539265001205" ID="ID_408" MODIFIED="1539676139029" TEXT="Branch can be created from a tag or a path"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_25" MODIFIED="1539353762161" STYLE="bubble" TEXT="Problem Reporting">
+<node CREATED="1539265001205" FOLDED="true" ID="ID_352" MODIFIED="1539680288534" STYLE="bubble" TEXT="List EFRs">
+<node CREATED="1539265001205" ID="ID_365" MODIFIED="1539265001205" TEXT="Ability to list child ECRs (4 levels deep)"/>
+<node CREATED="1539265001205" ID="ID_391" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+<node CREATED="1539265001205" ID="ID_32" MODIFIED="1539265001205" TEXT="Export EFRs as PDF"/>
+</node>
+<node CREATED="1539265001205" ID="ID_31" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify an EFR">
+<node CREATED="1539265001205" ID="ID_399" MODIFIED="1539265001205" TEXT="Link to child DOCs, ECRs"/>
+<node CREATED="1539265001205" ID="ID_413" MODIFIED="1539265001205" TEXT="Several severities (0, 1A, 1B, 2, 3A, 3B, ...)"/>
+<node CREATED="1539265001205" ID="ID_173" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_338" MODIFIED="1539353909427" TEXT="Associated Word form"/>
+<node CREATED="1539265001205" ID="ID_174" MODIFIED="1539353998363" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1425363431" MODIFIED="1539332910716" STYLE="bubble" TEXT="Automation features">
+<node CREATED="1539265001205" ID="ID_1413791033" MODIFIED="1539353946638" TEXT="Word form pre-filled with Trac data"/>
+</node>
+<node CREATED="1539265001205" ID="ID_251817424" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_908822522" MODIFIED="1539265001205" TEXT="Office (2010/2013)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_26" MODIFIED="1539266949099" STYLE="bubble" TEXT="Change Management">
+<node CREATED="1539265001205" ID="ID_355" MODIFIED="1539265001205" STYLE="bubble" TEXT="List ECRs">
+<node CREATED="1539265001205" ID="ID_368" MODIFIED="1539265001205" TEXT="Ability to list by skill"/>
+<node CREATED="1539265001205" ID="ID_390" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+<node CREATED="1539265001205" ID="ID_34" MODIFIED="1539265001205" TEXT="Export ECRs as PDF"/>
+</node>
+<node CREATED="1539265001205" ID="ID_33" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify an ECR">
+<node CREATED="1539265001205" ID="ID_419" MODIFIED="1539332755297" TEXT="ECR Type: Evolution or Problem Report"/>
+<node CREATED="1539265001205" ID="ID_169" MODIFIED="1539332682458" TEXT="Link to parent EFRs (Problem Report) or parent ECR(s) (Evolution)"/>
+<node CREATED="1539265001205" ID="ID_405" MODIFIED="1539332723393" TEXT="Link to child DOC(s) / ECR(s)"/>
+<node CREATED="1539265001205" ID="ID_420" MODIFIED="1539333542724" TEXT="List of impacted requirements"/>
+<node CREATED="1539265001205" ID="ID_171" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_339" MODIFIED="1539353894467" TEXT="Associated Word form"/>
+<node CREATED="1539265001205" ID="ID_172" MODIFIED="1539332060149" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_356" MODIFIED="1539333741951" STYLE="bubble" TEXT="List MOMs (Configuration Management)">
+<node CREATED="1539265001205" ID="ID_369" MODIFIED="1539265001205" TEXT="Ability to list child AIs"/>
+<node CREATED="1539265001205" ID="ID_392" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_27" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify a MOM (CCB)">
+<node CREATED="1539265001205" ID="ID_400" MODIFIED="1539336894027" TEXT="Link to child AI, DOC"/>
+<node CREATED="1539265001205" ID="ID_340" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_1746078580" MODIFIED="1539353875548" TEXT="Associated Word Form"/>
+<node CREATED="1539265001205" ID="ID_342" MODIFIED="1539332079466" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1061528388" MODIFIED="1539332910716" STYLE="bubble" TEXT="Automation features">
+<node CREATED="1539265001205" ID="ID_1642218080" MODIFIED="1539353845717" TEXT="Word form pre-filled with Trac data (ECR / MOM)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_107229526" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_1474620315" MODIFIED="1539763330838" TEXT="MS Office (2010/2013)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_357" MODIFIED="1539333782728" STYLE="bubble" TEXT="List AIs (Configuration Management)">
+<node CREATED="1539265001205" ID="ID_370" MODIFIED="1539265001205" TEXT="Group AIs by parent MOM or by date"/>
+<node CREATED="1539265001205" ID="ID_393" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_28" MODIFIED="1539349857205" STYLE="bubble" TEXT="Create, modify an AI (Configuration Management)">
+<node CREATED="1539265001205" ID="ID_402" MODIFIED="1539350892951" TEXT="Link to parent MOM (CCB)"/>
+<node CREATED="1539265001205" ID="ID_343" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_437734646" MODIFIED="1539332274563" TEXT="History of changes (ticket)"/>
+<node CREATED="1539265001205" ID="ID_396" MODIFIED="1539265001205" TEXT="Reminders"/>
+</node>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_203" MODIFIED="1539768408503" POSITION="right" STYLE="bubble" TEXT="User Experience">
+<node CREATED="1539849605321" ID="ID_1443080998" MODIFIED="1539849610308" TEXT="Data access">
+<node CREATED="1539265001205" ID="ID_258" MODIFIED="1539265001205" STYLE="bubble" TEXT="Workspaces">
+<node CREATED="1539265001205" ID="ID_259" MODIFIED="1539849444293" TEXT="Central Repository (local server)"/>
+<node CREATED="1539265001205" ID="ID_260" MODIFIED="1539849504490" TEXT="Local working copies (users desktop computers)"/>
+<node CREATED="1539848956164" ID="ID_1195768878" MODIFIED="1539849520865" TEXT="Remote working copies (local server)"/>
+</node>
+<node CREATED="1539849634819" ID="ID_1284294668" MODIFIED="1539849638874" TEXT="Subversion">
+<node CREATED="1539867228270" ID="ID_702654874" MODIFIED="1539869757437" TEXT="Configuration management under Windows (TortoiseSVN)"/>
+<node CREATED="1539265001205" ID="ID_255" MODIFIED="1539871378653" TEXT="Offline editing on local working copies (MS Office Word, Excel)"/>
+<node CREATED="1539849645595" ID="ID_1372095243" MODIFIED="1539869952805" TEXT="Configuration Management under Linux (svn command line commands)"/>
+<node CREATED="1539265001205" ID="ID_1568213449" MODIFIED="1539871368212" TEXT="Online editing on remote working copies (MS Office Word, Excel)"/>
+<node CREATED="1539867022009" ID="ID_397723808" MODIFIED="1539867750774" TEXT="Direct access to repositories - by-pass Trac (Internet Explorer)"/>
+<node CREATED="1539867037648" ID="ID_1981153335" MODIFIED="1539867700770" TEXT="Configuration management under Eclipse (Subclipse)"/>
+</node>
+<node CREATED="1539849790197" ID="ID_1737718786" MODIFIED="1539849792602" TEXT="Trac">
+<node CREATED="1539868703900" ID="ID_1700538146" MODIFIED="1539871771996" TEXT="Access to database tables through API (SQLite Connector)"/>
+<node CREATED="1539849723424" ID="ID_507709610" MODIFIED="1539869071606" TEXT="Access to database data through forms (Internet Explorer)"/>
+</node>
+<node COLOR="#338800" CREATED="1539265001205" ID="ID_63" MODIFIED="1539948432284" TEXT="Authentication">
+<node CREATED="1539265001205" ID="ID_64" MODIFIED="1539948432284" TEXT="Basic (password)"/>
+<node CREATED="1539265001205" ID="ID_66" MODIFIED="1539948432284" TEXT="Kerberos (SSO)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_204" MODIFIED="1539768480833" STYLE="bubble" TEXT="User Interface">
+<node CREATED="1539265001205" ID="ID_207" MODIFIED="1539265001205" STYLE="bubble" TEXT="Language">
+<node CREATED="1539265001205" ID="ID_208" MODIFIED="1539265001205" TEXT="English"/>
+<node CREATED="1539265001205" ID="ID_257" MODIFIED="1539265001205" TEXT="French"/>
+</node>
+<node CREATED="1539265001205" ID="ID_209" MODIFIED="1539265001205" STYLE="bubble" TEXT="Menus">
+<node CREATED="1539265001205" ID="ID_210" MODIFIED="1539872142187" TEXT="Appropriate to user profile"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_222" MODIFIED="1539768534645" STYLE="bubble" TEXT="User Functions">
+<node CREATED="1539265001205" ID="ID_223" MODIFIED="1539782730410" TEXT="Timeline">
+<node CREATED="1539782643447" ID="ID_1108975508" MODIFIED="1539783295148" TEXT="Trac and Subversion events on a specified period"/>
+<node CREATED="1539782670300" ID="ID_1310230055" MODIFIED="1539782871182" TEXT="For each event, its date, change description, change author"/>
+</node>
+<node CREATED="1539265001205" ID="ID_380" MODIFIED="1539778004700" TEXT="Roadmap">
+<node CREATED="1539777496704" ID="ID_187180503" MODIFIED="1539777995497" TEXT="Progress bar of closed tickets for each milestone"/>
+</node>
+<node CREATED="1539265001205" ID="ID_387" MODIFIED="1539775670042" TEXT="Browse Source">
+<node CREATED="1539775540786" ID="ID_1583211454" MODIFIED="1539783612659" TEXT="Tree view of Subversion repository contents (at specified revision)"/>
+<node CREATED="1539775514123" ID="ID_1466662002" MODIFIED="1539775971697" TEXT="Revision log (age, author, message)"/>
+<node CREATED="1539775912921" ID="ID_1525919051" MODIFIED="1539775952140" TEXT="Compare revisions (files added, removed, modified)"/>
+</node>
+<node CREATED="1539857141228" ID="ID_1106060115" MODIFIED="1539872788276" TEXT="Conf Mgmt">
+<node CREATED="1539857168872" ID="ID_801254646" MODIFIED="1539872634421" TEXT="Branches Management"/>
+<node CREATED="1539857176188" ID="ID_995657121" MODIFIED="1539872640983" TEXT="Components Management"/>
+<node CREATED="1539857182881" ID="ID_1201228302" MODIFIED="1539872648048" TEXT="Documents Management"/>
+<node CREATED="1539857186421" ID="ID_158459798" MODIFIED="1539872653800" TEXT="Milestone Tags Management"/>
+<node CREATED="1539857194195" ID="ID_1500231737" MODIFIED="1539872663902" TEXT="Milestones Management"/>
+<node CREATED="1539857199519" ID="ID_388807226" MODIFIED="1539872668806" TEXT="Version Tags Management"/>
+<node CREATED="1539857208388" ID="ID_1298921198" MODIFIED="1539872673179" TEXT="Versions Management"/>
+</node>
+<node CREATED="1539857236689" ID="ID_143920255" MODIFIED="1539857240687" TEXT="View tickets">
+<node CREATED="1539857266154" ID="ID_1849383126" MODIFIED="1539928182898" TEXT="List tickets of specified type, skill"/>
+</node>
+<node CREATED="1539857300370" ID="ID_720997457" MODIFIED="1539857305386" TEXT="New ticket">
+<node CREATED="1539857311025" ID="ID_546350599" MODIFIED="1539857320261" TEXT="Ticket creation"/>
+</node>
+<node CREATED="1539265001205" ID="ID_224" MODIFIED="1539265001205" TEXT="Search">
+<node CREATED="1539775227459" ID="ID_1841834836" MODIFIED="1539775321394" TEXT="Changesets comments"/>
+<node CREATED="1539775241379" ID="ID_1884563979" MODIFIED="1539775478903" TEXT="Milestones names"/>
+<node CREATED="1539775247045" ID="ID_1452608351" MODIFIED="1539775421146" TEXT="Tickets summary"/>
+<node CREATED="1539775251850" ID="ID_1184742538" MODIFIED="1539775466689" TEXT="Wiki (full text)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_381" MODIFIED="1539857363392" TEXT="Ticket Stats">
+<node CREATED="1539775067026" ID="ID_643572390" MODIFIED="1539775178018" TEXT="Number of open, new and closed tickets in a defined time range"/>
+<node CREATED="1539775117844" ID="ID_382610335" MODIFIED="1539787166663" TEXT="Number of EFR for each severity and status"/>
+<node CREATED="1539775139397" ID="ID_1456021021" MODIFIED="1539846332731" TEXT="Number of Action Items for each due date and workflow status"/>
+</node>
+</node>
+<node CREATED="1539846876359" ID="ID_1216406698" MODIFIED="1539928709814" TEXT="Collaboration">
+<node CREATED="1539850213016" ID="ID_1816181822" MODIFIED="1539928733999" TEXT="Subversion">
+<node CREATED="1539265001205" ID="ID_201" MODIFIED="1539265001205" TEXT="Lock-modify-unlock model"/>
+</node>
+<node CREATED="1539850227036" ID="ID_1396823581" MODIFIED="1539850229153" TEXT="Trac">
+<node CREATED="1539265001205" ID="ID_74" MODIFIED="1539850250568" TEXT="Notification through emails"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_212" MODIFIED="1539265001205" STYLE="bubble" TEXT="Support">
+<node CREATED="1539769042655" ID="ID_1627219174" MODIFIED="1539769052481" TEXT="Documentation">
+<node CREATED="1539265001205" ID="ID_220" MODIFIED="1539265001205" TEXT="Context-sensitive help"/>
+<node CREATED="1539265001205" ID="ID_215" MODIFIED="1539769289329" TEXT="Trac Wiki (tool self documentation)"/>
+<node CREATED="1539265001205" ID="ID_216" MODIFIED="1539929531910" TEXT="Dotclear Blog (additional documentation on processes)"/>
+</node>
+<node CREATED="1539769076603" ID="ID_1530630848" MODIFIED="1539769089996" TEXT="Training">
+<node CREATED="1539265001205" ID="ID_219" MODIFIED="1539355426299" TEXT="Sandbox (to practice)"/>
+</node>
+<node CREATED="1539851865742" ID="ID_524575277" MODIFIED="1539929950062" TEXT="Hot-line">
+<node CREATED="1539856968027" ID="ID_1058433067" MODIFIED="1539931407811" TEXT="Support of the Process Assurance &amp; Improvement Group"/>
+<node CREATED="1539852145806" ID="ID_786060445" MODIFIED="1539931424819" TEXT="Support of the Subversion and Trac admin"/>
+</node>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_60" MODIFIED="1539590988784" POSITION="right" STYLE="bubble" TEXT="Administration">
+<node CREATED="1539265001205" ID="ID_228" MODIFIED="1539265001205" STYLE="bubble" TEXT="Setup">
+<node CREATED="1539265001205" ID="ID_229" MODIFIED="1539847747237" STYLE="bubble" TEXT="Host">
+<node CREATED="1539265001205" ID="ID_230" MODIFIED="1539932207896" TEXT="VMWare VM"/>
+<node CREATED="1539265001205" ID="ID_240" MODIFIED="1539932222207" TEXT="CentOS 7 Linux"/>
+</node>
+<node CREATED="1539848102988" ID="ID_430397699" MODIFIED="1539933410695" TEXT="Subversion">
+<node CREATED="1539265001205" ID="ID_374" MODIFIED="1539265001205" TEXT="Two-dimensional filesystem (path, revision)"/>
+<node CREATED="1539265001205" ID="ID_266" MODIFIED="1539265001205" TEXT="Several trees (trunk, branches, tags)"/>
+<node CREATED="1539265001205" ID="ID_262" MODIFIED="1539265001205" TEXT="Each tree structured according to the PBS "/>
+<node CREATED="1539265001205" ID="ID_226" MODIFIED="1539934730955" TEXT="Path-based authorization (authenticated, developer, authorized, admin)"/>
+<node CREATED="1539936256128" ID="ID_1908929341" MODIFIED="1539936627906" TEXT="Actions hooked to repository events"/>
+</node>
+<node CREATED="1539847877865" ID="ID_1485010897" MODIFIED="1539847880590" TEXT="Trac">
+<node CREATED="1539850541218" ID="ID_1835144887" MODIFIED="1539850660561" TEXT="Permissions for accessing Trac features"/>
+<node CREATED="1539850668707" ID="ID_177541775" MODIFIED="1539850753268" TEXT="Permissions grouped into profiles (authenticated, developer, authorized, admin)"/>
+<node CREATED="1539850764078" ID="ID_368332030" MODIFIED="1539851306890" TEXT="Profiles refined into customizable roles (Project Manager, Project Technical Manager, Quality Assurance Manager, Configuration Manager, Team Member, ...)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_241" MODIFIED="1539935538792" STYLE="bubble" TEXT="Plugins">
+<node CREATED="1539848044839" ID="ID_1559649716" MODIFIED="1539848086578" TEXT="ARTUSPlugin"/>
+<node CREATED="1539848056633" ID="ID_496193972" MODIFIED="1539848064003" TEXT="other plugins"/>
+</node>
+<node CREATED="1539265001205" ID="ID_81" MODIFIED="1539265001205" STYLE="bubble" TEXT="Buildbot">
+<node CREATED="1539265001205" ID="ID_82" MODIFIED="1539847943922" STYLE="bubble" TEXT="Build, check, trace EOC build"/>
+<node CREATED="1539847950684" ID="ID_1768602232" MODIFIED="1539847982968" TEXT="Build, trace Bitstream build"/>
+<node CREATED="1539847990954" ID="ID_1536238639" MODIFIED="1539848008207" TEXT="Build, trace test procedures"/>
+</node>
+<node CREATED="1539265001205" ID="ID_250" MODIFIED="1539265001205" STYLE="bubble" TEXT="Configuration">
+<node CREATED="1539265001205" ID="ID_251" MODIFIED="1539937272827" TEXT="Global and per project ini files (Trac)"/>
+<node CREATED="1539265001205" ID="ID_252" MODIFIED="1539939116829" TEXT="Global and per project HTML templates (Trac)"/>
+<node CREATED="1539848199990" ID="ID_791750531" MODIFIED="1539939121915" TEXT="Global and per project document and record templates (MS Office)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_248" MODIFIED="1539939473720" STYLE="bubble" TEXT="Maintenance">
+<node CREATED="1539265001205" ID="ID_415" MODIFIED="1539948970677" STYLE="bubble" TEXT="Data integrity">
+<node CREATED="1539265001205" ID="ID_409" MODIFIED="1539948981928" TEXT="Removal of tags or tickets"/>
+</node>
+<node CREATED="1539265001205" ID="ID_414" MODIFIED="1539265001205" STYLE="bubble" TEXT="Debug">
+<node CREATED="1539265001205" ID="ID_249" MODIFIED="1539940450346" TEXT="Stack trace display in case of internal errors"/>
+<node CREATED="1539265001205" ID="ID_246" MODIFIED="1539940591059" TEXT="Log files with several verbosity levels (CRITICAL, ERROR, WARN, INFO, DEBUG)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_17" MODIFIED="1539940937659" STYLE="bubble" TEXT="Archive and Retrieval">
+<node CREATED="1539941018026" ID="ID_706921937" MODIFIED="1539948698267" TEXT="Archive">
+<node CREATED="1539265001205" ID="ID_371" MODIFIED="1539265001205" TEXT="Backup of all disks of the virtual server"/>
+</node>
+<node CREATED="1539941031472" ID="ID_354103227" MODIFIED="1539948705544" TEXT="Retrieval">
+<node CREATED="1539265001205" ID="ID_372" MODIFIED="1539265001205" TEXT="Restore of selected disks of the virtual server"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_61" MODIFIED="1539948363455" STYLE="bubble" TEXT="Users Management">
+<node CREATED="1539948367749" ID="ID_967497379" MODIFIED="1539948372800" TEXT="Authentication">
+<node CREATED="1539948087917" ID="ID_646750965" MODIFIED="1539948168107" TEXT="Change or add password"/>
+<node CREATED="1539265001205" ID="ID_78" MODIFIED="1539851117623" TEXT="Detection of users who left the company (Active Directory scan)"/>
+</node>
+<node CREATED="1539948373904" ID="ID_466921951" MODIFIED="1539948378375" TEXT="Authorization">
+<node CREATED="1539947869904" ID="ID_1054375956" MODIFIED="1539948577613" TEXT="Attribution of profiles/roles to new users on a project basis"/>
+<node CREATED="1539330197650" ID="ID_1651876314" MODIFIED="1539948347602" TEXT="Withdrawal of access rights for users who left the company"/>
+</node>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_5" MODIFIED="1539351321507" POSITION="left" STYLE="bubble" TEXT="Verification Management">
+<node CREATED="1539265001205" ID="ID_141" MODIFIED="1539265001205" STYLE="bubble" TEXT="Review Management">
+<node CREATED="1539265001205" ID="ID_360" MODIFIED="1539265001205" STYLE="bubble" TEXT="List PRFs">
+<node CREATED="1539265001205" ID="ID_394" MODIFIED="1539265001205" TEXT="Ability to list by skill"/>
+<node CREATED="1539265001205" ID="ID_395" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+<node CREATED="1539265001205" ID="ID_38" MODIFIED="1539265001205" TEXT="Export PRF as PDF"/>
+</node>
+<node CREATED="1539265001205" ID="ID_37" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify a PRF">
+<node CREATED="1539265001205" ID="ID_39" MODIFIED="1539680347154" TEXT="Independence support"/>
+<node CREATED="1539265001205" ID="ID_403" MODIFIED="1539265001205" TEXT="Link to parent ECM, DOC"/>
+<node CREATED="1539265001205" ID="ID_344" MODIFIED="1539329123259" TEXT="Dedicated workflow (Peer and Formal Review)"/>
+<node CREATED="1539265001205" ID="ID_46" MODIFIED="1539681291999" TEXT="Excel form with a checklist appropriate to the document"/>
+<node CREATED="1539265001205" ID="ID_348" MODIFIED="1539332098590" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1497592842" MODIFIED="1539265001205" STYLE="bubble" TEXT="Automation features">
+<node CREATED="1539265001205" ID="ID_1198742801" MODIFIED="1539354307674" TEXT="Cover page pre-filled with Trac data"/>
+</node>
+<node CREATED="1539265001205" ID="ID_506277467" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_1064581504" MODIFIED="1539763321904" TEXT="MS Office (2010/2013)"/>
+</node>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_6" MODIFIED="1539349888693" POSITION="left" STYLE="bubble" TEXT="Quality Assurance">
+<node CREATED="1539265001205" ID="ID_142" MODIFIED="1539265001205" STYLE="bubble" TEXT="Review Management">
+<node CREATED="1539265001205" ID="ID_1966017115" MODIFIED="1539335746683" STYLE="bubble" TEXT="List MOMs (Quality Assurance)">
+<node CREATED="1539265001205" ID="ID_385787082" MODIFIED="1539265001205" TEXT="Ability to list child AIs"/>
+<node CREATED="1539265001205" ID="ID_1430719193" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1676627091" MODIFIED="1539330531806" STYLE="bubble" TEXT="Create, modify a MOM (Review)">
+<node CREATED="1539265001205" ID="ID_367502401" MODIFIED="1539336989537" TEXT="Link to child AI"/>
+<node CREATED="1539265001205" ID="ID_1590963798" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_1347787638" MODIFIED="1539337062272" TEXT="Associated Word Form"/>
+<node CREATED="1539265001205" ID="ID_926725444" MODIFIED="1539332116342" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_28451400" MODIFIED="1539332910716" STYLE="bubble" TEXT="Automation features">
+<node CREATED="1539265001205" ID="ID_1548083826" MODIFIED="1539354345288" TEXT="Word form pre-filled with Trac data"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1220873120" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_969292264" MODIFIED="1539763276768" TEXT="MS Office (2010/2013)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1280744139" MODIFIED="1539349774505" STYLE="bubble" TEXT="List AIs (Quality Assurance)">
+<node CREATED="1539265001205" ID="ID_1919156186" MODIFIED="1539265001205" TEXT="Group AIs by parent MOM or by date"/>
+<node CREATED="1539265001205" ID="ID_1912712433" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1068717503" MODIFIED="1539349899210" STYLE="bubble" TEXT="Create, modify an AI (Quality Assurance)">
+<node CREATED="1539265001205" ID="ID_1122307016" MODIFIED="1539350872503" TEXT="Link to parent MOM (Review)"/>
+<node CREATED="1539265001205" ID="ID_821965277" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_1270746925" MODIFIED="1539332274563" TEXT="History of changes (ticket)"/>
+<node CREATED="1539265001205" ID="ID_86893018" MODIFIED="1539265001205" TEXT="Reminders"/>
+</node>
+</node>
+<node CREATED="1539336405804" ID="ID_501496940" MODIFIED="1539336413874" TEXT="Audit Management">
+<node CREATED="1539265001205" ID="ID_711936983" MODIFIED="1539335746683" STYLE="bubble" TEXT="List MOMs (Quality Assurance)">
+<node CREATED="1539265001205" ID="ID_1148468503" MODIFIED="1539265001205" TEXT="Ability to list child AIs"/>
+<node CREATED="1539265001205" ID="ID_726195868" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_56" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify a MOM (Audit)">
+<node CREATED="1539265001205" ID="ID_422120340" MODIFIED="1539337001725" TEXT="Link to child AI"/>
+<node CREATED="1539265001205" ID="ID_1064227803" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_366930025" MODIFIED="1539337038705" TEXT="Associated Word Form"/>
+<node CREATED="1539265001205" ID="ID_510139974" MODIFIED="1539332116342" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_104159168" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_1377931138" MODIFIED="1539763266731" TEXT="MS Office (2010/2013)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_121849359" MODIFIED="1539756411734" STYLE="bubble" TEXT="List AIs (Quality Assurance)">
+<node CREATED="1539265001205" ID="ID_1489146850" MODIFIED="1539265001205" TEXT="Group AIs by parent MOM or by date"/>
+<node CREATED="1539265001205" ID="ID_1790711609" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_775467883" MODIFIED="1539349912524" STYLE="bubble" TEXT="Create, modify an AI (Quality Assurance)">
+<node CREATED="1539265001205" ID="ID_657617534" MODIFIED="1539350837419" TEXT="Link to parent MOM (Audit)"/>
+<node CREATED="1539265001205" ID="ID_600172127" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_600384971" MODIFIED="1539332274563" TEXT="History of changes (ticket)"/>
+<node CREATED="1539265001205" ID="ID_1015945437" MODIFIED="1539265001205" TEXT="Reminders"/>
+</node>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_144" MODIFIED="1539332188705" POSITION="left" STYLE="bubble" TEXT="Project Management">
+<node CREATED="1539265001205" ID="ID_7" MODIFIED="1539343174961" STYLE="bubble" TEXT="Project Monitoring and Control">
+<node CREATED="1539265001205" ID="ID_936112777" MODIFIED="1539336704314" STYLE="bubble" TEXT="List MOMs (Project Monitoring and Control)">
+<node CREATED="1539265001205" ID="ID_1487283009" MODIFIED="1539265001205" TEXT="Ability to list child AIs"/>
+<node CREATED="1539265001205" ID="ID_734160623" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1625930814" MODIFIED="1539336783665" STYLE="bubble" TEXT="Create, modify a MOM (Progress)">
+<node CREATED="1539265001205" ID="ID_1277173684" MODIFIED="1539336799164" TEXT="Link to child AI"/>
+<node CREATED="1539265001205" ID="ID_1066638936" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_1458441193" MODIFIED="1539337029879" TEXT="Associated Word Form"/>
+<node CREATED="1539265001205" ID="ID_370462660" MODIFIED="1539332116342" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_395686634" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_1699222138" MODIFIED="1539763401219" TEXT="MS Office (2010/2013)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1066735417" MODIFIED="1539349933433" STYLE="bubble" TEXT="List AIs (Project Monitoring and Control)">
+<node CREATED="1539265001205" ID="ID_277913676" MODIFIED="1539265001205" TEXT="Group AIs by parent MOM or by date"/>
+<node CREATED="1539265001205" ID="ID_733479619" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_554394478" MODIFIED="1539349950303" STYLE="bubble" TEXT="Create, modify an AI (Project Monitoring and Control)">
+<node CREATED="1539265001205" ID="ID_741675232" MODIFIED="1539350817010" TEXT="Link to parent MOM (Progress)"/>
+<node CREATED="1539265001205" ID="ID_439339823" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_1935996719" MODIFIED="1539332274563" TEXT="History of changes (ticket)"/>
+<node CREATED="1539265001205" ID="ID_1075019211" MODIFIED="1539265001205" TEXT="Reminders"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_145" MODIFIED="1539265001205" STYLE="bubble" TEXT="Information Management">
+<node CREATED="1539265001205" ID="ID_363" MODIFIED="1539265001205" STYLE="bubble" TEXT="List ECMs">
+<node CREATED="1539337236783" ID="ID_1539726809" MODIFIED="1539337276906" TEXT="List by ECM Type: Document Delivery / Technical Note"/>
+<node CREATED="1539265001205" ID="ID_1021296977" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_48" MODIFIED="1539759596055" STYLE="bubble" TEXT="Create, modify an ECM (Document Delivery)">
+<node CREATED="1539759664094" ID="ID_26426223" MODIFIED="1539762158987" TEXT="Select documents and put them in one or more archives (zip)"/>
+<node CREATED="1539760732478" ID="ID_1362806136" MODIFIED="1539762254033" TEXT="List selected documents in each generated archive"/>
+<node CREATED="1539265001205" ID="ID_565045039" MODIFIED="1539337638160" TEXT="Dedicated workflow with optional review or approval"/>
+<node CREATED="1539268173664" ID="ID_909303472" MODIFIED="1539268184267" TEXT="Associated Word form"/>
+<node CREATED="1539265001205" ID="ID_1130161268" MODIFIED="1539332030215" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_109137715" MODIFIED="1539761729844" STYLE="bubble" TEXT="Create, modify an ECM (Technical Note)">
+<node CREATED="1539268095816" ID="ID_426215634" MODIFIED="1539268101691" TEXT="List of authors"/>
+<node CREATED="1539352713236" ID="ID_613934933" MODIFIED="1539353103782" TEXT="Child PRF status (progress bar of closed tickets)"/>
+<node CREATED="1539353183543" ID="ID_1521922918" MODIFIED="1539354847292" TEXT="List of child PRF tickets (owner, status, resolution)"/>
+<node CREATED="1539760866905" ID="ID_1039871964" MODIFIED="1539761679423" TEXT="Manage attachments (list, add, replace, delete)"/>
+<node CREATED="1539760816945" ID="ID_1576358972" MODIFIED="1539761703986" TEXT="Add attachments from repository or local file system"/>
+<node CREATED="1539265001205" ID="ID_289645340" MODIFIED="1539337638160" TEXT="Dedicated workflow with optional review or approval"/>
+<node CREATED="1539268173664" ID="ID_765615289" MODIFIED="1539268184267" TEXT="Associated Word form"/>
+<node CREATED="1539265001205" ID="ID_642072462" MODIFIED="1539332030215" TEXT="History of changes (ticket and form)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1913864344" MODIFIED="1539265001205" STYLE="bubble" TEXT="On-line editing">
+<node CREATED="1539265001205" ID="ID_419937473" MODIFIED="1539265001205" TEXT="Office (2010/2013)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1557651789" MODIFIED="1539265001205" STYLE="bubble" TEXT="Automation features">
+<node CREATED="1539764053865" ID="ID_431940815" MODIFIED="1539764139449" TEXT="Archive splitted (No split, 5M, 10M, 15M, 20M)"/>
+<node CREATED="1539265001205" ID="ID_1168753251" MODIFIED="1539764243085" TEXT="Header pre-filled"/>
+<node CREATED="1539265001205" ID="ID_846656518" MODIFIED="1539338338281" TEXT="Table of contents update"/>
+<node CREATED="1539345850352" ID="ID_947495826" MODIFIED="1539765118301" TEXT="Listing of attachments with description (name, size, contents with CRC if archives)"/>
+<node CREATED="1539265001205" ID="ID_484310750" MODIFIED="1539346438458" TEXT="PDF conversion"/>
+<node CREATED="1539265001205" ID="ID_1785209381" MODIFIED="1539346567541" STYLE="bubble" TEXT="PDF electronic signature (Author, Checker(s), Approver(s), Timestamp)"/>
+<node CREATED="1539346412057" ID="ID_1998612994" MODIFIED="1539346430770" TEXT="PDF fields filling (From, To, Copy)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_191205693" MODIFIED="1539765503320" STYLE="bubble" TEXT="Memo comparison">
+<node CREATED="1539265001205" ID="ID_1326525106" MODIFIED="1539765552159" TEXT="Compare two revisions"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1825700854" MODIFIED="1539765603746" STYLE="bubble" TEXT="Memo archiving">
+<node CREATED="1539265001205" ID="ID_161519044" MODIFIED="1539765658649" TEXT="Automatic archiving (online through ECM) "/>
+</node>
+<node CREATED="1539265001205" ID="ID_322821983" MODIFIED="1539765806979" STYLE="bubble" TEXT="Technical Note tagging">
+<node CREATED="1539265001205" ID="ID_416544192" MODIFIED="1539265001205" TEXT="Subversion and Trac"/>
+<node CREATED="1539265001205" ID="ID_1271357904" MODIFIED="1539338816720" TEXT="Tag set through ECM workflow transitions"/>
+</node>
+<node CREATED="1539338910461" ID="ID_957277847" MODIFIED="1539338944093" TEXT="ECM sending via email">
+<node CREATED="1539346692254" ID="ID_843441265" MODIFIED="1539346712956" TEXT="One mail with the ECM attached"/>
+<node CREATED="1539346715108" ID="ID_1968432902" MODIFIED="1539346856605" TEXT="One or several mails each with an ECM attachment (Technical Note)"/>
+<node CREATED="1539346715108" ID="ID_1478542017" MODIFIED="1539346876830" TEXT="One or several mails each with a partial zip archive (Document Delivery)"/>
+</node>
+</node>
+<node CREATED="1539265001205" ID="ID_8" MODIFIED="1539265001205" STYLE="bubble" TEXT="Risk Management">
+<node CREATED="1539265001205" ID="ID_671003858" MODIFIED="1539347117322" STYLE="bubble" TEXT="List RISKs">
+<node CREATED="1539265001205" ID="ID_1233831939" MODIFIED="1539265001205" TEXT="Ability to list child AIs"/>
+<node CREATED="1539265001205" ID="ID_1447689867" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_53" MODIFIED="1539265001205" STYLE="bubble" TEXT="Create, modify a RISK">
+<node CREATED="1539265001205" ID="ID_813779201" MODIFIED="1539336799164" TEXT="Link to child AI"/>
+<node CREATED="1539265001205" ID="ID_1290084481" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539347684379" ID="ID_827821969" MODIFIED="1539767457093" TEXT="Rating computed from combined Probability and Impact levels"/>
+<node CREATED="1539265001205" ID="ID_222807212" MODIFIED="1539767522529" TEXT="History of changes (ticket)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_687133374" MODIFIED="1539349594596" STYLE="bubble" TEXT="List AIs (Risk Management)">
+<node CREATED="1539265001205" ID="ID_684456566" MODIFIED="1539347986042" TEXT="Group AIs by parent RISK or by date"/>
+<node CREATED="1539265001205" ID="ID_1675439520" MODIFIED="1539265001205" TEXT="Export list (Excel, tab or comma delimited)"/>
+</node>
+<node CREATED="1539265001205" ID="ID_1488992366" MODIFIED="1539350956891" STYLE="bubble" TEXT="Create, modify an AI (Risk Management)">
+<node CREATED="1539265001205" ID="ID_135220024" MODIFIED="1539767865269" TEXT="Link to parent RISK"/>
+<node CREATED="1539265001205" ID="ID_1811459078" MODIFIED="1539265001205" TEXT="Dedicated workflow"/>
+<node CREATED="1539265001205" ID="ID_416351403" MODIFIED="1539332274563" TEXT="History of changes (ticket)"/>
+<node CREATED="1539265001205" ID="ID_604417850" MODIFIED="1539265001205" TEXT="Reminders"/>
+</node>
+</node>
+</node>
+</node>
+</map>

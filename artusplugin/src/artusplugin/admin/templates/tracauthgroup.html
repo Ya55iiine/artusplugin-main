@@ -1,0 +1,36 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE HTML
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Trac: AuthGroupFile</title>
+  </head>
+  <body>
+    <h2>Trac: AuthGroupFile</h2>
+    <form id="saveauthgroupfile" method="post">
+      <div class="field">
+        <textarea rows="20" style="width:90%" name="current">${auth_data}</textarea>
+      </div>
+      <div class="buttons">
+        <input type="submit" name="saveauthgroupfile" value=" Apply changes " />
+        <input type="reset" value=" Reset " />
+      </div>
+    </form>
+    
+  <br />
+    
+    <h2>Documentation</h2>
+    <h3>Links</h3>
+    <ul>
+      <li><a href="http://httpd.apache.org/docs/2.0/mod/mod_auth.html#authgroupfile">http://httpd.apache.org/docs/2.0/mod/mod_auth.html#authgroupfile</a></li>
+    </ul>
+  </body>
+</html>

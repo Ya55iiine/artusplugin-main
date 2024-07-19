@@ -1,0 +1,553 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Documents</title>
+    <script type="text/javascript">
+      function page_reload(id) {
+    	let selected_set;
+    	if (id == "branch") {
+    		selected_set = $('form#mod_drl select#selected_set option:first-child').val();
+    	}
+    	else {
+    		selected_set = $('form#mod_drl select#selected_set option:selected').val();
+    	};
+        document.location = get_href([['filter_value', $('input#filter_value').val()],
+            ['pdf_packaging', $('form#mod_drl input#pdf_packaging:checked').val()],
+            ['selected_drl', $('form#mod_drl select#drl option:selected').val()],
+            ['selected_branch', $('form#mod_drl select#branch option:selected').val()],
+            ['selected_set', selected_set],
+            ['external_refs', $('form#mod_drl input#external_refs').prop('checked')],
+            ['pdf_renaming', $('form#mod_drl input#pdf_renaming').prop('checked')],
+            ['max_size', $('form#mod_drl select#max_size option:selected').val()],
+            ['prf_chklst', $('form#mod_drl input#prf_chklst').prop('checked')],
+            ['source_files', $('form#mod_drl input#source_files').prop('checked')],
+            ['ScrollX', getScroll('X')],
+            ['ScrollY', getScroll('Y')]], [])
+      }
+    </script>
+    <style type="text/css">
+      .padded { padding: 0px 25px 0px 0px}
+    </style>
+  </head>
+
+  <body>
+    <h2>Manage Documents</h2>
+
+    <py:choose test="view">
+      <form py:when="'detail'" class="mod" id="modifydocument" method="post" action="">
+        <fieldset>
+          <legend>Modify Document:</legend>
+          <p>
+            Properties are categorized according to their impact on document <em>versions</em>.
+          </p>
+          <br/>
+          <fieldset>
+            <legend>Document properties</legend>
+            <p>These properties may be changed without impacting the document versions.</p>
+          <div class="field">
+              <label>Name:
+              <input type="text" name="name" value="${document.name}" size="50" readonly="true" style="background-color:#f4f4f4" />
+            </label>
+          </div>
+          <div class="field">
+              <label>Short Name:
+              <input type="text" name="shortname" value="${document.shortname}" size="10" />
+            </label>
+          </div>
+          <div class="field">
+            <fieldset class="iefix">
+              <label for="description" i18n:msg="">
+                Description (you may use <a tabindex="42" href="${href.wiki('WikiFormatting')}">WikiFormatting</a> here):
+            </label>
+              <p>
+                <textarea id="description" name="description" class="wikitext trac-resizable" rows="6" cols="60">
+${document.description}</textarea>
+              </p>
+            </fieldset>
+          </div>
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Document version properties</legend>
+            <py:if test="not doc_skill">
+              <p>These properties when changed will immediately impact the <em>current</em> document version</p>
+              <table style="width:100%">
+                <tr>
+                  <td>
+                    <div class="field">
+                      <label>Verified with independence
+                        <input type="checkbox" id="independence" name="independence"
+                               checked="${(document.independence == 1 or document.independence is None) or None}" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false' or ''}" />
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="field">
+                      <label>Control Category:
+                        <select name="controlcategory" id="controlcategory" disabled="${'VERSION_TAG_DELETE' not in perm or None}"
+                                title="${controlcategory_tip['select']}">
+                          <py:for each="cc in ['N/A']">
+                            <option selected="${(document.controlcategory == 0 or document.controlcategory is None) or None}" title="${controlcategory_tip[cc]}" value="$cc">$cc</option>
+                          </py:for>
+                          <py:for each="cc in ['CC1/HC1', 'CC2/HC2']">
+                            <option selected="${(cc == 'CC1/HC1' and document.controlcategory == 1) or (cc == 'CC2/HC2' and document.controlcategory == 2) or None}" title="${controlcategory_tip[cc]}" value="$cc">$cc</option>
+                          </py:for>
+                        </select>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </py:if>
+            <py:if test="doc_skill">
+              <p>These properties are used as default values when creating a <em>new</em> DOC ticket therefore they will <em>only</em> impact the <em>next</em> document versions.</p>
+              <table style="width:100%; border-spacing: 15px;">
+                <tr>
+                  <td rowspan="4" style="width:30%">
+                    <div class="field">
+                      <label title="${sourcetype_tip['select']}" class="tooltip">Source Type:</label>
+                      <select name="sourcetype" id="sourcetype" disabled="${'VERSION_TAG_DELETE' not in perm or None}"
+                          py:with="softwares=OrderedSet([st.split(':')[0].strip() for st in source_types])" size="17">
+                        <py:for each="software in softwares">
+                          <optgroup label="$software">
+                            <py:for each="st in source_types" py:with="sw=st.split(':')[0].strip();doctype=st.split(':')[1].strip()">
+                              <option py:if="sw == software" selected="${(document.sourcetype == st or document.sourcetype is None) or None}" title="${sourcetype_tip[st]}" class="tooltip" value="$st">&nbsp;&nbsp;$doctype</option>
+                            </py:for>
+                          </optgroup>
+                        </py:for>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="field">
+                      <label title="If the PDF file is to be digitally signed, spaces for signatures must exist on the first page of the document" class="tooltip">PDF Digitally Signed</label>
+                      <input type="checkbox" id="pdfsigned" name="pdfsigned"
+                             checked="${(document.pdfsigned == 1 or document.pdfsigned is None) or None}" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false' or ''}" />
+                    </div>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="field">
+                      <label title="The reviewer of a document with independence set to on cannot be amongst the writers of the document" class="tooltip">Verified with independence</label>
+                      <input type="checkbox" id="independence" name="independence"
+                             checked="${(document.independence == 1 or document.independence is None) or None}" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false' or ''}" />
+                    </div>
+                  </td>
+                  <td rowspan="2" style="border-left-style: solid; border-width:1px; text-align: left">
+                    <p style="padding: 15px">If DOC ticket is already created, a Trac admin can still change the corresponding ticket property.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="field">
+                      <label title="${controlcategory_tip['select']}" class="tooltip">Control Category:</label>
+                      <select name="controlcategory" id="controlcategory" disabled="${'VERSION_TAG_DELETE' not in perm or None}"
+                      size="3">
+                      <py:for each="idx, cc in enumerate(controlcategory_options)">
+                        <option selected="${((document.controlcategory is None and idx == 0) or document.controlcategory == idx) or None}" title="${controlcategory_tip[cc]}" class="tooltip" value="$cc">$cc</option>
+                      </py:for>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="field">
+                    <label title="${submittedfor_tip['select']}" class="tooltip">Submitted for:</label>
+                    <select name="submittedfor" id="submittedfor" disabled="${'VERSION_TAG_DELETE' not in perm or None}"
+                            size="3">
+                      <py:for each="idx, sf in enumerate(submittedfor_options)">
+                        <option selected="${((document.submittedfor is None and idx == 0) or document.submittedfor == idx) or None}" title="${submittedfor_tip[sf]}" class="tooltip" value="$sf">$sf</option>
+                      </py:for>
+                    </select>
+                  </div>
+                </td>
+                <td style="border-left-style: solid; border-width:1px; text-align: left">
+                  <p style="padding: 15px">If DOC ticket is already created, the ticket owner can still change the corresponding ticket property.</p>
+                </td>
+              </tr>
+              </table>
+            </py:if>
+          </fieldset>
+          <div class="buttons">
+            <input type="submit" name="cancel" value="${_('Cancel')}"/>
+            <input type="submit" name="save" value="${_('Save')}"/>
+          </div>
+        </fieldset>
+      </form>
+
+      <py:otherwise>
+	      <form id="mod_drl" method="post" action="">
+	        <div class="help">
+	            <p>
+	              The <em>documents</em> are automatically created through the creation of version tags or DOC tickets. See <a href="$dc_url/index.php?post/84">B-3</a> for a user guide.
+	            </p>
+                <fieldset>
+                  <legend>Document filter</legend>
+                  <table>
+                    <tr>
+                        <td><label for="filter_value">Document Name contains:</label></td>
+                        <td></td>
+                      </tr>
+                    <tr>
+                        <td><input type="text" id="filter_value" name="filter_value" value="$filter_value" size="60" /></td>
+
+                        <td>
+                          <input type="submit" name="update" value="Update"/>
+                          <input type="hidden" name="caller" value="$caller" />
+                        </td>
+                      </tr>
+                          <tr>
+                             <td style="text-align:left">(${len(documents)} matches)</td>
+                          </tr>
+                    </table>
+                </fieldset>
+                <table style="width:100%;margin-bottom:50px">
+                  <tr valign="top">
+                    <td>
+                      <div>
+  	                    <fieldset style="height:100%;margin:0;">
+  	                      <legend>Action</legend>
+                          <span>Choose between:</span>
+      		              <table style="margin-top: 13px;">
+      			            <tr>
+      					      <td>
+                                <label title="DRL definition requires an Authorized profile">
+                                  <input type="radio"
+                                         name="pdf_packaging"
+                                         id="pdf_packaging"
+                                         value="false"
+                                         checked="${pdf_packaging is False or None}"
+                                         onchange="page_reload('pdf_packaging')"
+                                         disabled="${'disabled' and not ('MILESTONE_CREATE' in perm) or None}"
+                                  /> Create or modify a <b>DRL</b><sup title="See note #1 below">1</sup>:
+                                </label>
+                              </td>
+      			            </tr>
+                            <tr>
+      			              <td>
+                                <label>
+                                  <span style="white-space:nowrap">
+                                    <input type="radio"
+                                           name="pdf_packaging"
+                                           id="pdf_packaging"
+                                           value="true"
+                                           checked="${pdf_packaging is True or None}"
+                                           onchange="page_reload('pdf_packaging')"
+                                    /> Setup a <b>Documents</b> package (zip)
+                                  </span>
+                                </label>
+                              </td>
+      		                </tr>
+                          </table>
+                          <table>
+                            <tr style="font-size:85%">
+                              <td style="vertical-align:top"><p><u>Note</u>:</p></td>
+                              <td>
+                                <ol>
+                                  <li>DRL = Documentation Requirements List<br/>(Predefined list of Documents)</li>
+                                </ol>
+                              </td>
+                            </tr>
+                          </table>
+  	                    </fieldset>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <fieldset id="DRLDocSelection" style="height:100%;margin:0;">
+                          <legend><span id="legend"></span><span class="in_drl"></span><span class="selected_pdf"></span></legend>
+                          <span>Select<sup title="See note #1 below">1</sup> the items to include by combining the choice of:</span>
+                          <table style="margin-top: 13px; border-spacing: 10px 0;">
+                            <tr>
+                              <td><label for="drl"><b>Documents Set</b>:<br/>(DRL)</label></td>
+                              <td py:if="branch_segregation_activated"><label for="branch"><b>Branch</b><sup title="See note #2 below">2</sup>:</label></td>
+                              <td><label for="selected_set"><b>Version Tags Set</b><sup title="See note #2 below">2</sup>:<br/>(Baseline Tag or Milestone Tag or Year<sup title="See note #3 below">3</sup>)</label></td>
+                              <td><label><b>External references</b><sup title="See note #4 below">4</sup>:</label></td>
+                            </tr>
+                            <tr>
+                               <td>
+                                 <select
+                                     id="drl"
+                                     name="drl"
+                                     style="width:170px"
+                                     onchange="page_reload('drl')"
+                                     disabled="${'disabled' and not documents or None}">
+                                   <option py:for="drl in drls" selected="${drl == selected_drl or None}" value="$drl">$drl</option>
+                                 </select>
+                                 <input type="hidden" name="selected_drl" value="$selected_drl" />
+                               </td>
+                               <td py:if="branch_segregation_activated">
+                                 <select
+                                     id="branch"
+                                     name="branch"
+                                     style="width:70px"
+                                     onchange="page_reload('branch')"
+                                     disabled="${'disabled' and not documents or None}">
+                                   <option py:for="branch in branches" selected="${branch == selected_branch or None}" value="$branch">$branch</option>
+                                 </select>
+                                 <input type="hidden" name="selected_branch" value="$selected_branch" />
+                               </td>
+                               <td id="version_tags">
+                                   <select
+                                       id="selected_set"
+                                       name="selected_set"
+                                       onchange="page_reload('selected_set')"
+                                       disabled="${'disabled' and not documents or None}">
+                                     <option selected="$selected_set == 'Last version tags' or None}">Last version tags</option>
+                                     <py:if test="select_tags">
+                                       <py:for each="first_group in select_tags">
+                                         <optgroup py:with="last_first_group_tag=first_group[-1][-1][-1]" label="${last_first_group_tag.baselined and 'Baselines' or 'Milestones'}">
+                                           <py:for each="second_group in first_group">
+                                             <optgroup py:with="last_second_group_tag=second_group[-1][-1]" label="&nbsp;&nbsp;${last_second_group_tag.tagged_item or '&lt;No Version&gt;'}">
+                                               <py:for each="third_group in second_group">
+                                                 <optgroup py:with="last_third_group_tag=third_group[-1]" label="&nbsp;&nbsp;&nbsp;&nbsp;${last_third_group_tag.status or '&lt;No Status&gt;'}">
+                                                   <py:for each="tag in third_group">
+                                                     <option selected="${tag.name == selected_set or None}" value="$tag.name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$tag.name</option>
+                                                   </py:for>
+                                                 </optgroup>
+                                               </py:for>
+                                             </optgroup>
+                                           </py:for>
+                                         </optgroup>
+                                       </py:for>
+                                     </py:if>
+                                     <optgroup py:if="select_years" label="Years">
+                                       <option py:for="year in select_years" selected="${str(year) == selected_set or None}" value="$year">$year</option>
+                                     </optgroup>
+                                   </select>
+                                   <a py:if="select_tags and selected_set != 'Last version tags' and not is_int(selected_set)" id="view_select_tag"  title="View selected baseline tag or milestone tag" href="${get_panel_href(get_tag(selected_set).review)(selected_set)}" target="_blank" disabled="${'disabled' and not documents or None}"><img src="/htdocs/eye.png"></img></a>
+                               </td>
+                               <td style="text-align:center;">
+                                 <input type="checkbox"
+                                        name="external_refs"
+                                        id="external_refs"
+                                        value="true"
+                                        checked="${external_refs or None}"
+                                        onchange="page_reload('external_refs')"
+                                        disabled="${'disabled' and (not documents or (select_tags and is_int(selected_set))) or None}"
+                                 />
+                               </td>
+                            </tr>
+                          </table>
+                          <table>
+                            <tr style="font-size:85%">
+                              <td style="vertical-align:top"><p><u>Notes</u>:</p></td>
+                              <td>
+                                <ol>
+                                  <li>You can also select them via <b>the Document filter</b> and <b>the PDF checkboxes</b>.</li>
+                                  <li>Documents that match the <py:if test="branch_segregation_activated">selected Branch and </py:if>Version Tags Set are highlighted in <b>green</b>.</li>
+                                  <li>Only Baseline Tags or Milestone Tags or Years with at least a Version Tag <py:if test="branch_segregation_activated">on the selected <b>Branch</b> </py:if>will be selectable.</li>
+                                  <li>Only external references to Version Tags of <b>this</b> project are taken into account.</li>
+                                </ol>
+                              </td>
+                            </tr>
+                          </table>
+                        </fieldset>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <fieldset id="Options" style="height:100%;margin:0;">
+                          <legend>Zip Options</legend>
+                          <span>Select the required options:</span>
+                          <table style="margin-top: 13px;">
+                            <tr>
+                              <td><label for="pdf_renaming"><b>Rename</b> PDF<sup title="See note #1 below">1</sup></label></td>
+                              <td style="text-align:center;padding-right:3em;"><input type="checkbox"
+                                                                                      name="pdf_renaming"
+                                                                                      id="pdf_renaming"
+                                                                                      value="true"
+                                                                                      checked="${pdf_renaming or None}"
+                                                                                      disabled="${'disabled' and not documents or None}"
+                                                                               />
+                              </td>
+                              <td><label for="max_size"><b>Split</b> zip file at<sup title="See note #2 below">2</sup></label></td>
+                              <td>
+                                 <select id="max_size" name="max_size">
+                                   <option py:for="size in ['No split', '5M', '10M', '15M', '20M']" selected="${size == max_size or None}" value="$size" disabled="${'disabled' and not documents or None}">$size</option>
+                                 </select>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><label for="prf_chklst">Include <b>(P)RFs/CHKLSTs</b><sup title="See note #3 below">3</sup></label></td>
+                              <td style="text-align:center;padding-right:3em;"><input type="checkbox"
+                                                                                      name="prf_chklst"
+                                                                                      id="prf_chklst"
+                                                                                      value="true"
+                                                                                      checked="${prf_chklst or None}"
+                                                                                      disabled="${'disabled' and not documents or None}"
+                                                                               />
+                              </td>
+                              <td><label for="source_files" title="">Include <b>Source</b> files<sup title="See note #4 below">4</sup></label></td>
+                              <td style="text-align:center;"><input type="checkbox"
+                                                                    name="source_files"
+                                                                    id="source_files"
+                                                                    value="true"
+                                                                    checked="${source_files or None}"
+                                                                    disabled="${'disabled' and not documents or None}"
+                                                             />
+                              </td>
+                            </tr>
+                          </table>
+                          <table>
+                            <tr style="font-size:85%">
+                              <td style="vertical-align:top"><p><u>Notes</u>:</p></td>
+                              <td>
+                                <ol>
+                                  <li>Each PDF file will be renamed so as to include the <b>version</b> (and any EXT prefix will be removed).</li>
+                                  <li>This way a heavy zip file can still be sent by <b>email</b>.</li>
+                                  <li>The (P)RFs/CHKLSTs are included into their respective document <b>PDF</b> files.</li>
+                                  <li>The source file(s) associated to each document PDF file is/are included into the <b>zip</b> file.</li>
+                                </ol>
+                              </td>
+                            </tr>
+                          </table>
+                        </fieldset>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+	        </div>
+
+	        <table class="listing" id="doclist">
+	          <thead>
+	            <tr>
+                  <th class="sel" style="vertical-align:middle">In DRL</th>
+	              <th style="vertical-align:middle">Name</th>
+                  <th style="vertical-align:middle">Source Type</th>
+                  <th class="sel" style="vertical-align:middle">PDF Signed</th>
+                  <th class="sel" style="vertical-align:middle">Independence</th>
+                  <th class="sel" style="vertical-align:middle">Control Category</th>
+                  <th class="sel" style="vertical-align:middle">Version Tags</th>
+	              <th style="vertical-align:middle">Version Tag<br/>from selected Version Tags Set - Last applied tag (*) by default</th>
+                  <th py:if="'DOC' in ticket_types" class="sel" style="vertical-align:middle">DOC Tickets</th>
+                  <th class="sel" py:if="'DOC' in ticket_types" style="vertical-align:middle">DOC Ticket<br/>for selected Version Tag</th>
+                  <th id="pdf_th" class="sel"><img src="/htdocs/pdf_icon.png" id="pdf_icon" name="pdf_icon" value="pdf_icon" title="Pdf Icon"/></th>
+	            </tr>
+	          </thead>
+	          <tbody>
+              <py:choose test="len(documents)">
+                 <tr py:when="0" style="height:2em">
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td py:if="'DOC' in ticket_types"></td>
+                   <td py:if="'DOC' in ticket_types"></td>
+                   <td></td>
+                 </tr>
+                 <tr py:otherwise="" py:for="idx,docname in enumerate(documents.keys(), start=1)" class="${'in_vtg_odd' if (documents[docname]['inVtg'] and idx % 2) else 'in_vtg_even' if documents[docname]['inVtg'] else 'odd' if idx % 2 else 'even'}" style="white-space:nowrap" py:with="doc_skill=get_doc_skill(env, docname, program_name);doc_type=documents[docname]['sourcetype'];doc_signed=documents[docname]['pdfsigned'];doc_ind=documents[docname]['independence'];doc_cc=documents[docname]['controlcategory'];">
+                  <td class="sel">
+                     <py:choose test="" py:with="drl_item=documents[docname]['inDrl']">
+                       <py:when test="'MILESTONE_CREATE' in perm">
+                           <input type="hidden" name="drl_item_name" value="${docname}" />
+                           <input type="checkbox" id="drl_item" name="drl_item" checked="${drl_item or None}" value="${docname}" onchange="drl_item_change()"/>
+                       </py:when>
+                       <input py:otherwise="" type="checkbox" id="drl_item" name="drl_item" checked="${drl_item or None}" value="${docname}" disabled="disabled"/>
+                     </py:choose>
+                  </td>
+                  <td><a href="${panel_href(docname)}" title="${documents[docname]['description']}">${docname}</a></td>
+                  <td>
+                    <py:if test="doc_skill"><span>${doc_type}</span></py:if>
+                    <py:if test="not doc_skill"><span title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                  </td>
+                  <td class="sel">
+                    <py:if test="doc_skill"><span>${"No" if doc_signed == 0 else "Yes"}</span></py:if>
+                    <py:if test="not doc_skill"><span title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                  </td>
+                  <td class="sel">${"No" if doc_ind == 0 else "Yes"}</td>
+                  <td class="sel">${"CC1/HC1" if doc_cc == 1 else "CC2/HC2" if doc_cc == 2 else "N/A"}</td>
+                  <td class="sel"><a href="${get_panel_href()(filter_value='%s' % docname)}"><img src="/htdocs/eye.png" title="View all version tags associated to this document"></img></a></td>
+                  <td py:choose="">
+                     <py:when test="pdf_version_tags[docname]['doc_version_tag']">
+                         <a href="${get_panel_href()(pdf_version_tags[docname]['doc_version_tag'])}">${pdf_version_tags[docname]['doc_version_tag']}</a>&nbsp;<py:if test="pdf_version_tags[docname]['doc_version_tag'] == last_version_tags[docname]">*</py:if>
+                     </py:when>
+                     <py:otherwise>
+                         No applied tag<py:if test="branch_segregation_activated"> on the selected branch</py:if>
+                     </py:otherwise>
+                  </td>
+                  <td py:if="'DOC' in ticket_types" class="sel">
+                    <py:if test="doc_skill" py:with="doc_query_string=get_doc_query_string(env, doc_skill, docname)">
+                        <a py:if="doc_query_string" href="${href('query')+doc_query_string}"><img src="/htdocs/eye.png" title="View all DOC tickets associated to this document"></img></a>
+                    </py:if>
+                    <py:if test="not doc_skill"><span title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                  </td>
+                  <td class="sel" py:if="'DOC' in ticket_types">
+                    <py:if test="pdf_version_tags[docname]['doc_version_tag']" py:with="version=get_version_from_tag(env, pdf_version_tags[docname]['doc_version_tag'])" >
+                      <py:if test="doc_skill" py:with="doc_tktid=get_doc_tktid(env, version);doc_tktstatus=get_doc_tktstatus(env, version)">
+                        <a id="doc_tktid_$idx" py:if="doc_tktid" href="${req.href('ticket', doc_tktid)}" class="${classes(closed=doc_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${pdf_version_tags[docname]['doc_version_tag']}', 'doc_tktid', 'doc_tktid_$idx', 'title')" >#$doc_tktid</a>
+                        <a id="doc_tktid_$idx" py:if="not doc_tktid" href="${req.href('newticket', type='DOC', skill=doc_skill, configurationitem=docname, changetype='Status', fromversion=pdf_version_tags[docname]['doc_version_tag'])}" title="Create a DOC ticket" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false'}" style="${'VERSION_TAG_DELETE' not in perm and 'color:grey'}">Create...</a>
+                      </py:if>
+                      <py:if test="not doc_skill"><span title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                    </py:if>
+                    <py:if test="not pdf_version_tags[docname]['doc_version_tag']"><span title="N/A because there is no applied tag">N/A</span></py:if>
+                  </td>
+                  <td class="sel" id="pdf_td">
+                    <py:for each="pdf in pdf_version_tags[docname]['pdf_data']" py:choose="">
+                       <py:when test="pdf_version_tags[docname]['doc_version_tag']">
+                         <py:choose test="">
+                           <py:when test="pdf[0] == 'No pdf'">
+                             <img src="/htdocs/exclamation_point.png" id="no_pdf" name="no_pdf" value="no_pdf" title="No pdf"/>
+                           </py:when>
+                           <py:otherwise>
+                             <input type="checkbox" id="pdf_checkbox" name="pdf_checkbox" value="${pdf_version_tags[docname]['doc_version_tag']}/${pdf[0]}" checked="${pdf_checkbox[docname][pdf[0]]}" title="${pdf[0]}"  onchange="pdf_checkbox_change()"/>
+                           </py:otherwise>
+                         </py:choose>
+                       </py:when>
+                       <span py:otherwise="" title="N/A because there is no applied tag">N/A</span>
+                    </py:for>
+                    <img py:if="not pdf_version_tags[docname]['pdf_data']" src="/htdocs/exclamation_point.png" id="no_pdf" name="no_pdf" value="no_pdf" title="No pdf"/>
+                  </td>
+                 </tr>
+              </py:choose>
+	          </tbody>
+	        </table>
+
+	        <div py:if="documents" style="margin-top: 1em">
+                <py:if test="documents and 'MILESTONE_CREATE' in perm" style="float:left">
+                  <div>
+                      <p class="in_drl"></p>
+	                  <input type="submit" id="drl_select" value="Select all" title="Select all displayed documents" />
+	                  <input type="submit" id="drl_deselect" value="Deselect all" title="Deselect all displayed documents" />
+	                  <input type="submit" name="change_drl" value="Discard changes" disabled="disabled" />
+                      <input type="submit" name="change_drl" value="Save DRL" disabled="disabled" />
+                      <input type="submit" name="change_drl" value="Save DRL as" />
+                      <input type="text" id="drl_as" name="drl_as" value="$drl_as" size="15" onkeypress="return stopRKey(event)"/>
+                      <input type="submit" name="change_drl" value="Delete DRL" disabled="${'disabled' and selected_drl == 'Default DRL' or None}" />
+                  </div>
+                </py:if>
+	            <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+	            <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+	            <div style="text-align:right">
+                    <p class="selected_pdf"></p>
+                    <input type="submit" id="pdf_select" value="Select all" title="Select all displayed documents" />
+                    <input type="submit" id="pdf_deselect" value="Deselect all" title="Deselect all displayed documents" />
+                    <input type="submit" name="change_pdf" value="Discard changes" disabled="disabled" />
+                    <input type="submit" id="list_get" name="list_get" value="Get Documents list" title="Get the list of the selected documents" />
+                    <input py:if="not caller" type="submit" id="pdf_get" name="pdf_get" value="Get Documents package" title="Get the package of the selected documents" onclick="set_overlay()" />
+                    <input py:if="caller" type="submit" id="pdf_get" name="pdf_get" value="Confirm Documents selection" title="Back to ticket ${caller[1:]} (ECM)" onclick="set_overlay()" />
+                </div>
+	        </div>
+	      </form>
+      </py:otherwise>
+    </py:choose>
+  </body>
+
+</html>

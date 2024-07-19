@@ -1,0 +1,61 @@
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedImport": "information",
+        "reportMissingImports": "information"
+    },
+    "python.analysis.diagnosticMode": "workspace",
+    "deploy.reloaded": {
+        "values": {
+            "version": {
+                "type": "code",
+                "code": "require('/usr/lib/node_modules/npm/node_modules/ini').parse(require('fs').readFileSync('/home/sysadmin/ARTUSPlugin/artusplugin/pyproject.toml', 'utf-8')).tool.poetry.version"
+            }
+        },
+        "packages": [
+            {
+                "applyValuesTo": {
+                    "name": "ArtusPlugin",
+                    "description": "Version ${version}",
+                    "files": [
+                        "/artusplugin/dist/artusplugin-*-py2.py3-none-any.whl"
+                    ]
+                }
+            }
+        ],
+        "targets": [
+            {
+                "type": "sftp",
+                "name": "Deploy",
+                "description": "on dev2-centOS7-64.artus.dom",
+
+                "dir": "/",
+                "host": "dev2-centOS7-64.artus.dom",
+                "user": "apache",
+                "privateKey": "/home/sysadmin/.ssh/id_apache",
+                "privateKeyPassphrase": "deployer",
+                "modes": 644,
+                
+                "mappings": {
+                    "/artusplugin/dist/artusplugin-*-py2.py3-none-any.whl": "/usr/share/httpd/.local/lib/python2.7/site-packages"
+                },
+
+                "applyValuesTo": {
+                    "commands": {
+                            "beforeUpload": [
+                                "rm -f /usr/share/httpd/.local/lib/python2.7/site-packages/artusplugin-*-py2.py3-none-any.whl",
+                                "rm -fR /usr/share/httpd/.local/lib/python2.7/site-packages/ArtusPlugin/artusplugin",
+                                "rm -fR /usr/share/httpd/.local/lib/python2.7/site-packages/ArtusPlugin/artusplugin-*.dist-info"
+                            ],
+                            "uploaded": [
+                                "unzip -d /usr/share/httpd/.local/lib/python2.7/site-packages/ArtusPlugin ${remote_file}",
+                                "echo artusplugin > /usr/share/httpd/.local/lib/python2.7/site-packages/ArtusPlugin/artusplugin-${version}.dist-info/top_level.txt",
+                                "cd /usr/share/httpd/.local/lib/python2.7/site-packages/ArtusPlugin/artusplugin/htdocs && rm -f stamped/*.js && mkdir -p stamped/messages && cp artus.js stamped/artus_$(date +'%d-%m-%Y_%H-%M-%S').js && cp admin.js stamped/admin_$(date +'%d-%m-%Y_%H-%M-%S').js && cp iframe.js stamped/iframe_$(date +'%d-%m-%Y_%X').js && cp messages/fr.js stamped/messages/fr_$(date +'%d-%m-%Y_%X').js",
+                                "rm -Rf /usr/share/trac/htdocs/artusplugin/stamped/* && /usr/bin/trac-admin /srv/trac/E05058SB deploy /usr/share/trac",
+                                "sudo -n /sbin/service httpd graceful"
+                            ]
+                    }
+                }
+            }
+        ]
+    }
+}

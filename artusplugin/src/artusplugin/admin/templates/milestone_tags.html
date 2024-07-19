@@ -1,0 +1,500 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Milestone Tags Management</title>
+  </head>
+
+  <body>
+    <h2>Manage Milestone Tags</h2>
+
+    <py:choose test="view">
+      <py:when test="'detail'">
+        <h3><br /><span>${milestone_tag.name}<py:if test="milestone_tag.tag_url != None" py:with="changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))"> (rev. <a href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}">${get_revision(milestone_tag.tag_url)}</a>)</py:if></span></h3>
+        <table>
+          <tr>
+            <td valign="top" style="padding-right:10px" >
+                <form class="mod" id="get_reqtify_project" method="post" enctype="multipart/form-data" action="">
+                    <fieldset>
+                        <legend><img src="/htdocs/reqtify.gif" style="vertical-align:middle"> Get Milestone Tag associated Reqtify Project and export script:</img></legend>
+                        <p class="help">Input your Reqtify project and you will get back a modified version compatible with this baseline as well as an export script for the documents described in your Reqtify project. See <a href="$dc_url/index.php?post/88">L-1</a>.</p>
+                        <div class="field">
+                          <p><label>Reqtify Project File:<br />
+                            <input type="file" name="reqtify_project_file" size="80"/>
+                          </label></p>
+                        </div>
+                        <div class="buttons">
+                           <input type="submit" name="reqtify_project" value="Get Zip File" />
+                        </div>
+                    </fieldset>
+                </form>
+            </td>
+          </tr>
+          <tr py:if="milestone_tag.tag_url != None">
+            <td valign="top" style="padding-right:10px" >
+                <form class="mod" id="get_listing" method="post" action="">
+                    <fieldset>
+                        <legend><img src="/htdocs/icon_listing.gif" style="vertical-align:middle"> Get Milestone Tag Index:</img></legend>
+                        <p class="help"> The Milestone Tag Index is a libreoffice.org document (Writer) listing the file hierarchy and associated Subversion revisions in a table ready for use in your Configuration Index, Top Level drawing ...</p>
+                        <div class="buttons">
+                           <input type="submit" name="listing" value="Get Index" />
+                        </div>
+                    </fieldset>
+                </form>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding-right:10px" >
+              <form id="trac_links" method="post" action="">
+                <div class="field">
+                  <fieldset class="iefix">
+                    <legend>External references:</legend>
+                    <label for="links" i18n:msg="">
+                      Listed here are Milestone Tags or Version Tags neither included nor including but still related (see eg SCI/TLD):
+                    </label>
+                    <div id="rendered_refs">
+                      ${wiki_to_html(context, tag_refs, escape_newlines='preserve_newlines')}
+                    </div>
+                    <py:if test="'VERSION_TAG_DELETE' in perm">
+                      <div id="input_refs" style="margin-top:1em;display:none;" >
+                        <table>
+                          <tr style="vertical-align:top">
+                            <td><p><textarea id="refs" name="refs" rows="7" cols="60">$tag_refs</textarea></p></td>
+                            <td style="padding-left:1em;">${wiki_to_html(context, refs_syntax, escape_newlines='preserve_newlines')}</td>
+                          </tr>
+                        </table>
+                      </div>
+                      <div class="buttons">
+                         <script type="text/javascript">
+                         function cancel() {
+                             $("#rendered_refs").show();
+                             $("#input_refs").hide();
+                             $("#cancel_refs").hide();
+                             $("#edit_refs").show();
+                             $("#save_refs").hide();
+                             };
+                         function edit() {
+                             $("#rendered_refs").hide();
+                             $("#input_refs").show();
+                             $("#cancel_refs").show();
+                             $("#edit_refs").hide();
+                             $("#save_refs").show();
+                             };
+                         </script>
+                         <input type="button" id="cancel_refs" name="cancel_refs" value="Cancel" onclick="cancel();" style="display:none" />
+                         <input type="button" id="edit_refs" name="edit_refs" value="Edit" onclick="edit();" />
+                         <input type="submit" id="save_refs" name="save_refs" value="Save" style="display:none" />
+                      </div>
+                    </py:if>
+                  </fieldset>
+                </div>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding-right:10px" >
+              <form class="mod" id="view_including_baselines" method="post" action="">
+                <fieldset py:with="including_baselines = get_including_baselines(milestone_tag.name)">
+                  <legend>Included in Milestone Tags (${len(including_baselines)} items):</legend>
+                  <table class="listing" id="including_baselines_list">
+                    <thead>
+                      <tr>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('view_including_baselines', 'including', 'name')">Name</span></th>
+                        <th style="vertical-align:middle">Author</th>
+                        <th style="vertical-align:middle">Tag rev</th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('view_including_baselines', 'including', 'author')">Included by</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="including_baseline in including_baselines" style="white-space:nowrap" py:with="including_tag=get_tag(including_baseline.baselined_tag)" >
+                        <td class="name"><a href="${get_panel_href(including_tag.review)(including_tag.name)}">${including_tag.name}</a></td>
+                        <td class="default">${including_tag.author}</td>
+                        <td name="revision" class="default"><a py:if="including_tag.tag_url != None" py:with="tag_url=including_tag.tag_url;changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))" href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${get_revision(tag_url)}</a></td>
+                        <td class="default">$including_baseline.author</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="help" style="text-align:justify">
+                    To access a tag <em>baseline</em>, click on the tag <em>name</em>.
+                    To browse the repository, click on the tag <em>revision</em>.
+                  </p>
+                    <div class="buttons">
+		              <input py:if="included_tag" type="hidden" name="included_tag" value="$included_tag" />
+		              <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+			          <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+			          <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+			          <input type="hidden" name="sort_including" value="$sort_including" />
+			          <input type="hidden" name="asc_including" value="$asc_including" />
+			          <input type="hidden" name="sort_included" value="$sort_included" />
+			          <input type="hidden" name="asc_included" value="$asc_included" />
+			          <input py:if="filter_value" type="hidden" name="filter_value" value="$filter_value" />
+                    </div>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding-right:10px">
+
+              <form class="mod" id="mod_baseline" method="post" action="" onsubmit="SaveScrollXY('mod_baseline')">
+                <fieldset py:with="baseline_tags = get_baseline_tags(milestone_tag.name)">
+                  <legend>Includes Milestone or Version Tags (${len(baseline_tags)} items):</legend>
+                  <table class="listing" id="baseline_tag_list">
+                    <thead>
+                      <tr>
+                        <th py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" class="sel" style="vertical-align:middle"><img src="/htdocs/supprimer.png" title="Remove"></img></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('mod_baseline', 'included', 'name')">Name</span></th>
+                        <th style="vertical-align:middle">Author</th>
+                        <th style="vertical-align:middle">Tag rev</th>
+                        <th style="vertical-align:middle">Branch</th>
+                        <th py:if="'DOC' in ticket_types" style="vertical-align:middle">DOC ticket</th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('mod_baseline', 'included', 'author')">Included by</span></th>
+                        <th class="sel" style="vertical-align:middle"><img py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" src="/htdocs/modifier.png" title="Replace"></img></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="idx,baseline_tag in enumerate(baseline_tags, start=1)" class="${'odd' if idx % 2 else 'even'}" style="white-space:nowrap" py:with="included_tag=get_tag(baseline_tag.name);doc_skill=get_doc_skill(env, included_tag.tagged_item, program_name) if 'DOC' in ticket_types else None;doc_tktid=get_doc_tktid(env, included_tag.tagged_item) if doc_skill else None;doc_tktstatus=get_doc_tktstatus(env, included_tag.tagged_item) if doc_skill else None;branch=get_branch_from_tag(env, included_tag.name)" py:attrs="get_row_style(included_tag.name, args)">
+                        <td py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" class="sel"><input type="checkbox" name="sel" value="$baseline_tag.name" /></td>
+                        <td class="name"><a href="${get_panel_href(included_tag.review)(included_tag.name)}">${included_tag.name}</a></td>
+                        <td class="default">$included_tag.author</td>
+                        <td name="revision" class="default"><a py:if="included_tag.tag_url != None" py:with="tag_url=included_tag.tag_url;changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))" href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${get_revision(tag_url)}</a></td>
+                        <td name="branch" class="default" py:with="branch_attrs=[('href', None if branch in ('trunk', '?') else req.href('admin/tags_mgmt/branches', branch.strip('B'))), ('title', 'The branch could not be identified' if branch == '?' else None)]">
+                          <py:if test="included_tag.review"><span id="branch_$idx" title="N/A because it is a milestone">N/A</span></py:if>
+                          <py:if test="not included_tag.review">
+	                         <a id="branch_$idx" py:attrs="branch_attrs">$branch</a>
+	                      </py:if>
+                        </td>
+                        <td py:if="'DOC' in ticket_types" name="doc_tktid" class="default">
+                          <py:choose>
+                            <py:when test="included_tag.component == 0 and included_tag.edition">
+                              <py:if test="doc_skill">
+                                <a id="doc_tktid_$idx" py:if="doc_tktid" href="${req.href('ticket', doc_tktid)}" class="${classes(closed=doc_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${included_tag.name}', 'doc_tktid', 'doc_tktid_$idx', 'title')" >#$doc_tktid</a>
+                                <a id="doc_tktid_$idx" py:if="not doc_tktid" href="${req.href('newticket', type='DOC', skill=doc_skill, configurationitem=included_tag.tracked_item, changetype='Status', fromversion=included_tag.name, sourceurl=included_tag.source_url)}" title="Create a DOC ticket" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false'}" style="${'VERSION_TAG_DELETE' not in perm and 'color:grey'}">Create...</a>
+                              </py:if>
+                              <py:if test="not doc_skill"><span id="doc_tktid_$idx" title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                            </py:when>
+                            <py:otherwise>
+                              <span id="doc_tktid_$idx" title="N/A because DOC tickets are only applicable to internal documents">N/A</span>
+                            </py:otherwise>
+                          </py:choose>
+                        </td>
+                        <td class="default">$baseline_tag.author</td>
+                        <py:choose py:with="update=get_change_options(env, included_tag)">
+                            <py:when test="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None">
+                                <py:choose py:with="asterisk='*';bracket=']'">
+                                    <td py:when="update == '?'" class="default"><img src="/htdocs/point_interrogation.gif" title="Click to set a newer or an older milestone or version (or status) if feasible" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:when="update == '+'" class="default"><img src="/htdocs/flechehaut.gif" title="Click to set a newer milestone or version (or status)" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:when="update == '+-'" class="default"><img src="/htdocs/flechehautbas.gif" title="Click to set a newer or an older milestone or version (or status)" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:when="update == '-'" class="default"><img src="/htdocs/flechebas.gif" title="Click to set an older milestone or version (or status)" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:otherwise="" class="default"></td>
+                                </py:choose>
+                            </py:when>
+                            <py:otherwise>
+                                <py:choose>
+                                    <td py:when="update == '?'" class="default"><img src="/htdocs/point_interrogation.png" title="There may be a newer or an older milestone or version (or status)"></img></td>
+                                    <td py:when="update == '+'" class="default"><img src="/htdocs/flechehaut.png" title="There is at least one newer milestone or version (or status)"></img></td>
+                                    <td py:when="update == '+-'" class="default"><img src="/htdocs/flechehautbas.png" title="There are both newer and older milestones or versions (or status)"></img></td>
+                                    <td py:when="update == '-'" class="default"><img src="/htdocs/flechebas.png" title="There is at least one older milestone or version (or status)"></img></td>
+                                    <td py:otherwise="" class="default"></td>
+                                </py:choose>
+                            </py:otherwise>
+                        </py:choose>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="help" style="text-align:justify">
+                    To access a tag <em>baseline/source url</em>, click on the tag <em>name</em>.
+                    To browse the repository, click on the tag <em>revision</em>.
+                  </p>
+                  <div class="buttons">
+		            <input py:if="included_tag" type="hidden" name="included_tag" value="$included_tag" />
+		            <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+			        <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+			        <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+			        <input type="hidden" name="sort_including" value="$sort_including" />
+			        <input type="hidden" name="asc_including" value="$asc_including" />
+			        <input type="hidden" name="sort_included" value="$sort_included" />
+			        <input type="hidden" name="asc_included" value="$asc_included" />
+	          		<input py:if="filter_value" type="hidden" name="filter_value" value="$filter_value" />
+                    <input py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" type="submit" id="item_select" value="Select all" title="Select all items" />
+                    <input py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" type="submit" id="item_deselect" value="Deselect all" title="Deselect all items" />
+                    <input py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" type="submit" name="remove" value="Remove selected items" onclick="set_overlay()" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+            <td py:if="'MILESTONE_TAG_MODIFY' in perm and milestone_tag.tag_url == None" valign="top">
+              <form id="add_tag" method="post" action="" onsubmit="SaveScrollXY('add_tag')">
+                <fieldset>
+                  <legend>Add Version or Milestone Tag to Milestone:</legend>
+                  <div class="field">
+                    <table><tr>
+                      <td><label>Version or Milestone Name contains:<br /><input type="text" id="filter_value" name="filter_value" value="$filter_value" size="30" title="'*' as a prefix means 'is baselined' - ']' as a suffix means 'CI name ends with'"/></label></td>
+                      <td><label><br /><input type="submit" name="update" value="Update" onclick="set_overlay()" /></label></td>
+                    </tr></table>
+                  	($included_tags_nb matches)<br /><br />
+                    <label>Version or Milestone Tag to include:<br />
+          	          <py:choose>
+                        <select py:when="included_tags" id="included_tag" name="included_tag" onchange="set_overlay(); document.location = get_href([['included_tag', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])">
+              	          <py:for each="tagged_group in included_tags">
+              	            <optgroup py:with="last_tagged_tag=tagged_group[-1][-1]" label="${last_tagged_tag.tagged_item or '&lt;No Version&gt;'}">
+              	              <py:for each="status_group in tagged_group">
+              	                <optgroup py:with="last_status_tag=status_group[-1]" label="&nbsp;&nbsp;&nbsp;&nbsp;${last_status_tag.status or '&lt;No Status&gt;'}">
+              	                  <py:for each="tag in status_group">
+              	                    <option selected="${tag.name == included_tag or None}" value="$tag.name">&nbsp;&nbsp;&nbsp;&nbsp;$tag.name</option>
+              	                  </py:for>
+              	                </optgroup>
+              	              </py:for>
+              	            </optgroup>
+              	          </py:for>
+            	        </select>
+            	        <input py:otherwise="" type="text" name="included_tag" value="$included_tag" size="50" readonly="true" style="background-color:#f4f4f4" />
+          	          </py:choose>
+          	        </label>
+                  </div>
+                  <p class="help" style="text-align:justify">
+                    Only version/milestone tags not yet included in the baseline, or version/milestone tags whose CI/skill is not yet included in the baseline, are proposed in the list. Only APPLIED tags are listed.
+                  </p>
+                  <div class="buttons">
+		            <input py:if="replaced_tag" type="hidden" name="replaced_tag" value="$replaced_tag" />
+		            <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+			        <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+			        <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+			        <input type="hidden" name="sort_including" value="$sort_including" />
+			        <input type="hidden" name="asc_including" value="$asc_including" />
+			        <input type="hidden" name="sort_included" value="$sort_included" />
+			        <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input type="submit" name="add" value="Add/Replace" onclick="return UIComponents.buttons.addReplaceVersionTag.object.confirm('$included_tag', '$replaced_tag')"/>
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+        </table>
+        <form id="apply_milestone" method="post" action="">
+          <div py:if="not empty_baseline and 'MILESTONE_TAG_APPLY' in perm and milestone_tag.tag_url == None" class="field">
+            <fieldset class="iefix">
+              <label for="comment">
+                Comment (you may use <a tabindex="42" href="${href.wiki('WikiFormatting')}">WikiFormatting</a> here):
+              </label>
+              <p>
+                <textarea id="comment" name="comment" class="wikitext trac-resizable" rows="6" cols="60"></textarea>
+              </p>
+            </fieldset>
+          </div>
+          <py:if test="'MILESTONE_TAG_APPLY' in perm and milestone_tag.tag_url == None">
+            <py:choose test="empty_baseline">
+              <p py:when="True" class="help" style="text-align:justify">
+                The 'Apply Tag' button will not be accessible as long as the baseline remains empty.
+              </p>
+              <p py:otherwise="" class="help" style="text-align:justify">
+                When you are satisfied with the baseline content, click on the 'Apply Tag' button to create the associated tag in the repository.
+              </p>
+            </py:choose>
+          </py:if>
+          <div py:if="milestone_tag.tag_url is None">
+            <span py:if="empty_baseline or 'MILESTONE_TAG_APPLY' not in perm" id="help" style="text-align: left"><strong>Note: </strong>
+            The milestone tag cannot be applied because the baseline is empty and/or the profile is not authorized</span>
+          </div>
+          <div class="buttons">
+            <input type="submit" name="cancel" value="Cancel" />
+            <input py:if="not empty_baseline and 'MILESTONE_TAG_APPLY' in perm and milestone_tag.tag_url == None" type="submit" name="apply" value="Apply Tag" title="$tag_url" onclick="return UIComponents.buttons.applyTag.object.confirm('${milestone_tag.status}')" />
+          </div>
+        </form>
+      </py:when>
+
+      <py:otherwise>
+        <table>
+          <tr>
+            <td valign="top" style="padding-right:10px">
+              <form id="milestone_tag_table" method="post" action="" onsubmit="SaveScrollXY('milestone_tag_table')" >
+                <fieldset>
+                  <legend>Existing Milestone Tags:</legend>
+                  <table><tr>
+                    <td><label>Milestone Tag Name contains:<br /><input type="text" id="filter_value" name="filter_value" value="$filter_value" size="60" /></label></td>
+                    <td><label><br /><input type="submit" name="update" value="Update" onclick="set_overlay()" /></label></td>
+                  </tr></table>
+                  ($milestone_tags_nb matches)
+                  <table class="listing" id="milestone_tag_list">
+                    <thead>
+                      <tr>
+                        <th py:if="'MILESTONE_TAG_DELETE' in perm" class="sel" style="vertical-align:middle"><img src="/htdocs/supprimer.png" title="Remove"></img></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('milestone_tag_table', 'included', 'name')">Name</span></th>
+						<th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('milestone_tag_table', 'included', 'author')">Author</span></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('milestone_tag_table', 'included', 'rev')">Tag rev</span></th>
+                        <th style="vertical-align:middle">MOM ticket</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="idx,milestone_tag in enumerate(milestone_tags, start=1)" class="${'odd' if idx % 2 else 'even'}" style="white-space:nowrap" py:with="mom_tktid=get_mom_tktid(env, milestone_tag) if milestone_tag.status in ('Prepared','Reviewed') else None;mom_tktstatus=get_mom_tktstatus(env, milestone_tag.name) if milestone_tag.status in ('Prepared','Reviewed') else None;milestone_accepted=is_milestone_accepted(env, milestone_tag.name)" py:attrs="get_row_style(milestone_tag.name, args)" >
+                        <td py:if="'MILESTONE_TAG_DELETE' in perm">
+                          <py:choose test="">
+                            <input py:when="milestone_tag.tag_url == None or 'MILESTONE_TAG_ADMIN' in perm" type="checkbox" name="sel" value="$milestone_tag.name"/>
+                            <input py:otherwise="" type="checkbox" name="sel" value="$milestone_tag.name" disabled="disabled"/>
+                          </py:choose>
+                        </td>
+                        <td class="name">
+                          <a href="${get_panel_href(milestone_tag.review)(milestone_tag.name)}" title="${get_mtag_description(milestone_tag)}">${milestone_tag.name}</a>
+                        </td>
+                        <td class="default">
+                          $milestone_tag.author
+                        </td>
+                        <td name="revision" class="default">
+                          <a py:if="milestone_tag.tag_url != None" py:with="tag_url=milestone_tag.tag_url;changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))" href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${get_revision(tag_url)}</a>
+                        </td>
+                        <td name="mom_tktid" class="default">
+                          <py:if test="milestone_tag.status == 'Prepared'">
+                             <a id="mom_tktid_$idx" py:if="mom_tktid" href="${req.href('ticket', mom_tktid)}" class="${classes(closed=mom_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${milestone_tag.name}', 'mom_tktid', 'mom_tktid_$idx', 'title')" >#$mom_tktid</a>
+                             <a id="mom_tktid_$idx" py:if="not milestone_accepted and not mom_tktid" href="${req.href('newticket', type='MOM', skill=get_mom_skill(env, milestone_tag.name, program_name), momtype='CCB', milestonetag=milestone_tag.name)}" title="Create a CCB MOM ticket" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false'}" style="${'VERSION_TAG_DELETE' not in perm and 'color:grey'}">Create...</a>
+                          </py:if>
+                          <py:if test="milestone_tag.status == 'Reviewed'">
+                             <a id="mom_tktid_$idx" py:if="mom_tktid" href="${req.href('ticket', mom_tktid)}" class="${classes(closed=mom_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${milestone_tag.name}', 'mom_tktid', 'mom_tktid_$idx', 'title')" >#$mom_tktid</a>
+                             <a id="mom_tktid_$idx" py:if="not milestone_accepted and not mom_tktid" href="${req.href('newticket', type='MOM', skill=get_mom_skill(env, milestone_tag.name, program_name), momtype='Review', milestonetag=milestone_tag.name)}" title="Create a Review MOM ticket" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false'}" style="${'VERSION_TAG_DELETE' not in perm and 'color:grey'}">Create...</a>
+                          </py:if>
+                          <py:if test="(not mom_tktid and milestone_accepted) or milestone_tag.status == 'Accepted'"><span id="mom_tktid_$idx" title="N/A because it is Accepted">N/A</span></py:if>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="help" style="text-align:justify">
+                    <py:if test="'MILESTONE_TAG_VIEW' in perm">To access a tag <em>baseline/source url</em><py:if test="'MILESTONE_TAG_APPLY' in perm"> or apply the tag to the repository</py:if>, click on the tag <em>name</em>.</py:if>
+                    <py:if test="'MILESTONE_TAG_VIEW' in perm">To browse the repository, click on the tag <em>revision</em>.</py:if>
+                  </p>
+                  <div class="buttons">
+		            <input py:if="review" type="hidden" name="review" value="$review" />
+		            <input py:if="change_type" type="hidden" name="change_type" value="$change_type" />
+		            <input py:if="from_tag" type="hidden" name="from_tag" value="$from_tag" />
+		            <input type="hidden" name="skill" value="$skill" />
+		            <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+		            <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+		            <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+			        <input type="hidden" name="sort_included" value="$sort_included" />
+			        <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input py:if="'MILESTONE_TAG_DELETE' in perm" type="submit" name="remove" value="Remove selected items" onclick="set_overlay()" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+
+            <td valign="top">
+              <form py:if="'MILESTONE_TAG_CREATE' in perm" id="add_milestone_tag" method="post" action="" onsubmit="SaveScrollXY('add_milestone_tag')">
+                <fieldset>
+                  <legend>Add Milestone Tag:</legend>
+                  <div class="field">
+                    <label>Milestone Tag Name:<br /><input type="text" name="tag_name" value="$tag_name" size="55" readonly="true" style="background-color:#f4f4f4" /></label>
+                    <table>
+                      <tr>
+          		        <td><label>${skill_label}:<br />
+          		          <py:choose>
+                            <select py:when="skills" id="skill" name="skill" onchange="set_overlay(); document.location = get_href([['skill', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['from_tag', 'review', 'change_type', 'status'])" >
+              	              <option py:for="sk in skills.keys()" selected="${sk == skill or None}" value="$sk">$sk</option>
+            	            </select>
+            	            <input py:otherwise="" type="text" name="skill" value="" size="22" readonly="true" style="background-color:#f4f4f4" />
+          	              </py:choose>
+          	            </label></td>
+                    	<td><label>From Milestone Tag:<br />
+          		      	  <py:choose>
+                        	<select py:when="from_tags" id="from_tag" name="from_tag" onchange="set_overlay(); document.location = get_href([['from_tag', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['change_type', 'status'])" >
+              	          	  <py:for each="tagged_group in from_tags">
+              	                <optgroup py:with="last_tagged_tag=tagged_group[-1][-1]" label="${last_tagged_tag.tagged_item or '&lt;No Version&gt;'}">
+              	                  <py:for each="status_group in tagged_group">
+              	                    <optgroup py:with="last_status_tag=status_group[-1]" label="&nbsp;&nbsp;&nbsp;&nbsp;${last_status_tag.status or '&lt;No Status&gt;'}">
+              	                      <py:for each="tag in status_group">
+              	                        <option selected="${tag.name == from_tag or None}" value="$tag.name">&nbsp;&nbsp;&nbsp;&nbsp;$tag.name</option>
+              	                      </py:for>
+              	                    </optgroup>
+              	                  </py:for>
+              	                </optgroup>
+              	              </py:for>
+            	        	</select>
+            	        	  <input py:otherwise="" type="text" name="from_tag" value="" size="40" readonly="true" style="background-color:#f4f4f4" />
+          	          	  </py:choose>
+          	        	</label></td>
+                      </tr>
+                    </table>
+                          <label>Change Type:<br />
+          			        <py:choose>
+            		          <select py:when="change_types" id="change_type" name="change_type" style="width:8em" onchange="set_overlay(); document.location = get_href([['change_type', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['add_review', 'status'])" >
+              			        <option py:for="ch_typ in change_types" selected="${ch_typ == change_type or None}" value="$ch_typ">$ch_typ</option>
+            		          </select>
+            	  	          <input py:otherwise="" type="text" name="change_type" value="" size="10" readonly="true" style="background-color:#f4f4f4" />
+          	    	        </py:choose>
+          			      </label>
+                    <table>
+                      <tr>
+				        <td><label><br />Add Review</label></td>
+				        <td><label><br /><input type="checkbox" name="add_review" id="add_review" checked="${add_review == True or None}" disabled="${change_type == 'Status' or change_type == 'Status Index' or reviews == None or None}" onclick="set_overlay(); document.location = get_href([['add_review', document.getElementById('add_review').checked], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['review', 'status', 'status_index'])" /></label></td>
+                        <td>
+      				      <div class="field">
+        			        <label>Review:<br />
+          			          <py:choose>
+          			            <py:when test="change_type == 'Review' or change_type == 'Creation'">
+          			              <py:choose>
+            		          	    <select py:when="reviews and add_review == False" id="review" name="review" style="width:6em" onchange="set_overlay(); document.location = get_href([['review', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['status'])" >
+              			              <option py:for="revw in reviews" selected="${revw == review or None}" value="$revw">$revw</option>
+            		                </select>
+            	  	                <input py:otherwise="" type="text" name="review" value="" style="width:6em" onkeypress="return stopRKey(event)" />
+          	    	              </py:choose>
+          	    	            </py:when>
+          	    	            <py:otherwise>
+            	  	              <input type="text" name="review" value="$review" readonly="true" style="width:6em;background-color:#f4f4f4" />
+          	    	            </py:otherwise>
+          	    	          </py:choose>
+        			        </label>
+      				      </div>
+                        </td>
+                    	<td py:if="add_review == True or reviews == None"><label><br /><input type="submit" name="update" onclick="set_overlay()" value="Update"/></label></td>
+                        <td>
+                          <label>Status:<br />
+          			        <py:choose>
+            		          <select py:when="status_list" id="status" name="status" onchange="set_overlay(); document.location = get_href([['status', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])">
+              			        <option py:for="st in status_list" selected="${st == status or None}" value="$st">$st</option>
+            		          </select>
+            		          <input py:otherwise="" type="text" name="status" value="$status" size="10" readonly="true" style="background-color:#f4f4f4" />
+          			        </py:choose>
+          			      </label>
+                        </td>
+                        <td>
+      				      <div class="field">
+        			        <label>St Idx: <br />
+          				      <input type="text" name="status_index" value="$status_index" size="1" readonly="true" style="background-color:#f4f4f4" />
+        			        </label>
+      				      </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <p class="help" style="text-align:justify">
+                    Select the skill, then choose the tag it derives from - if applicable, the type of change introduced by the new tag, the review and the status.
+                  </p>
+                  <div class="buttons">
+			        <input py:if="milestone_name" type="hidden" name="milestone_name" value="$milestone_name" />
+			        <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+			        <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+			        <input type="hidden" name="sort_included" value="$sort_included" />
+			        <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input type="hidden" name="repos" value="${skills and skill and skills[skill]}" />
+			        <input py:if="filter_value" type="hidden" name="filter_value" value="$filter_value" />
+                    <input type="submit" name="add" value="Add"/>
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+        </table>
+
+      </py:otherwise>
+    </py:choose>
+  </body>
+
+</html>
+

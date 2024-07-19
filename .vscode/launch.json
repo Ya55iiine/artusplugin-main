@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Remote Attach",
+            "type": "python",
+            "request": "attach",
+            "connect": {
+                "host": "dev2-centos7-64.artus.dom",
+                "port": 6000
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/artusplugin/src/artusplugin",
+                    "remoteRoot": "/usr/share/httpd/.local/lib/python2.7/site-packages/ArtusPlugin/artusplugin"
+                }
+            ],
+            "justMyCode": false
+        }
+    ]
+}

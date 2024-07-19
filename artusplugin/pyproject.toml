@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "artusplugin"
+version = "6.4.0"
+description = "Support of configuration management and certification"
+authors = ["Michel Guillot <michel.guillot@meggitt.com>"]
+license = "BSD 3-Clause"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^2.7"
+pytz = "^2022.7.1"
+# python-ldap = "2.4.15"
+future = "*"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.plugins."trac.plugins"]
+"admin.web_ui" = "artusplugin.admin.web_ui"
+"advanced_workflow" = "artusplugin.advanced_workflow"
+"api" = "artusplugin.api"
+"cache" = "artusplugin.cache"
+"form" = "artusplugin.form"
+"macros" = "artusplugin.macros"
+"model" = "artusplugin.model"
+"Ooo" = "artusplugin.Ooo"
+"util" = "artusplugin.util"
+"web_ui" = "artusplugin.web_ui"
+"buildbot.db" = "artusplugin.buildbot.db"
+"buildbot.model" = "artusplugin.buildbot.model"
+"buildbot.web_ui" = "artusplugin.buildbot.web_ui"
+"requirements.api" = "artusplugin.requirements.api"
+"requirements.db" = "artusplugin.requirements.db"
+"requirements.model" = "artusplugin.requirements.model"
+"requirements.web_ui" = "artusplugin.requirements.web_ui"
+
+[tool.poetry.scripts]
+pybabel = "babel.messages.frontend:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

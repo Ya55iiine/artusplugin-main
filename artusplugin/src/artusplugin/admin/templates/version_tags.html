@@ -1,0 +1,925 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n"  i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Version Tags Management</title>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var prev_checked_original = ['#original_1', $('#original_1').prop("title")];
+        var prev_checked_revised = ['#revised_2', $('#revised_2').prop("title")];
+        $('input[name=revised]').change(function() {
+            // peer id
+            var idx = this.id.split('_')[1];
+            var peer_id = '#original_' + idx;
+            // title restored
+            $(prev_checked_revised[0]).prop("title", prev_checked_revised[1]);
+            // title saved
+            prev_checked_revised[0] = '#' + this.id;
+            prev_checked_revised[1] = this.title;
+            // title changed
+            if ($(peer_id).prop("checked")) {
+                this.title = 'To HEAD revision';
+            }
+        })
+        $('input[name=original]').change(function() {
+            // peer id
+            var idx = this.id.split('_')[1];
+            var peer_id = '#revised_' + idx;
+            // title restored
+            $(prev_checked_revised[0]).prop("title", prev_checked_revised[1]);
+            // title saved
+            prev_checked_revised[0] = peer_id;
+            prev_checked_revised[1] = $(peer_id).prop('title');
+            // title changed
+            if ($(peer_id).prop("checked")) {
+                $(peer_id).prop('title', 'To HEAD revision');
+            }
+        })
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="tooltip_templates">
+      <div id="versiontag_name_help">
+        <p>The text: 'Set the appropriate filter' is to be replaced by a pattern that will obey the following rules:</p>
+        <ol>
+          <li>'*' as a prefix means 'is baselined'</li>
+          <li>']' as a suffix means 'CI name ends with'</li>
+          <li>'%' represents zero, one or multiple characters</li>
+          <li>'_' represents one single character</li>
+        </ol>
+        <p>To match the literal character '_', prefix it with the escape character '\'.</p>
+      </div>
+    </div>
+    <h2>Manage Version Tags</h2>
+
+    <py:choose test="view">
+      <py:when test="'detail'">
+        <h3><br /><span>${version_tag.name}<py:if test="version_tag.tag_url" py:with="tag_url=version_tag.tag_url;changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))"> (rev. <a href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}">${get_revision(version_tag.tag_url)}</a>)</py:if></span></h3>
+        <table>
+          <tr py:if="baselined">
+            <td valign="top" style="padding-right:10px" >
+                <form class="mod" id="get_reqtify_project" method="post" enctype="multipart/form-data" action="">
+                    <fieldset>
+                        <legend><img src="/htdocs/reqtify.gif" style="vertical-align:middle"> Get Version Tag associated Reqtify Project and export script:</img></legend>
+                        <p class="help">Input your Reqtify project and you will get back a modified version compatible with this baseline as well as an export script for the documents described in your Reqtify project. See <a href="$dc_url/index.php?post/88">L-1</a>.</p>
+                        <div class="field">
+                          <p><label>Reqtify Project File:<br />
+                            <input type="file" name="reqtify_project_file" size="80"/>
+                          </label></p>
+                        </div>
+                        <div class="buttons">
+                           <input type="submit" name="reqtify_project" value="Get Zip File" />
+                        </div>
+                    </fieldset>
+                </form>
+            </td>
+          </tr>
+          <tr py:if="version_tag.tag_url">
+            <td valign="top" style="padding-right:10px" >
+                <form class="mod" id="get_listing" method="post" action="">
+                    <fieldset>
+                        <legend><img src="/htdocs/icon_listing.gif" style="vertical-align:middle"> Get Version Tag Index:</img></legend>
+                        <p class="help"> The Version Tag Index is a libreoffice.org document (Writer) listing the file hierarchy and associated Subversion revisions in a table ready for use in your Configuration Index, Top Level drawing ...</p>
+                        <div class="buttons">
+                           <input type="submit" name="listing" value="Get Index" />
+                        </div>
+                    </fieldset>
+                </form>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding-right:10px" >
+              <form id="trac_links" method="post" action="">
+                <div class="field">
+                  <fieldset class="iefix">
+                    <legend>External references:</legend>
+                    <label for="links" i18n:msg="">
+                      Listed here are Version Tags neither included nor including but still related (see eg SCI/TLD):
+                    </label>
+                    <div id="rendered_refs">
+                      ${wiki_to_html(context, tag_refs, escape_newlines='preserve_newlines')}
+                    </div>
+                    <py:if test="'VERSION_TAG_DELETE' in perm">
+                      <div id="input_refs" style="margin-top:1em;display:none;" >
+                        <table>
+                          <tr style="vertical-align:top">
+                            <td><p><textarea id="refs" name="refs" rows="7" cols="60">$tag_refs</textarea></p></td>
+                            <td style="padding-left:1em;">${wiki_to_html(context, refs_syntax, escape_newlines='preserve_newlines')}</td>
+                          </tr>
+                        </table>
+                      </div>
+                      <div class="buttons">
+                         <script type="text/javascript">
+                         function cancel() {
+                             $("#rendered_refs").show();
+                             $("#input_refs").hide();
+                             $("#cancel_refs").hide();
+                             $("#edit_refs").show();
+                             $("#save_refs").hide();
+                             };
+                         function edit() {
+                             $("#rendered_refs").hide();
+                             $("#input_refs").show();
+                             $("#cancel_refs").show();
+                             $("#edit_refs").hide();
+                             $("#save_refs").show();
+                             };
+                         </script>
+                         <input type="button" id="cancel_refs" name="cancel_refs" value="Cancel" onclick="cancel();" style="display:none" />
+                         <input type="button" id="edit_refs" name="edit_refs" value="Edit" onclick="edit();" />
+                         <input type="submit" id="save_refs" name="save_refs" value="Save" style="display:none" />
+                      </div>
+                    </py:if>
+                  </fieldset>
+                </div>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding-right:10px">
+              <form class="mod" id="view_including_baselines" method="post" action="">
+                <fieldset py:with="including_baselines = get_including_baselines(version_tag.name)">
+                  <legend>Included in Version or Milestone Tags (${len(including_baselines)} items):</legend>
+                  <table class="listing" id="including_baselines_list">
+                    <thead>
+                      <tr>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('view_including_baselines', 'including', 'name')">Name</span></th>
+                        <th style="vertical-align:middle">Author</th>
+                        <th style="vertical-align:middle">Tag rev</th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('view_including_baselines', 'including', 'author')">Included by</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="including_baseline in including_baselines"  style="white-space:nowrap" py:with="including_tag=get_tag(including_baseline.baselined_tag)">
+                        <td class="name"><a href="${get_panel_href(including_tag.review)(including_tag.name)}">${including_tag.name}</a></td>
+                        <td class="default">${including_tag.author}</td>
+                        <td name="revision" class="default"><a py:if="including_tag.tag_url != None" py:with="tag_url=including_tag.tag_url;changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))" href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${get_revision(tag_url)}</a></td>
+                        <td class="default">$including_baseline.author</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="help" style="text-align:justify">
+                    To access a tag <em>baseline/source url</em>, click on the tag <em>name</em>.
+                    To browse the repository, click on the tag <em>revision</em>.
+                  </p>
+                    <div class="buttons">
+                      <input py:if="included_tag" type="hidden" name="included_tag" value="$included_tag" />
+                      <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+                      <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+                      <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+                      <input type="hidden" name="sort_including" value="$sort_including" />
+                      <input type="hidden" name="asc_including" value="$asc_including" />
+                      <input type="hidden" name="sort_included" value="$sort_included" />
+                      <input type="hidden" name="asc_included" value="$asc_included" />
+                      <input py:if="filter_value" type="hidden" name="filter_value" value="$filter_value" />
+                    </div>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding-right:10px">
+
+              <form py:if="baselined" class="mod" id="mod_baseline" method="post" action="" onsubmit="SaveScrollXY('mod_baseline')">
+                <fieldset py:with="baseline_tags = get_baseline_tags(version_tag.name);DOC_ECM_FEE_set=set(['DOC', 'ECM', 'FEE']).intersection(set(ticket_types))">
+                  <legend>Includes Version Tags (${len(baseline_tags)} items):</legend>
+                  <table class="listing" id="baseline_tag_list">
+                    <caption><p>* = Outside of baseline directory structure</p></caption>
+                    <thead>
+                      <tr>
+                        <th py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" class="sel" style="vertical-align:middle"><img src="/htdocs/supprimer.png" title="Remove"></img></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('mod_baseline', 'included', 'name')">Name</span></th>
+                        <th style="vertical-align:middle">Author</th>
+                        <th style="vertical-align:middle">Tag rev</th>
+                        <th style="vertical-align:middle">Branch</th>
+                        <th py:if="DOC_ECM_FEE_set" style="vertical-align:middle">${_('Ticket')}</th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('mod_baseline', 'included', 'author')">Included by</span></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('mod_baseline', 'included', 'subpath')">Sub-path</span></th>
+                        <th class="sel" style="vertical-align:middle"><img py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" src="/htdocs/modifier.png" title="Replace"></img></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="idx,baseline_tag in enumerate(baseline_tags, start=1)" class="${'odd' if idx % 2 else 'even'}" style="white-space:nowrap" py:with="included_tag=get_tag(baseline_tag.name);doc_skill=get_doc_skill(env, included_tag.tagged_item, program_name) if 'DOC' in ticket_types else None;doc_tktid=get_doc_tktid(env, included_tag.tagged_item) if doc_skill else None;doc_tktstatus=get_doc_tktstatus(env, included_tag.tagged_item) if doc_skill else None;ecm_tktid=get_ecm_tktid(env, included_tag.tagged_item);ecm_tktstatus=get_ecm_tktstatus(env, included_tag.tagged_item);ecm_tktid=get_ecm_tktid(env, included_tag.tagged_item);fee_tktstatus=get_fee_tktstatus(env, included_tag.tagged_item);fee_tktid=get_fee_tktid(env, included_tag.tagged_item);branch=get_branch_from_tag(env, included_tag.name)" py:attrs="get_row_style(included_tag.name, args)">
+                        <td py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" class="sel"><input type="checkbox" name="sel" value="$baseline_tag.name" /></td>
+                        <td class="name"><a href="${get_panel_href(included_tag.review)(included_tag.name)}">${included_tag.name}</a><py:if test="not normalize(get_url(included_tag.source_url)).startswith(normalize(get_url(version_tag.source_url)))"><span title="Source url: $included_tag.source_url">&nbsp;*</span></py:if></td>
+                        <td class="default">$included_tag.author</td>
+                        <td name="revision" class="default"><a py:if="included_tag.tag_url != None" py:with="tag_url=included_tag.tag_url;changeset=get_repository(env, tag_url).get_changeset(get_revision(tag_url))" href="${get_tracbrowserurl(env, get_url(tag_url))}" title="Changeset date: ${get_formatted_datetime(changeset.date)}" >${get_revision(tag_url)}</a></td>
+                        <td name="branch" class="default" py:with="branch_attrs=[('href', None if branch in ('trunk', '?') else req.href('admin/tags_mgmt/branches', branch.strip('B'))), ('title', 'The branch could not be identified' if branch == '?' else None)]">
+                             <a id="branch_$idx" py:attrs="branch_attrs">$branch</a>
+                        </td>
+                        <td py:if="not included_tag.name.startswith('ECM_') and 'DOC' in ticket_types" name="doc_tktid" class="default">
+                          <py:choose>
+                            <py:when test="included_tag.component == 0 and included_tag.edition">
+                              <py:if test="doc_skill">
+                                <a id="doc_tktid_$idx" py:if="doc_tktid" href="${req.href('ticket', doc_tktid)}" class="${classes(closed=doc_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${included_tag.name}', 'doc_tktid', 'doc_tktid_$idx', 'title')" >#$doc_tktid</a>
+                                <a id="doc_tktid_$idx" py:if="not doc_tktid" href="${req.href('newticket', type='DOC', skill=doc_skill, configurationitem=included_tag.tracked_item, changetype='Status', fromversion=included_tag.name, sourceurl=included_tag.source_url)}" title="Create a DOC ticket" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false'}" style="${'VERSION_TAG_DELETE' not in perm and 'color:grey'}">Create...</a>
+                              </py:if>
+                              <py:if test="not doc_skill"><span id="doc_tktid_$idx" title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                            </py:when>
+                            <py:otherwise>
+                              <span id="doc_tktid_$idx" title="N/A because DOC tickets are only applicable to internal documents">N/A</span>
+                            </py:otherwise>
+                          </py:choose>
+                        </td>
+                        <td py:if="included_tag.name.startswith('ECM_') and 'ECM' in ticket_types" name="ecm_tktid" class="default">
+                          <a id="ecm_tktid_$idx" href="${req.href('ticket', ecm_tktid)}" class="${classes(closed=ecm_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${included_tag.name}', 'ecm_tktid', 'ecm_tktid_$idx', 'title')" >#$ecm_tktid</a>
+                        </td>
+                        <td py:if="included_tag.name.startswith('FEE_') and 'FEE' in ticket_types" name="fee_tktid" class="default">
+                          <a id="fee_tktid_$idx" href="${req.href('ticket', fee_tktid)}" class="${classes(closed=fee_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${included_tag.name}', 'fee_tktid', 'fee_tktid_$idx', 'title')" >#$fee_tktid</a>
+                        </td>
+                        <td class="default">$baseline_tag.author</td>
+                        <py:choose py:with="subpath=baseline_tag.subpath">
+                          <td py:when="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" style="padding:0px" title="$subpath" ><input type="hidden" name="tag_name" value="${included_tag.name}" /><input type="text" name="subpath" value="$subpath" size="25" onchange="subpath_change()" /></td>
+                          <td py:otherwise="" class="name" title="$subpath" >$subpath</td>
+                        </py:choose>
+                        <py:choose py:with="update=get_change_options(env, included_tag)">
+                            <py:when test="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url">
+                                <py:choose py:with="asterisk='*';bracket=']'">
+                                    <td py:when="update == '?'" class="default"><img src="/htdocs/point_interrogation.gif" title="Click to set a newer or an older version (or status) if feasible" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:when="update == '+'" class="default"><img src="/htdocs/flechehaut.gif" title="Click to set a newer version (or status)" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:when="update == '+-'" class="default"><img src="/htdocs/flechehautbas.gif" title="Click to set a newer or an older version (or status)" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:when="update == '-'" class="default"><img src="/htdocs/flechebas.gif" title="Click to set an older version (or status)" style="cursor:pointer" onclick="set_overlay(); document.location = get_href([['filter_value', '${included_tag.baselined and asterisk or None}${included_tag.tracked_item}${bracket}'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])"></img></td>
+                                    <td py:otherwise="" class="default"><img src="/htdocs/vide.png" title="There is no other version (or status)"></img></td>
+                                </py:choose>
+                            </py:when>
+                            <py:otherwise>
+                                <py:choose>
+                                    <td py:when="update == '?'" class="default"><img src="/htdocs/point_interrogation.png" title="There may be a newer or an older version (or status)"></img></td>
+                                    <td py:when="update == '+'" class="default"><img src="/htdocs/flechehaut.png" title="There is at least one newer version (or status)"></img></td>
+                                    <td py:when="update == '+-'" class="default"><img src="/htdocs/flechehautbas.png" title="There are both newer and older versions (or status)"></img></td>
+                                    <td py:when="update == '-'" class="default"><img src="/htdocs/flechebas.png" title="There is at least one older version (or status)"></img></td>
+                                    <td py:otherwise="" class="default"><img src="/htdocs/vide.png" title="There is no other version (or status)"></img></td>
+                                </py:choose>
+                            </py:otherwise>
+                        </py:choose>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="help" style="text-align:justify">
+                    To access a tag <em>baseline/source url</em>, click on the tag <em>name</em>.
+                    To browse the repository, click on the tag <em>revision</em>.
+                  </p>
+                  <div class="buttons">
+                    <input py:if="included_tag" type="hidden" name="included_tag" value="$included_tag" />
+                    <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+                    <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+                    <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+                    <input type="hidden" name="sort_including" value="$sort_including" />
+                    <input type="hidden" name="asc_including" value="$asc_including" />
+                    <input type="hidden" name="sort_included" value="$sort_included" />
+                    <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input py:if="filter_value" type="hidden" name="filter_value" value="$filter_value" />
+                    <input type="submit" name="change" value="Apply changes" style="display:none" />
+                    <input py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" type="submit" id="item_select" value="Select all" title="Select all items" />
+                    <input py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" type="submit" id="item_deselect" value="Deselect all" title="Deselect all items" />
+                    <input py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" type="submit" name="change" value="Remove selected items"  onclick="set_overlay()" />
+                    <input py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" type="submit" name="change" value="Discard changes" disabled="true" />
+                    <input py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url" type="submit" name="change" value="Apply changes" disabled="true" onclick="set_overlay()" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+            <td py:if="'VERSION_TAG_MODIFY' in perm and not version_tag.tag_url and baselined" valign="top">
+              <form id="add_tag" method="post" action="" onsubmit="SaveScrollXY('add_tag')">
+                <fieldset>
+                  <legend>Add Version Tag to Baseline:</legend>
+                  <div class="field">
+                    <table><tr>
+                      <td><label>Version Tag Name contains:<br /><input type="text" id="filter_value" name="filter_value" value="$filter_value" size="30"/></label></td>
+                      <td><label><br /><input type="submit" name="update" value="Update" onclick="set_overlay()" /></label></td>
+                      <td><br/><img id="help_button" src="/htdocs/help-mini.jpg" style="vertical-align:middle;" class="tooltip" data-tooltip-content="#versiontag_name_help" ></img></td>
+                    </tr></table>
+                    ($included_tags_nb matches)<br /><br />
+                    <label>Version Tag to include:<br />
+                      <py:choose>
+                        <select py:when="included_tags" id="included_tag" name="included_tag" onchange="set_overlay(); document.location = get_href([['included_tag', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])">
+                          <py:for each="tagged_group in included_tags">
+                            <optgroup py:with="last_tagged_tag=tagged_group[-1][-1]" label="${last_tagged_tag.tagged_item or '&lt;No Version&gt;'}">
+                              <py:for each="status_group in tagged_group">
+                                <optgroup py:with="last_status_tag=status_group[-1]" label="&nbsp;&nbsp;&nbsp;&nbsp;${last_status_tag.status or '&lt;No Status&gt;'}">
+                                  <py:for each="tag in status_group">
+                                    <option selected="${tag.name == included_tag or None}" value="$tag.name">&nbsp;&nbsp;&nbsp;&nbsp;$tag.name</option>
+                                  </py:for>
+                                </optgroup>
+                              </py:for>
+                            </optgroup>
+                          </py:for>
+                        </select>
+                        <input py:otherwise="" type="text" name="included_tag" value="$included_tag" size="50" readonly="true" style="background-color:#f4f4f4" />
+                      </py:choose>
+                    </label>
+                  </div>
+                  <p class="help" style="text-align:justify">
+                    Only APPLIED tags not yet included are listed. The added tag will replace another tag if on same CI.
+                  </p>
+                  <div class="buttons">
+                    <input py:if="replaced_tag" type="hidden" name="replaced_tag" value="$replaced_tag" />
+                    <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+                    <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+                    <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+                    <input type="hidden" name="sort_including" value="$sort_including" />
+                    <input type="hidden" name="asc_including" value="$asc_including" />
+                    <input type="hidden" name="sort_included" value="$sort_included" />
+                    <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input type="submit" name="add" value="Add/Replace" onclick="return UIComponents.buttons.addReplaceVersionTag.object.confirm('$included_tag', '$replaced_tag')" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+        </table>
+        <form py:if="not component or (component and not baselined) and 'VERSION_TAG_VIEW' in perm" class="mod" id="apply_not_baselined" method="post" action="">
+          <fieldset py:if="'VERSION_TAG_MODIFY' in perm and not buildbot" >
+            <py:choose>
+                <legend py:when="not version_tag.tag_url">Modify Version Tag attributes:</legend>
+                <legend py:otherwise="">View Version Tag attributes:</legend>
+            </py:choose>
+            <div class="field">
+              <label>Source Url:<br /><input type="text" name="source_url" value="$source_url" size="220" readonly="true" style="background-color:#f4f4f4" title="$source_url" /></label>
+            </div>
+            <py:choose>
+              <span py:when="not source_url">Please browse to the url and revision of your choice.</span>
+              <span py:otherwise="" py:if="not version_tag.tag_url">Please check the above url and revision (Last changed revision: <strong>$last_changed_rev</strong>)</span>
+            </py:choose>
+            <div class="buttons">
+              <input type="button" name="url_select" value="Browse" onclick="location.href='${get_tracbrowserurl(env, source_url, caller=version_tag.name)}'" title="$source_url" />
+              <input py:if="not version_tag.tag_url" type="submit" name="change" value="Apply changes" disabled="${source_url == version_tag.source_url or None}" onclick="set_overlay()" />
+            </div>
+          </fieldset>
+          <fieldset py:if="'VERSION_TAG_MODIFY' in perm and buildbot" style="width:90%" >
+            <py:choose>
+                <legend py:when="not version_tag.tag_url">Modify Version Tag attributes:</legend>
+                <legend py:otherwise="">View Version Tag attributes:</legend>
+            </py:choose>
+            <table class="listing" id="build">
+              <thead>
+                <tr style="white-space:nowrap">
+                  <th style="text-align:center">Build sources</th>
+                  <th style="text-align:center">Build page</th>
+                  <th style="text-align:center">Build no</th>
+                  <th style="text-align:center">Builded EOC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="white-space:nowrap">
+                  <td class="default">
+                    <py:choose>
+                      <py:when test="prod_csci_name">
+                        <table><tr>
+                          <td style="border: 0px;">
+                            <py:choose>
+                              <py:when test="not version_tag.tag_url">
+                                <select id="prod_csci_name" name="prod_csci_name" onchange="set_overlay(); document.location = get_href([['csci_name', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])" >
+                                  <option py:for="name in csci_names" selected="${name == prod_csci_name or None}" value="$name">$name</option>
+                                </select>
+                                <td style="border: 0px;"><a href="$prod_csci_url" title="$prod_csci_name">?</a></td>
+                              </py:when>
+                              <a py:otherwise="" href="$prod_csci_url" title="$prod_csci_name">$prod_csci_name</a>
+                            </py:choose>
+                          </td>
+                        </tr></table>
+                      </py:when>
+                      <span py:otherwise="">N/A</span>
+                    </py:choose>
+                  </td>
+                  <td class="name" style="text-align:center;vertical-align:middle;">
+                    <py:choose test="">
+                      <span py:when="not prod_makefile_url">N/A</span>
+                      <a py:otherwise="" href="$prod_makefile_url" title="Waterfall page">${prod_category}</a>
+                    </py:choose>
+                  </td>
+                  <td class="default" style="text-align:center;vertical-align:middle;">
+                    <py:choose test="prod_build_no">
+                      <span py:when="None">N/A</span>
+                      <a py:otherwise="" href="${prod_status_url}" title="Build status page">$prod_build_no</a>
+                    </py:choose>
+                  </td>
+                  <td class="default" style="text-align:center;vertical-align:middle;">
+                    <py:choose test="prod_eoc_url">
+                      <span py:when="None">N/A</span>
+                      <input py:otherwise="" type="button" name="browse_eoc" value="Browse" onclick="location.href='$prod_eoc_url'" title="Browse builded EOC" />
+                    </py:choose>
+                  </td>
+                </tr>
+                <tr py:if="version_tag.tag_url" style="white-space:nowrap">
+                  <td class="default">
+                    <py:choose>
+                      <py:when test="check_csci_name">
+                        <table><tr>
+                          <td style="border: 0px;">
+                            <select id="check_csci_name" name="check_csci_name" onchange="set_overlay(); document.location = get_href([['csci_name', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])" >
+                              <option py:for="name in csci_names" selected="${name == check_csci_name or None}" value="$name">$name</option>
+                            </select>
+                          </td>
+                          <td style="border: 0px;"><a href="$check_csci_url" title="$check_csci_name">?</a></td>
+                        </tr></table>
+                      </py:when>
+                      <span py:otherwise="">N/A</span>
+                    </py:choose>
+                  </td>
+                  <td class="name" style="text-align:center;vertical-align:middle;">
+                    <py:choose test="">
+                      <span py:when="not check_makefile_url">N/A</span>
+                      <a py:otherwise="" href="$check_makefile_url" title="Waterfall page">${check_category}</a>
+                    </py:choose>
+                  </td>
+                  <td class="default" style="text-align:center;vertical-align:middle;">
+                    <py:choose test="check_build_no">
+                      <span py:when="None">N/A</span>
+                      <a py:otherwise="" href="$check_status_url" title="Build status page">$check_build_no</a>
+                    </py:choose>
+                  </td>
+                  <td class="default" style="text-align:center;vertical-align:middle;">
+                    <py:choose test="check_eoc_url">
+                      <span py:when="None">N/A</span>
+                      <input py:otherwise="" type="button" name="browse_eoc" value="Browse" onclick="location.href='$check_eoc_url'" title="Browse builded EOC" />
+                    </py:choose>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <py:choose test="version_tag.tag_url">
+              <p py:when="None" class="help" style="text-align:justify">
+                <py:if test="'VERSION_TAG_VIEW' in perm">
+                  <py:choose test="">
+                    <span py:when="csci_names">
+                      To (re)build the <em>EOC</em>, first choose the sources to build from, then go to the build page to launch the build.
+                    </span>
+                    <span py:otherwise="">
+                      Only baselines that fulfill the following requirements will be presented in the <em>Build sources</em> field:
+                      <ul>
+                        <li>same standard, edition and revision numbers as the EOC</li>
+                        <li>ONE and ONLY one m(M)akefile in one of its documents</li>
+                        <li>tag applied</li>
+                      </ul>
+                    </span>
+                  </py:choose>
+                </py:if>
+              </p>
+              <p py:otherwise="" class="help" style="text-align:justify">
+                <py:if test="'VERSION_TAG_VIEW' in perm">You can only view the sources of the build and its results and make a check build after the tag has been applied. Only baselines including the EOC will be presented as build sources for the check build.</py:if>
+              </p>
+            </py:choose>
+          </fieldset>
+          <br/>
+          <div py:if="version_tag.source_url != None and 'VERSION_TAG_APPLY' in perm and (version_tag.status != 'Released' or 'VERSION_TAG_DELETE' in perm) and not version_tag.tag_url" class="field">
+            <fieldset class="iefix">
+              <label for="comment" i18n:msg="">
+                Comment (you may use <a tabindex="42" href="${href.wiki('WikiFormatting')}">WikiFormatting</a> here):
+              </label>
+              <p>
+                <textarea id="comment" name="comment" class="wikitext trac-resizable" rows="6" cols="60"></textarea>
+              </p>
+            </fieldset>
+          </div>
+          <div py:choose="buildbot">
+            <py:when test="True">
+              <p py:if="prod_build_no != None and 'VERSION_TAG_APPLY' in perm and (version_tag.status != 'Released' or 'VERSION_TAG_DELETE' in perm) and not version_tag.tag_url" class="help" style="text-align:justify">
+                 When you are satisfied with the build, click on the 'Apply Tag' button to create the associated tag in the repository.
+              </p>
+            </py:when>
+            <py:otherwise>
+              <p py:if="version_tag.source_url != None and 'VERSION_TAG_APPLY' in perm and (version_tag.status != 'Released' or 'VERSION_TAG_DELETE' in perm) and not version_tag.tag_url" class="help" style="text-align:justify">
+                 When you are satisfied with the source url, click on the 'Apply Tag' button to create the associated tag in the repository.
+              </p>
+            </py:otherwise>
+          </div>
+          <div py:if="not version_tag.tag_url">
+            <span py:if="version_tag.source_url is None or 'VERSION_TAG_APPLY' not in perm or (version_tag.status == 'Released' and 'VERSION_TAG_DELETE' not in perm)" id="help" style="text-align: left"><strong>Note: </strong>
+            The version tag cannot be applied because the source url is not defined and/or the profile is not developer and/or the status is Released but the profile is not authorized</span>
+          </div>
+          <div class="buttons">
+            <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+            <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+            <input type="submit" name="cancel" value="Cancel" />
+            <input py:if="version_tag.source_url != None and 'VERSION_TAG_APPLY' in perm and (version_tag.status != 'Released' or 'VERSION_TAG_DELETE' in perm) and not version_tag.tag_url" type="submit" name="apply" value="Apply Tag" disabled="${source_url != version_tag.source_url or None}" title="$tag_url" onclick="return UIComponents.buttons.applyTag.object.confirm('${version_tag.status}')" />
+          </div>
+        </form>
+        <form py:if="component and baselined" id="apply_baselined" method="post" action="">
+          <div py:if="not empty_baseline and 'VERSION_TAG_DELETE' in perm and not version_tag.tag_url" class="field">
+            <fieldset class="iefix">
+              <label for="comment" i18n:msg="">
+                Comment (you may use <a tabindex="42" href="${href.wiki('WikiFormatting')}">WikiFormatting</a> here):
+              </label>
+              <p>
+                <textarea id="comment" name="comment" class="wikitext trac-resizable" rows="6" cols="60"></textarea>
+              </p>
+            </fieldset>
+          </div>
+          <py:if test="'VERSION_TAG_DELETE' in perm and not version_tag.tag_url">
+            <py:choose test="empty_baseline">
+              <p py:when="True" class="help" style="text-align:justify">
+                The 'Apply Tag' button will not be accessible as long as the baseline remains empty.
+              </p>
+              <p py:otherwise="" class="help" style="text-align:justify">
+                When you are satisfied with the baseline content, click on the 'Apply Tag' button to create the associated tag in the repository.
+              </p>
+            </py:choose>
+          </py:if>
+          <div py:if="not version_tag.tag_url">
+            <span py:if="empty_baseline or 'VERSION_TAG_DELETE' not in perm" id="help" style="text-align: left"><strong>Note: </strong>
+            The version tag cannot be applied because the baseline is empty and/or the profile is not authorized</span>
+          </div>
+          <div class="buttons">
+            <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+            <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+            <input py:if="not version_tag.tag_url or (version_tag.tag_url and not empty_baseline)" type="submit" name="cancel" value="Cancel" />
+            <input py:if="not empty_baseline and 'VERSION_TAG_DELETE' in perm and not version_tag.tag_url" type="submit" name="apply" value="Apply Tag" title="$tag_url" onclick="return UIComponents.buttons.applyTag.object.confirm('${version_tag.status}')" />
+          </div>
+        </form>
+      </py:when>
+
+      <py:otherwise>
+        <table>
+          <tr>
+            <td valign="top" style="padding-right:10px">
+              <form id="version_tag_table" method="post" action="" onsubmit="SaveScrollXY('version_tag_table')">
+                <fieldset py:with="DOC_ECM_FEE_set=set(['DOC', 'ECM', 'FEE']).intersection(set(ticket_types))">
+                  <legend>Existing Version Tags: (* = Baselined)</legend>
+                  <table><tr>
+                    <td><label>Version Tag Name contains:<br /><input type="text" id="filter_value" name="filter_value" value="$filter_value" size="60" /></label></td>
+                    <td><label><br /><input type="submit" name="update" value="Update" onclick="set_overlay()" /></label></td>
+                    <td><br/><img id="help_button" src="/htdocs/help-mini.jpg" style="vertical-align:middle;" class="tooltip" data-tooltip-content="#versiontag_name_help" ></img></td>
+                  </tr></table>
+                  ($version_tags_nb matches)
+                  <p py:if="'VERSION_TAG_VIEW' in perm" class="help" style="text-align:justify">To access a tag <em>baseline/source url</em><py:if test="'VERSION_TAG_APPLY' in perm"> or apply the tag to the repository</py:if>, click on the tag <b>name</b>. To browse the repository, click on the tag <b>revision</b>.</p>
+                  <table class="listing" id="version_tag_list">
+                    <thead>
+                      <tr>
+                        <th py:if="'VERSION_TAG_DELETE' in perm" class="sel" style="vertical-align:middle"><img src="/htdocs/supprimer.png" title="Remove"></img></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('version_tag_table', 'included', 'name')">Name</span></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('version_tag_table', 'included', 'author')">Author</span></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('version_tag_table', 'included', 'rev')">Tag rev</span></th>
+                        <th style="vertical-align:middle"><span style="color:#bb0000;cursor:pointer" onmouseover="this.style.color = '#555555'" onmouseout="this.style.color = '#bb0000'" onclick="setOrder('version_tag_table', 'included', 'branch')">Branch</span></th>
+                        <th py:if="DOC_ECM_FEE_set" style="vertical-align:middle">${_('Ticket')}</th>
+                        <th py:if="DOC_ECM_FEE_set" style="vertical-align:middle">${_('From/To')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr py:for="idx,version_tag in enumerate(version_tags, start=1)" class="${'odd' if idx % 2 else 'even'}" style="white-space:nowrap" py:attrs="get_row_style(version_tag.name, args)"
+                          py:with="doc_skill=get_doc_skill(env, version_tag.tagged_item, program_name) if 'DOC' in ticket_types else None;doc_tktid=get_doc_tktid(env, version_tag.tagged_item) if doc_skill else None;doc_tktstatus=get_doc_tktstatus(env, version_tag.tagged_item) if doc_skill else None;ecm_tktid=get_ecm_tktid(env, version_tag.tagged_item);ecm_tktstatus=get_ecm_tktstatus(env, version_tag.tagged_item);fee_tktid=get_fee_tktid(env, version_tag.tagged_item);fee_tktstatus=get_fee_tktstatus(env, version_tag.tagged_item);branch=get_branch_from_tag(env, version_tag.name)">
+                        <td py:if="'VERSION_TAG_DELETE' in perm">
+                          <py:choose test="">
+                            <input py:when="not version_tag.tag_url or ('VERSION_TAG_ADMIN' in perm and not doc_tktid)" type="checkbox" name="sel" value="$version_tag.name"/>
+                            <input py:otherwise="" type="checkbox" name="sel" value="$version_tag.name" disabled="disabled"/>
+                          </py:choose>
+                        </td>
+                        <td class="name">
+                          <a id="name_$idx" href="${get_panel_href(version_tag.review)(version_tag.name)}" title="please wait..." onmouseover="on_mouseover('${version_tag.name}', 'version_tag', 'name_$idx', 'title')" >${version_tag.name}</a><py:if test="version_tag.baselined == 1">&nbsp;*</py:if>
+                        </td>
+                        <td class="default">
+                          $version_tag.author
+                        </td>
+                        <td name="revision" class="default">
+                          <a id="rev_$idx" py:if="version_tag.tag_url" py:with="tag_url=version_tag.tag_url;revision=get_revision(tag_url)" href="${get_tracbrowserurl(env, get_url(tag_url))}" title="please wait..." onmouseover="on_mouseover('${version_tag.name}', 'revision', 'rev_$idx', 'title')" >${revision}</a>
+                        </td>
+                        <td name="branch" class="default" py:with="branch_attrs=[('href', None if branch in ('trunk', '?') else req.href('admin/tags_mgmt/branches', branch.strip('B'))), ('title', 'The branch could not be identified' if branch == '?' else None)]">
+                           <a id="branch_$idx" py:attrs="branch_attrs">$branch</a>
+                        </td>
+                        <td py:if="not version_tag.name.startswith('ECM_') and 'DOC' in ticket_types" name="doc_tktid" class="default">
+                          <py:choose>
+                            <py:when test="version_tag.component == 0 and version_tag.edition">
+                              <py:if test="doc_skill">
+                                <a id="doc_tktid_$idx" py:if="doc_tktid" href="${req.href('ticket', doc_tktid)}" class="${classes(closed=doc_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${version_tag.name}', 'doc_tktid', 'doc_tktid_$idx', 'title')" >#$doc_tktid</a>
+                                <a id="doc_tktid_$idx" py:if="not doc_tktid" href="${req.href('newticket', type='DOC', skill=doc_skill, configurationitem=version_tag.tracked_item, changetype='Status', fromversion=version_tag.name, sourceurl=version_tag.source_url)}" title="Create a DOC ticket" onclick="${'VERSION_TAG_DELETE' not in perm and 'return false'}" style="${'VERSION_TAG_DELETE' not in perm and 'color:grey'}">Create...</a>
+                              </py:if>
+                              <py:if test="not doc_skill"><span id="doc_tktid_$idx" title="N/A because DOC tickets are not applicable to this skill">N/A</span></py:if>
+                            </py:when>
+                            <py:otherwise>
+                              <span id="doc_tktid_$idx" title="N/A because DOC tickets are only applicable to internal documents">N/A</span>
+                            </py:otherwise>
+                          </py:choose>
+                        </td>
+                        <td py:if="version_tag.name.startswith('ECM_') and 'ECM' in ticket_types" name="ecm_tktid" class="default">
+                          <a id="ecm_tktid_$idx" href="${req.href('ticket', ecm_tktid)}" class="${classes(closed=ecm_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${version_tag.name}', 'ecm_tktid', 'ecm_tktid_$idx', 'title')" >#$ecm_tktid</a>
+                        </td>
+                        <td py:if="version_tag.name.startswith('FEE_') and 'FEE' in ticket_types" name="fee_tktid" class="default">
+                          <a id="fee_tktid_$idx" href="${req.href('ticket', fee_tktid)}" class="${classes(closed=fee_tktstatus == 'closed')}" title="please wait..." onmouseover="on_mouseover('${version_tag.name}', 'fee_tktid', 'fee_tktid_$idx', 'title')" >#$fee_tktid</a>
+                        </td>
+                        <td py:if="not version_tag.name.startswith('ECM_') and 'DOC' in ticket_types" py:with="disabled=version_tag.component == 1 or not version_tag.edition or not doc_skill or not doc_tktid or None" name="diff" class="default">
+                          <input type="radio" id= "original_$idx" name="original" value="$version_tag.name,$doc_tktid" title="From $version_tag.name"
+                                 checked="${not disabled or None}" disabled="$disabled" />
+                          <input type="radio" id="revised_$idx" name="revised" value="$version_tag.name,$doc_tktid" title="To $version_tag.name"
+                                 checked="${not disabled or None}" disabled="$disabled" />
+                        </td>
+                        <td py:if="version_tag.name.startswith('ECM_') and 'ECM' in ticket_types" name="diff" class="default">
+                          <input type="radio" id= "original_$idx" name="original" value="$version_tag.name,$ecm_tktid" title="From $version_tag.name"
+                                 checked="${idx == 1 or None}" />
+                          <input type="radio" id="revised_$idx" name="revised" value="$version_tag.name,$ecm_tktid" title="To $version_tag.name"
+                                 checked="${idx == 2 or None}" />
+                        </td>
+                        <td py:if="version_tag.name.startswith('FEE_') and 'FEE' in ticket_types" name="diff" class="default">
+                          <input type="radio" id= "original_$idx" name="original" value="$version_tag.name,$fee_tktid" title="From $version_tag.name"
+                                 checked="${idx == 1 or None}" />
+                          <input type="radio" id="revised_$idx" name="revised" value="$version_tag.name,$fee_tktid" title="To $version_tag.name"
+                                 checked="${idx == 2 or None}" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p py:if="'DOC' in ticket_types" class="help" style="text-align:justify">
+                    To compare <em>source files</em> (Word only), select two tags (From/To) <b>with associated DOC tickets</b>. To compare a tag source file with the HEAD revision, select the tag <em>twice</em>.
+                  </p>
+                  <div class="buttons">
+                    <input py:if="unmanaged_skill" type="hidden" name="separator" value="$separator" />
+                    <input py:if="version" type="hidden" name="version" value="$version" />
+                    <input py:if="change_type" type="hidden" name="change_type" value="$change_type" />
+                    <input py:if="from_tag" type="hidden" name="from_tag" value="$from_tag" />
+                    <input py:if="source_url" type="hidden" name="source_url" value="$source_url" />
+                    <input py:if="ci_name" type="hidden" name="ci_name" value="$ci_name" />
+                    <input py:if="component" type="hidden" name="component" value="$component" />
+                    <input py:if="baselined" type="hidden" name="baselined" value="$baselined" />
+                    <input type="hidden" name="ma" value="$ma" />
+                    <input py:if="selected_item" type="hidden" name="selected_item" value="$selected_item" />
+                    <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+                    <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+                    <input type="hidden" name="sort_included" value="$sort_included" />
+                    <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input py:if="'DOC' in ticket_types" type="hidden" name="office_version" />
+                    <input py:if="'VERSION_TAG_DELETE' in perm" type="submit" name="remove" value="Remove selected items" onclick="set_overlay()" />
+                    <input py:if="DOC_ECM_FEE_set" type="submit" name="compare" value="${_('Compare')}" style="float:right;margin-right:0px" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+
+            <td valign="top">
+              <form py:if="'VERSION_TAG_CREATE' in perm" id="add_version_tag" method="post" action="" onsubmit="SaveScrollXY('add_version_tag')">
+                <fieldset>
+                  <legend>Add Version Tag:</legend>
+                  <div class="field">
+                    <label>Version Tag Name:<br /><input type="text" id="tag_name" name="tag_name" value="$tag_name" size="55" readonly="true" style="background-color:#f4f4f4" /></label>
+                    <fieldset>
+                      <legend>Configuration Item</legend>
+                      <table>
+                        <tr>
+                            <td style="vertical-align:middle"><label>Configuration Item Name:<br />
+                              <py:choose>
+                                <select py:when="document_cis_by_branch" id="ci_name" name="ci_name" style="width:20em;padding:2px" onchange="set_overlay(); document.location = get_href([['ci_name', this.options[this.selectedIndex].value], ['ci_type', document.getElementsByName('ci_type')[0].value], ['baselined', checked=document.getElementById('csci')?checked=document.getElementById('csci').checked:false], ['branch', this.options[this.selectedIndex].parentNode.label], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['ci_source_url', 'from_tag', 'change_type', 'status'])" >
+                                  <py:for each="br in document_cis_by_branch">
+                                    <optgroup label="$br">
+                                        <option py:for="doc in document_cis_by_branch[br]" selected="${doc == ci_name and br == branch or None}" value="$doc">$doc</option>
+                                    </optgroup>
+                                  </py:for>
+                                </select>
+                                <select py:when="component_cis_by_branch" id="ci_name" name="ci_name" style="width:20em;padding:2px" onchange="set_overlay(); document.location = get_href([['ci_name', this.options[this.selectedIndex].value], ['ci_type', document.getElementsByName('ci_type')[1].value], ['baselined', checked=document.getElementById('csci')?checked=document.getElementById('csci').checked:false], ['branch', this.options[this.selectedIndex].parentNode.label], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['ci_source_url', 'from_tag', 'change_type', 'status'])" >
+                                  <py:for each="br in component_cis_by_branch">
+                                    <optgroup label="$br">
+                                        <option py:for="comp in component_cis_by_branch[br]" selected="${comp == ci_name and br == branch or None}" value="$comp">$comp</option>
+                                    </optgroup>
+                                  </py:for>
+                                </select>
+                                <input py:otherwise="" type="text" name="ci_name" value="" readonly="true" style="background-color:#f4f4f4;width:20em" />
+                              </py:choose>
+                            </label></td>
+                        <td style="vertical-align:top"><label><br /><input type="button" name="ci_select" value="Browse" class="buttons" onclick="location.href='${get_tracbrowserurl(env, get_url(source_url))}'" title="${get_tracbrowserurl(env, get_url(source_url))}" /></label></td>
+                        </tr>
+                      </table>
+                      <table>
+                        <tr>
+                            <td style="width:200px">
+                              <label>Configuration Item Type:<br />
+                                <table>
+                                  <tr py:with="opt_ci_name=(not browsed_ci or doc_skill) and 'ci_name' or '';opt_ci_source_url=(not browsed_ci or doc_skill) and 'ci_source_url' or ''">
+                                        <td><label title="Specification, Design, Source or Verification Document (not accessible if DOC tickets are used for the skill)"><input type="radio" name="ci_type" id="ci_type" checked="${component == False or None}" disabled="${'VERSION_TAG_MODIFY' not in perm and not 'VERSION_TAG_ADMIN' in perm or None}" value="document" onclick="if (original_event(event, this.value, this.nextSibling.textContent) == false) return false; else { set_overlay(); document.location = get_href([['ci_type', document.getElementsByName('ci_type')[0].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['$opt_ci_name', '$opt_ci_source_url', 'branch', 'baselined', 'buildbot', 'version_type', 'from_tag', 'change_type', 'status']);}" /> Document</label></td>
+                                  </tr>
+                                  <tr py:with="opt_ci_name=not browsed_ci and 'ci_name' or '';opt_ci_source_url=not browsed_ci and 'ci_source_url' or ''">
+                                        <td><label title="Software product, component (including EOC or BITSTREAM)"><input type="radio" name="ci_type" id="ci_type" checked="${component == True or None}" disabled="${'VERSION_TAG_MODIFY' not in perm or None}" value="component" onclick="if (original_event(event, this.value, this.nextSibling.textContent) == false) return false; else { set_overlay(); document.location = get_href([['ci_type', document.getElementsByName('ci_type')[1].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['$opt_ci_name', '$opt_ci_source_url', 'branch', 'baselined', 'buildbot', 'version_type', 'from_tag', 'change_type', 'status']);}" /> Component</label></td>
+                                      </tr>
+                                    </table>
+                                  </label>
+                                </td>
+                            <td py:if="component == True" style="width:200px">
+                              <label>Component Properties:<br />
+                                <table>
+                                  <tr>
+                                    <td><label title="If checked, the tag will be built by including tags (baseline), else from a source url"><input type="checkbox" name="csci" id="csci" checked="${baselined == True or None}" disabled="${'VERSION_TAG_MODIFY' not in perm or buildbot or None}" value="baselined" onclick="if (original_event(event, this.value, this.nextSibling.textContent) == false) return false; else { set_overlay(); document.location = get_href([['ci_name', $('input[name=ci_name]').val()], ['ci_type', document.getElementsByName('ci_type')[1].value], ['baselined', document.getElementById('csci').checked], ['version_type', document.getElementsByName('version_type')[0].checked ? 'ser' : 'ma'], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['from_tag', 'change_type', 'status'])}" /> Baselined</label></td>
+                                  </tr>
+                                  <tr>
+                                    <td><label title="If checked, the tag will be created from buildbot working copy, else from the repository"><input type="checkbox" name="eoc" id="eoc" checked="${buildbot == True or None}" disabled="${'VERSION_TAG_MODIFY' not in perm or baselined or (component and ma) or None}" value="buildbot" onclick="if (original_event(event, this.value, this.nextSibling.textContent) == false) return false; else { set_overlay(); document.location = get_href([['ci_type', document.getElementsByName('ci_type')[1].value], ['buildbot', document.getElementById('eoc').checked], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['version_type', ])}" /> Buildbot generated</label></td>
+                                  </tr>
+                                </table>
+                              </label>
+                            </td>
+                          <td py:if="component == True" style="width:200px">
+                            <label>Version Type:<br />
+                              <table>
+                                <tr>
+                                  <td><label title="Standard, Edition, Revision"><input type="radio" name="version_type" id="version_type" checked="${ma == False or None}" disabled="${'VERSION_TAG_MODIFY' not in perm or None}" value="ser" onclick="if (original_event(event, this.value, this.nextSibling.textContent) == false) return false; else { set_overlay(); document.location = get_href([['ci_type', document.getElementsByName('ci_type')[1].value], ['baselined', document.getElementById('csci').checked], ['buildbot', document.getElementById('eoc').checked], ['version_type', document.getElementsByName('version_type')[0].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['from_tag', 'change_type', 'status']);}" /> S.E.R.</label></td>
+                                </tr>
+                                <tr>
+                                  <td><label title="Modification, Amendment"><input type="radio" name="version_type" id="version_type" checked="${ma == True or None}" disabled="${'VERSION_TAG_MODIFY' not in perm or buildbot or None}" value="ma" onclick="if (original_event(event, this.value, this.nextSibling.textContent) == false) return false; else { set_overlay(); document.location = get_href([['ci_type', document.getElementsByName('ci_type')[1].value], ['baselined', document.getElementById('csci').checked], ['buildbot', document.getElementById('eoc').checked], ['version_type', document.getElementsByName('version_type')[1].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['from_tag', 'change_type', 'status']);}" /> M.A.</label></td>
+                                </tr>
+                              </table>
+                            </label>
+                          </td>
+                        </tr>
+                      </table>
+                      <p class="help" style="text-align:justify">
+                          Select the Configuration Item Name either by browsing the trunk/branches or from a list depending on the Configuration Item type, and if a component, its properties and version type.
+                      </p>
+                    </fieldset>
+                    <fieldset>
+                      <legend>Version</legend>
+                      <label>From Version Tag:<br />
+                        <py:choose>
+                          <select py:when="from_tags" id="from_tag" style="width:25em;padding:2px" name="from_tag" onchange="set_overlay(); document.location = get_href([['from_tag', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['ci_source_url', 'change_type', 'status'])" >
+                              <py:for each="tagged_group in from_tags">
+                                <optgroup py:with="last_tagged_tag=tagged_group[-1][-1]" label="${last_tagged_tag.tagged_item or '&lt;No Version&gt;'}">
+                                  <py:for each="status_group in tagged_group">
+                                    <optgroup py:with="last_status_tag=status_group[-1]" label="&nbsp;&nbsp;&nbsp;&nbsp;${last_status_tag.status or '&lt;No Status&gt;'}">
+                                      <py:for each="tag in status_group">
+                                        <option selected="${tag.name == from_tag or None}" value="$tag.name">&nbsp;&nbsp;&nbsp;&nbsp;$tag.name</option>
+                                      </py:for>
+                                    </optgroup>
+                                  </py:for>
+                                </optgroup>
+                              </py:for>
+                          </select>
+                          <input py:otherwise="" type="text" name="from_tag" value="" readonly="true" style="background-color:#f4f4f4;width:25em" />
+                        </py:choose>
+                      </label>
+                      <table>
+                        <tr>
+                          <td>
+                            <label>Change Type:<br />
+                                <py:choose>
+                              <select py:when="change_types" id="change_type" name="change_type" style="width:8em;padding:2px" onchange="set_overlay(); document.location = get_href([['change_type', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], ['status'])" >
+                                    <option py:for="ch_typ in change_types" selected="${ch_typ == change_type or None}" value="$ch_typ">$ch_typ</option>
+                              </select>
+                              <input py:otherwise="" type="text" name="change_type" value="$change_type" readonly="true" style="background-color:#f4f4f4;width:6em" />
+                                </py:choose>
+                              </label>
+                          </td>
+                          <py:if test="unmanaged_skill">
+                          <td>
+                            <label>Separator: <br />
+                              <input type="text" name="separator" value="$separator" style="width:5em" onkeypress="return stopRKey(event)" />
+                            </label>
+                          </td>
+                          <td>
+                            <label>Version: <br />
+                              <input type="text" name="version" value="$version" style="width:8em" onkeypress="return stopRKey(event)" />
+                            </label>
+                          </td>
+                          <td><label><br /><input type="submit" name="update" value="Update" onclick="set_overlay()" /></label></td>
+                          </py:if>
+                          <py:if test="not unmanaged_skill">
+                            <py:if test="ma" py:with="branch_segregation_activated=env.config.get('artusplugin', 'branch_segregation_activated', 'False')">
+                              <td py:if="branch_segregation_activated=='True'">
+                                <div class="field">
+                                  <label>Standard: <br />
+                                    <py:choose>
+                                      <select py:when="standards" id="standard" name="standard" style="padding:2px" onchange="set_overlay(); document.location = get_href([['standard', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])">
+                                        <option py:for="st in standards" selected="${st == standard or None}" value="$st">$st</option>
+                                      </select>
+                                      <py:otherwise>
+                                        <py:choose>
+                                          <input py:when="change_type == 'Standard' and 'VERSION_TAG_ADMIN' in perm" type="text" id="standard" name="standard" value="$standard" style="width:4em" onchange="update_version_tag_name();" />
+                                          <input py:otherwise="" type="text" id="standard" name="standard" value="$standard" readonly="true" style="background-color:#f4f4f4;width:4em" />
+                                        </py:choose>
+                                      </py:otherwise>
+                                    </py:choose>
+                                  </label>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="field">
+                                  <label>Modification: <br />
+                                      <py:choose>
+                                        <input py:when="change_type == 'Creation' and 'VERSION_TAG_ADMIN' in perm" type="text" id="modification" name="modification" value="$modification" style="width:6em" onchange="update_version_tag_name();" />
+                                        <input py:otherwise="" type="text" id="modification" name="modification" value="$modification" readonly="true" style="background-color:#f4f4f4;width:6em" />
+                                      </py:choose>
+                                  </label>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="field">
+                                  <label>Amendment: <br />
+                                      <py:choose>
+                                        <input py:when="change_type == 'Creation' and 'VERSION_TAG_ADMIN' in perm" type="text" id="amendment" name="amendment" value="$amendment" style="width:6em" onchange="update_version_tag_name();" />
+                                        <input py:otherwise="" type="text" id="amendment" name="amendment" value="$amendment" readonly="true" style="background-color:#f4f4f4;width:6em" />
+                                      </py:choose>
+                                  </label>
+                                </div>
+                              </td>
+                            </py:if>
+                            <py:if test="not ma">
+                            <td py:if="component or standard">
+                              <div class="field">
+                                <label>Standard: <br />
+                                  <py:choose>
+                                    <select py:when="standards" id="standard" name="standard" style="padding:2px" onchange="set_overlay(); document.location = get_href([['standard', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])">
+                                      <option py:for="st in standards" selected="${st == standard or None}" value="$st">$st</option>
+                                    </select>
+                                    <py:otherwise>
+                                      <py:choose>
+                                        <input py:when="component and change_type == 'Standard' and 'VERSION_TAG_ADMIN' in perm" type="text" id="standard" name="standard" value="$standard" style="width:4em" onchange="update_version_tag_name();" />
+                                        <input py:otherwise="" type="text" id="standard" name="standard" value="$standard" readonly="true" style="background-color:#f4f4f4;width:4em" />
+                                      </py:choose>
+                                    </py:otherwise>
+                                  </py:choose>
+                                </label>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="field">
+                                <label>Edition: <br />
+                                    <py:choose>
+                                      <input py:when="change_type == 'Creation' and 'VERSION_TAG_ADMIN' in perm" type="text" id="edition" name="edition" value="$edition" style="width:3em" onchange="update_version_tag_name();" />
+                                      <input py:otherwise="" type="text" id="edition" name="edition" value="$edition" readonly="true" style="background-color:#f4f4f4;width:3em" />
+                                    </py:choose>
+                                </label>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="field">
+                                <label>Revision: <br />
+                                    <py:choose>
+                                      <input py:when="change_type == 'Creation' and 'VERSION_TAG_ADMIN' in perm" type="text" id="revision" name="revision" value="$revision" style="width:4em" onchange="update_version_tag_name();" />
+                                      <input py:otherwise="" type="text" id="revision" name="revision" value="$revision" readonly="true" style="background-color:#f4f4f4;width:4em" />
+                                    </py:choose>
+                                </label>
+                              </div>
+                            </td>
+                            </py:if>
+                          <td>
+                            <label>Status:<br />
+                              <py:choose>
+                                <select py:when="status_list" id="status" name="status" style="padding:2px" onchange="set_overlay(); document.location = get_href([['status', this.options[this.selectedIndex].value], ['ScrollX', getScroll('X')], ['ScrollY', getScroll('Y')]], [])">
+                                  <option py:for="st in status_list" selected="${st == status or None}" value="$st">$st</option>
+                                </select>
+                                <input py:otherwise="" type="text" name="status" value="$status" readonly="true" style="background-color:#f4f4f4;width:6em" />
+                              </py:choose>
+                            </label>
+                          </td>
+                          <td py:if="status_index is not None">
+                            <div class="field">
+                              <label>Status Index: <br />
+                                  <py:choose>
+                                    <input py:when="change_type == 'Creation' and 'VERSION_TAG_ADMIN' in perm and status != 'Released'" type="text" id="status_index" name="status_index" value="$status_index" style="width:6em" onchange="update_version_tag_name();" />
+                                    <input py:otherwise="" type="text" id="status_index" name="status_index" value="$status_index" readonly="true" style="background-color:#f4f4f4;width:6em" />
+                                  </py:choose>
+                              </label>
+                            </div>
+                          </td>
+                          </py:if>
+                        </tr>
+                      </table>
+                      <p class="help" style="text-align:justify">
+                        If applicable, choose the tag it derives from, the type of change introduced by the new tag and the version.
+                      </p>
+                    </fieldset>
+                    <table>
+                      <tr>
+                        <td>
+                          <div>
+                            <input py:if="source_url" type="hidden" name="source_url" value="$source_url" />
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <py:choose>
+                    <p py:when="not component or (component and not baselined)" class="help" style="text-align:justify">
+                      <b>The choice of the source url and revision is done in the next step.</b>
+                    </p>
+                    <p py:otherwise="" class="help" style="text-align:justify">
+                      <b>The definition of the baseline is done in the next step.</b>
+                    </p>
+                  </py:choose>
+                  <div class="buttons">
+                    <input type="hidden" name="buildbot" value="$buildbot" />
+                    <input type="hidden" name="component" value="$component" />
+                    <input type="hidden" name="baselined" value="$baselined" />
+                    <input py:if="version_name" type="hidden" name="version_name" value="$version_name" />
+                    <input py:if="ScrollX" type="hidden" name="ScrollX" value="$ScrollX" />
+                    <input py:if="ScrollY" type="hidden" name="ScrollY" value="$ScrollY" />
+                    <input type="hidden" name="sort_included" value="$sort_included" />
+                    <input type="hidden" name="asc_included" value="$asc_included" />
+                    <input py:if="filter_value" type="hidden" name="filter_value" value="$filter_value" />
+                    <input type="submit" name="add" value="Add" onclick="set_overlay()" />
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+          </tr>
+        </table>
+
+      </py:otherwise>
+    </py:choose>
+  </body>
+
+</html>
+

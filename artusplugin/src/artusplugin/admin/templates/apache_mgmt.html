@@ -1,0 +1,57 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Apache management</title>
+  </head>
+
+  <body>
+    <h2>Manage Apache server</h2>
+
+    <fieldset>
+    <legend>Restart Apache server</legend>
+
+      <div id="apache">
+        <form action="" method="POST">
+          <div class="buttons">
+            <input type="submit" name="apache_graceful" value="Graceful Restart" onclick="set_overlay()" />
+            <input type="submit" name="apache_forceful" value="Forceful Restart" onclick="set_overlay()" />
+          </div>
+        </form>
+      </div>
+      <div class="help" style="text-align:left">
+        <p><strong>Note: </strong><em>Graceful</em> means to shut down all services normally, allowing current operations to finish, then restart. <em>Forceful</em> means just shut the whole thing down and restart NOW. It's always nicer to use graceful, but when there's a problem, it doesn't always work.</p>
+        <p><strong>Note: </strong>Restarting Apache will restart all projects, therefore you may prefer to restart only the current application if this option is available (see below). Restarting Apache will free memory.</p>
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+    <legend>Restart WSGI application</legend>
+
+      <div id="wsgi">
+        <form action="" method="POST">
+          <div class="buttons">
+            <input type="submit" name="wsgi_graceful" value="Graceful Restart" onclick="set_overlay()" disabled="${None if req.environ['DAEMON_MODE'] else 'disabled'}"/>
+            <input type="submit" name="wsgi_forceful" value="Forceful Restart" onclick="set_overlay()" disabled="${None if req.environ['DAEMON_MODE'] else 'disabled'}"/>
+          </div>
+        </form>
+      </div>
+      <div class="help" style="text-align:left">
+        <p><strong>Note: </strong>Restarting is only available if this project runs in <em>daemon</em> mode (<em>${req.environ['DAEMON_MODE']}</em>). If that's the case, the daemon process in which your project runs will be shutdown and restarted automatically after pressing one of these buttons.</p>
+        <p><strong>Note: </strong>You may use the graceful restart if the <em>code</em> has changed and the forceful restart if the known <em>users</em> or their <em>permissions</em> have changed. If a graceful restart does not do what you expect, try a forceful restart.</p>
+      </div>
+
+    </fieldset>
+  </body>
+</html>
+

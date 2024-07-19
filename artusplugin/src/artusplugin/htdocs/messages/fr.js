@@ -1,0 +1,2 @@
+// Generated messages javascript file from compiled MO file
+babel.Translations.load({"domain":"artusplugin-js","locale":"fr","messages":{"As your authentication credentials are stored in the browser memory, the only way to logout is to close all instances of your browser":"As your authentication credentials are stored in the browser memory, the only way to logout is to close all instances of your browser","Set the appropriate filter":"Set the appropriate filter"},"plural_expr":"(n \u003e 1)"}).install();

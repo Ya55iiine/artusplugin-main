@@ -1,0 +1,90 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE HTML
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Trac: Users</title>
+  </head>
+  <body>
+    <h2>Trac: Users</h2>
+    <p class="help" style="text-align:justify">
+    Users that can access this project are listed first by <em>profile</em> - with ascending rights, then by <em>role</em> - when applicable, and finally <em>alphabetically</em>.<br/>
+    </p>
+    <py:for each="profile in user_profiles">
+      <p style="font-weight: bold;"><a href="$dc_url/index.php?post/94">$profile</a></p>
+      <table class="users">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Username</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <py:for each="role in roles_by_profile[profile]" py:if="users_by_role[role]">
+            <!-- Users with roles for the profile -->
+            <py:for each="user in users_by_role[role]" py:with="registered=user in registered_users;email=users_emails[user]">
+              <tr>
+                <td rowspan="${len(users_by_role[role])}" py:if="user == users_by_role[role][0]">${displayed_roles[role]} (${role_initials[role]})</td>
+                <td>$user</td>
+                <td>
+                  <py:choose>
+                    <py:when test="registered and email">
+                      <a href="mailto:$email" title="$email">
+                        ${ldap_display_names[user] if user in ldap_display_names else email}
+                      </a>
+                    </py:when>
+                    <py:when test="registered and not email">
+                      <span title="The user was not found in MEGGITT Active Directory">This user has left the company</span>
+                    </py:when>
+                    <py:otherwise>
+                      <span title="The user was not found in the database of passwords">This user is not registered</span>
+                    </py:otherwise>
+                  </py:choose>
+                </td>
+              </tr>
+            </py:for>
+          </py:for>
+          <py:for each="user in users_without_role_by_profile[profile]" py:with="registered=user in registered_users;email=users_emails[user]" py:if="user not in test_users">
+            <!-- Users without roles for the profile -->
+            <tr>
+              <td rowspan="${len(users_without_role_by_profile[profile])}" py:if="user == users_without_role_by_profile[profile][0]">None</td>
+              <td>$user</td>
+              <td>
+                <py:choose>
+                  <py:when test="registered and email">
+                    <a href="mailto:$email" title="$email">
+                      ${ldap_display_names[user] if user in ldap_display_names else email}
+                    </a>
+                  </py:when>
+                  <py:when test="registered and not email">
+                    <span title="The user was not found in MEGGITT Active Directory">This user has left the company</span>
+                  </py:when>
+                  <py:otherwise>
+                    <span title="The user was not found in the database of passwords">This user is not registered</span>
+                  </py:otherwise>
+                </py:choose>
+              </td>
+            </tr>
+          </py:for>
+          <py:if test="not users_with_role_by_profile[profile] and not users_without_role_by_profile[profile]">
+            <!-- No user for the profile -->
+            <tr>
+              <td>None</td>
+              <td>None</td>
+              <td>None</td>
+            </tr>
+          </py:if>
+        </tbody>
+      </table>
+    </py:for>
+  </body>
+</html>

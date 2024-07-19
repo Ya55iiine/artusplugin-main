@@ -1,0 +1,60 @@
+button[type=button]:hover {
+	background: #ccb;
+}
+
+.tooltip_templates {
+	display: none;
+}
+
+.in_vtg_odd {
+	background-color: #c0f1ce;
+}
+
+.in_vtg_even {
+	background-color: #d3f3dc;
+}
+
+table.listing tbody tr.in_vtg_odd:hover td { background: #b6dcc1 !important }
+table.listing tbody tr.in_vtg_even:hover td { background: #b6dcc1 !important }
+
+#current_activity, #current_status {
+	color: #222;
+}
+
+legend :link, legend :visited {
+	font-weight: normal;
+}
+
+table.users {
+	table-layout: fixed;
+    width: 80%;
+    border-collapse: collapse;
+}
+
+table.users, table.users th, table.users td {
+    border: 1px solid black;
+}
+
+table.users th {
+    background-color:#F0F0F0;
+}
+
+table.users td {
+	padding: 7px;
+}
+
+table.users td span {
+    cursor: pointer;
+}
+
+table.users td:nth-child(1), table.users th:nth-child(1) {
+    width: 35%;
+}
+
+table.users td:nth-child(2), table.users th:nth-child(2) {
+    width: 20%;
+}
+
+table.users td:nth-child(3), table.users th:nth-child(3) {
+    width: 45%;
+}

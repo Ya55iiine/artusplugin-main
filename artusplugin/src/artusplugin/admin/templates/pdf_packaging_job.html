@@ -1,0 +1,123 @@
+<!--!  Copyright (C) 2024 Artus
+  All rights reserved.
+  Author: Michel Guillot <michel.guillot@meggitt.com>
+-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n" i18n:domain="artusplugin">
+  <head>
+    <title>TRAC PDF packaging job</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <style>
+      .header {
+        font-size: medium;
+        font-weight: bold;
+        width:  90%;
+        padding-bottom: 1em;
+      }
+
+      .project_name {
+        font-size: 30px;
+        font-family: Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
+        font-weight: bold;
+        letter-spacing: -0.018em;
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      .host_url {
+        font-size: 15px;
+        font-family: Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
+        font-weight: normal;
+        letter-spacing: -0.018em;
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      :link, :visited {
+        text-decoration: underline;
+        color: #b00;
+      }
+    </style>
+
+  </head>
+  <body>
+    <table width="100%" style="margin-bottom:1em;table-layout:fixed;">
+      <tbody>
+        <tr>
+          <td style="width:100%">
+            <div class="project_name">${project_name}</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width:100%">
+            <div class="host_url">This Trac project (<b>${project_desc}</b>) is hosted on <b>${host}</b></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div py:if="build_result == 'success'">
+      <py:if test="how_many > 1">
+        <p class="header">
+          You have submitted a job of PDF documents packaging. The job has succeeded.
+        </p>
+        <p>
+          You have requested a maximum size of ${max_size} for the generated archives.
+        </p>
+        <p>
+          Here are the links to download the zip files containing the PDF files:
+        </p>
+        <p>
+          <py:for each="link in links">
+            <p><a href="$link">${link.split('/')[-1]}</a></p>
+          </py:for>
+        </p>
+        <p>
+          Here is the link to download the associated index file:
+        </p>
+        <p>
+          <a href="$index">${index.split('/')[-1]}</a>
+        </p>
+        <p style="font-size:smaller">
+          <hr/>
+          These links will remain valid at least for 10 days. After that, the files may be removed.
+        </p>
+      </py:if>
+      <py:if test="how_many == 1">
+        <p class="header">
+          You have submitted a job of PDF documents packaging. The job has succeeded.
+        </p>
+        <p>
+          Here is the link to download the zip file containing the PDF files:
+        </p>
+        <p>
+          <a href="$link">${link.split('/')[-1]}</a>
+        </p>
+        <p style="font-size:smaller">
+          <hr/>
+          This link will remain valid at least for 10 days. After that, the file may be removed.
+        </p>
+      </py:if>
+    </div>
+    <py:if test="build_result != 'success'">
+      <p class="header">
+        You have submitted a job of PDF documents packaging. The job has failed.
+      </p>
+      <p>
+        Here is the error message(s):
+      </p>
+      <p>
+        ${build_message}
+      </p>
+      <p style="font-size:smaller">
+        <hr/>
+        Please provide more details if possible by replying to this mail.
+      </p>
+    </py:if>
+  </body>
+</html>

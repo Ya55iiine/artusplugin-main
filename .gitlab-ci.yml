@@ -1,0 +1,102 @@
+workflow:
+  rules:
+    # $CI_COMMIT_BRANCH, $CI_DEFAULT_BRANCH:
+    #   https://docs.gitlab.com/ee/ci/variables/predefined_variables.html 
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+default:
+  image: alpine:latest
+
+# List of stages for jobs, and their order of execution
+stages:
+  - build
+  - deploy
+
+# This job runs in the build stage.
+build-job:
+  stage: build
+  image: centos:7
+  variables:
+    VM11_URL: http://10.125.2.8
+  
+  # Setup poetry
+  before_script:
+    # $PWD: Current working directory when executed as a shell script on a gitlab-runner (job)
+    - yum install -y python-ldap
+    - yum install -y epel-release
+    - yum install -y python-pip
+    - pip install --upgrade "pip < 21.0"
+    - pip install poetry
+    - yum install -y centos-release-scl
+    - yum install -y rh-python38
+    - cd $PWD/artusplugin
+    - poetry update
+    - poetry install
+    - source `poetry env info --path`/bin/activate
+  
+  # Build the package
+  script:
+    - echo "This is the build stage"
+    - poetry build
+    - echo "Build done ..."
+   
+  # Publish it into the GitLab package registry of the Trac group. 
+  after_script:
+    # $GITLAB_API_CONF, $CI_DEPLOY_USER, $CI_DEPLOY_PASSWORD:
+    #   http://gitlab.artus.dom/groups/meggitt-avrille/services/ingenierie-et-projets/certification/outils/trac/-/settings/ci_cd
+    # $CI_PROJECT_ID:
+    #   https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+    # $PWD: Current working directory when executed as a shell script on a gitlab-runner (job)
+    # See https://docs.gitlab.com/runner/shells/
+    - source /opt/rh/rh-python38/enable
+    - pip install "urllib3 == 1.26.15"
+    - pip install "python-gitlab == 3.14.0"
+    # Package version to be published (extracted from pyproject.toml)
+    - cd $PWD/artusplugin
+    - version=$(poetry version|grep artusplugin|grep -oP "[\d\.]+")
+    # Package ids already published (from GitLab)
+    - ids=$(gitlab -c $GITLAB_API_CONF -v project-package list --project-id $CI_PROJECT_ID|
+      grep -P 'id:\s'|grep -oP '[\d\.]+')
+    # Package has to be removed if already published
+    - for id in $ids;
+      do
+        v=$(gitlab -c $GITLAB_API_CONF -v project-package get
+        --project-id $CI_PROJECT_ID --id $id|grep -P "version:\s"|grep -oP "[\d\.]+");
+        if [ "$v" = "$version" ]; then
+          gitlab -c $GITLAB_API_CONF project-package delete --project-id $CI_PROJECT_ID --id $id;
+          echo "Package version $v has been removed"
+          break;
+        fi;
+      done
+    # Publish the package to the project package repository
+    - poetry config repositories.gitlab http://gitlab.artus.dom/api/v4/projects/$CI_PROJECT_ID/packages/pypi
+    - poetry config http-basic.gitlab $CI_DEPLOY_USER $CI_DEPLOY_PASSWORD
+    - echo "Gitlab repository configured ..."
+    - poetry publish -r gitlab
+    - echo "Publishing done!"
+
+  environment:
+        name: production
+        url: $VM11_URL
+
+# This job runs in the deploy stage.
+deploy-job:
+  stage: deploy
+  
+  # Setup deployment
+  before_script:
+    # $VM11_KEY, $VM11_PASSPHRASE:
+    #   http://gitlab.artus.dom/meggitt-avrille/services/ingenierie-et-projets/certification/outils/trac/trac-plugins/artusplugin/-/settings/ci_cd
+    - apk update && apk add --upgrade openssh-client && apk add --upgrade util-linux
+    - mkdir "$(pwd)/.ssh"
+    - chmod 700 "$(pwd)/.ssh"
+    - echo -e "$VM11_KEY" > "$(pwd)/.ssh/id_deployer"
+    - chmod 600 "$(pwd)/.ssh/id_deployer"
+    - eval `ssh-agent`
+    - echo "$VM11_PASSPHRASE"|SSH_ASKPASS=/bin/cat setsid -w ssh-add $(pwd)/.ssh/id_deployer
+
+  # Install the package on the remote target (user/password in /etc/pip.conf).
+  script:
+    # $VM11_USER, $VM11_IP, $INSTALL_SCRIPT:
+    #   http://gitlab.artus.dom/meggitt-avrille/services/ingenierie-et-projets/certification/outils/trac/trac-plugins/artusplugin/-/settings/ci_cd
+    - ssh -i "$(pwd)/.ssh/id_deployer" -o StrictHostKeyChecking=no "$VM11_USER@$VM11_IP" "bash -s" < $INSTALL_SCRIPT

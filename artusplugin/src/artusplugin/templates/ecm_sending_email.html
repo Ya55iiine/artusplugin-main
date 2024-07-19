@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     xmlns:xi="http://www.w3.org/2001/XInclude">
+  <head>
+
+    <style>
+      body {
+      	font: 11pt Calibri, sans-serif;
+      }
+
+      .signature {
+        font-family: Arial, sans-serif;
+        font-size: 8pt;
+      }
+
+      .sendername {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 10pt;
+      }
+
+      .division {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 8pt;
+      }
+
+      .green {
+        font-family: Arial, sans-serif;
+        font-size: 8pt;
+        color: green;
+      }
+    </style>
+
+  </head>
+  <body style="background-color:color=white">
+    <p>*** This email was generated automatically by <a href="https://trac.edgewall.org">Trac</a> on behalf of $sendername (Ticket <a href="$ticket_url">#$ticket_id</a>) ***<br/>
+    *** This is email #$email_no out of a total of $emails_count email(s) ***</p>
+    <p>Please find attached the following <strong>$attachment_introduction</strong>:<br/>
+      <span>$attachment_name</span>
+    </p>
+    <p py:if="attachment_content_type">$attachment_content_type:<br/>
+      <span py:for="item in attachment_content">$item<br/></span>
+    </p>
+    <p py:if="attachment_comment">Comment:<br/>
+      <span>$attachment_comment</span>
+    </p>
+    <p>Regards</p>
+    <span class="sendername">$sendername</span><br/>
+    <span class="signature">$fromrole</span><br/>
+    <br/>
+    <span class="division">$productgroup</span><br/>
+    <span class="division">$division</span><br/>
+    <span class="signature">$address1</span><br/>
+    <span class="signature">$address2</span><br/>
+    <span class="signature">$address3</span><br/>
+    <span class="signature">$country</span><br/>
+    <br/>
+    <span class="signature">Tel: $fromphone</span><br/>
+    <span class="signature">$senderemail</span><br/>
+    <br/>
+    <span class="signature">$company_website</span><br/>
+    <br/>
+    <span class="green">Please consider the environment before printing this e-mail.</span><br/>
+    <img src="cid:$image"/><br/>
+  </body>
+</html>
