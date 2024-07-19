@@ -7,7 +7,7 @@ license = "BSD 3-Clause"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^2.7"
+python = "^3"
 pytz = "^2022.7.1"
 # python-ldap = "2.4.15"
 future = "*"
