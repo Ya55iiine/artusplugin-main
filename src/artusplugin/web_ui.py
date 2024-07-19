@@ -7,7 +7,6 @@
 
 """ Customizations of ticket processing. """
 
-from builtins import basestring, unicode
 
 # Genshi
 from genshi.builder import tag
@@ -2156,7 +2155,7 @@ class ArtusModule(Component):
                             reversed_skills = dict(zip(skills.values(), skills.keys()))
                             skill = reversed_skills[match.group(1)]
 
-                    if 'caller' in req.args and isinstance(req.args.get('caller'), basestring):
+                    if 'caller' in req.args and isinstance(req.args.get('caller'), str):
                         caller = req.args.get('caller')
                         regexp = r"\At(\d+)\Z"
                         match = re.search(regexp, caller)
@@ -2292,7 +2291,7 @@ class ArtusModule(Component):
                     if ('TICKET_MODIFY' in req.perm and
                         display_button and
                         'caller' in req.args and
-                        isinstance(req.args.get('caller'), basestring)):
+                        isinstance(req.args.get('caller'), str)):
                         caller = req.args.get('caller')
                         regexp = r"\At(\d+)\Z"
                         match = re.search(regexp, caller)
@@ -2529,7 +2528,7 @@ class ArtusModule(Component):
         """ 'Create Ticket' button """
 
         now = datetime.now(localtz)
-        req.args['field_submitdate'] = unicode(now.isoformat(' '))
+        req.args['field_submitdate'] = str(now.isoformat(' '))
         req.args['field_submitcomment'] = req.args.get('comment') or ''
         req.args['field_initialcomment'] = req.args['field_submitcomment']
         if req.args['field_type'] == 'DOC':
@@ -2592,7 +2591,7 @@ class ArtusModule(Component):
 
         # Force detection of a change (for concurrent access handling)
         now = datetime.now(localtz)
-        req.args['field_submitdate'] = unicode(now.isoformat(' '))
+        req.args['field_submitdate'] = str(now.isoformat(' '))
         req.args['field_submitcomment'] = req.args.get('comment')
 
     def _pre_process_newattachment_post(self, req, handler):
@@ -3498,7 +3497,7 @@ class ArtusModule(Component):
 
         data['wiki_url'] = '%s/wiki' % self.env.config.get('trac', 'base_url')
         data['dc_url'] = self.env.config.get('artusplugin', 'dc_url')
-        data['caller'] = req.args.get('caller', None) if isinstance(req.args.get('caller'), basestring) else None
+        data['caller'] = req.args.get('caller', None) if isinstance(req.args.get('caller'), str) else None
 
         # Attachment ticket id ('attachment_tid') support:
         #   the browser is used for changing the url or the revision

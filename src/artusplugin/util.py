@@ -7,8 +7,6 @@
 
 """ Utility functions """
 
-from builtins import basestring, unicode
-
 # Genshi
 from genshi.builder import Element
 from genshi.output import DocType
@@ -267,8 +265,7 @@ def upload_filename(upload, suffix):
         raise TracError(_("Can't upload empty file"))
     # We try to normalize the filename to unicode NFC if we can.
     # Files uploaded from OS X might be in NFD.
-    filename = unicodedata.normalize('NFC', unicode(upload.filename,
-                                                    'utf-8'))
+    filename = unicodedata.normalize('NFC', str(upload.filename))
     filename = os.path.basename(path_to_linux(filename))
     return filename
 
@@ -798,7 +795,7 @@ def unix_cmd_apply(env, unix_cmd_list, line_number, nesting_level=0):
                 # command output
                 child_stdout_and_stderr = p1.stdout
                 for line in child_stdout_and_stderr.readlines():
-                    lines += [unicode(line, 'utf-8')]
+                    lines += str(line)
 
                 if failed:
                     # lookup for special errors
@@ -1301,7 +1298,7 @@ def get_edit_or_view_mode(env, req, ticket, permission):
 def url_add_params(url, list_param=None):
     if url and list_param:
         for param_name, param_value in list_param:
-            if param_value and isinstance(param_value, basestring):
+            if param_value and isinstance(param_value, str):
                 url += '&' if '?' in url else '?'
                 url += param_name + '=' + param_value
     return url
@@ -1496,7 +1493,7 @@ def send_pdf_print_email(env, authname, base_path):
         with Ldap_Utilities() as ldap_util:
             email = Users.get_email(env, username, ldap_util)
         displayname = users_permissions.users_ldap_names[username]
-        displayname = unicode(displayname, "utf-8")
+        displayname = str(displayname)
         displayname = '"%s"' % unidecode(displayname)
         return (displayname, email)
 
@@ -1548,7 +1545,7 @@ def strip_accents(text):
     :rtype: String.
     """
     try:
-        text = unicode(text, 'utf-8')
+        text = str(text)
     except (TypeError, NameError): # unicode is a default on python 3 
         pass
     text = unicodedata.normalize('NFD', text)
@@ -1822,7 +1819,7 @@ class UsersLdapNames(object):
                         if ldap_name is None:
                             ldap_name = username
                         else:
-                            ldap_name = unidecode(unicode(ldap_name, "utf-8"))
+                            ldap_name = unidecode(str(ldap_name))
                     except Exception:
                         ldap_name = username
                 else:

@@ -10,7 +10,6 @@
 # Python-Future
 from __future__ import print_function
 
-from builtins import basestring
 
 # Genshi
 from genshi.builder import tag
@@ -599,7 +598,7 @@ class AdminInterface(CComponent):
                         id_='help', style_='text-align: left')))
                 return stream
 
-            if 'caller' in req.args and isinstance(req.args.get('caller'), basestring) and re.search(re_frmtpl, req.args.get('caller')):
+            if 'caller' in req.args and isinstance(req.args.get('caller'), str) and re.search(re_frmtpl, req.args.get('caller')):
 
                 if 'MILESTONE_CREATE' in req.perm:
 
@@ -675,7 +674,7 @@ class AdminInterface(CComponent):
                             stream |= Transformer('//input[@name="Version_Tag_view"]').attr(
                                 'onclick', 'location.href="%s"' % url_tag_view)
 
-                            if 'caller' in req.args and isinstance(req.args.get('caller'), basestring):
+                            if 'caller' in req.args and isinstance(req.args.get('caller'), str):
                                 caller = req.args.get('caller')
                                 ci_name = model.Tag(self.env, tagname).tracked_item
 
@@ -813,7 +812,7 @@ class AdminInterface(CComponent):
                         if ('VERSION_TAG_VIEW' in req.perm and
                             display_button and
                             'caller' in req.args and
-                            isinstance(req.args.get('caller'), basestring)):
+                            isinstance(req.args.get('caller'), str)):
                             caller = req.args.get('caller')
 
                             if (caller.startswith(dir_name) and
@@ -929,7 +928,7 @@ class AdminInterface(CComponent):
                                                       util.unicode_unquote_plus(href),
                                                       regular_expression)
 
-                    if 'BRANCH_VIEW' in req.perm and 'caller' in req.args and isinstance(req.args.get('caller'), basestring):
+                    if 'BRANCH_VIEW' in req.perm and 'caller' in req.args and isinstance(req.args.get('caller'), str):
                         caller = req.args.get('caller')
 
                         if util.is_branch_name(caller):
@@ -1040,7 +1039,7 @@ class AdminInterface(CComponent):
 
         # Version tag ('caller') support:
         #   the browser is used for changing the url or the revision
-        data['caller'] = req.args.get('caller', None) if isinstance(req.args.get('caller'), basestring) else None
+        data['caller'] = req.args.get('caller', None) if isinstance(req.args.get('caller'), str) else None
         data['url_add_params'] = util.url_add_params
 
         # View documents/components
@@ -2386,7 +2385,7 @@ class DocumentsAdminPanel(TagsMgmt, VersionAdminPanel):
             args['max_size'] = req.args.get('max_size', '20M')
             args['ScrollX'] = req.args.get('ScrollX', 0)
             args['ScrollY'] = req.args.get('ScrollY', 0)
-            args['caller'] = req.args.get('caller', None) if isinstance(req.args.get('caller'), basestring) else None
+            args['caller'] = req.args.get('caller', None) if isinstance(req.args.get('caller'), str) else None
 
             # Values / parameters used internally (python code / Genshi templating)
             data['pdf_packaging'] = args['pdf_packaging'] == 'true'
@@ -6046,7 +6045,7 @@ class TemplatesAdminPanel(CComponent):
         selected_ttype = None
         selected_url = None
 
-        if 'selected_url' in req.args and 'caller' in req.args and isinstance(req.args.get('caller'), basestring):
+        if 'selected_url' in req.args and 'caller' in req.args and isinstance(req.args.get('caller'), str):
             caller = req.args.get('caller')
             regexp = r"\A(%s)_(%s)\Z" % ('|'.join(data['skills']),
                                          '|'.join(data['ticket_types_with_forms']))
