@@ -1806,7 +1806,7 @@ class UsersLdapNames(object):
         flags = os.O_CREAT + os.O_WRONLY
         if hasattr(os, 'O_BINARY'):
             flags += os.O_BINARY
-        targetfile = os.fdopen(os.open(self.ldap_display_names_file, flags, 0666), 'w')
+        targetfile = os.fdopen(os.open(self.ldap_display_names_file, flags, 666), 'w')
         ldap_display.write(targetfile)
         targetfile.close()
 
