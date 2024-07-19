@@ -9,7 +9,7 @@
 
 # Genshi
 # from genshi.builder import Element
-from html import HTML as Element
+from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 # Trac
@@ -1317,7 +1317,7 @@ def entries_add_params(req, list_param=None):
 
 
 def get_link(elt):
-    if isinstance(elt, Element):
+    if bool(BeautifulSoup(elt, "html.parser").find()):
         if elt.tag.localname == 'a':
             return elt.attrib.get('href'), elt.children[0]
         else:
