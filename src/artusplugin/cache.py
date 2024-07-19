@@ -7,8 +7,6 @@
 
 """ Caching (working copy) of configuration items """
 
-from builtins import unicode
-
 # Genshi
 from genshi.builder import tag
 from genshi.output import DocType
@@ -1815,7 +1813,7 @@ class PDFPackage(object):
         else:
             self.package_name = '%s_%s_%s' % (
                 self.trac_env_name,
-                unicode(datetime.now(localtz).strftime('%Y-%m-%d_%H-%M-%S')),
+                str(datetime.now(localtz).strftime('%Y-%m-%d_%H-%M-%S')),
                 self.authname)
         self.pdf_list = pdf_list
         # Case where only one element is selected
@@ -1895,7 +1893,7 @@ class PDFPackage(object):
                                                  pdf_tag_file[1]),
                                       util.get_revision(node_url))
                 doc_filepath = '%s/%s' % (doc_dirpath, targetfilename)
-                targetfile = os.fdopen(os.open(doc_filepath, self.flags, 0666), 'w')
+                targetfile = os.fdopen(os.open(doc_filepath, self.flags, 666), 'w')
                 shutil.copyfileobj(node.get_content(), targetfile)
                 targetfile.close()
                 # Add associated (P)RF/CHKLST IF main PDF file
@@ -2159,7 +2157,7 @@ class PDFPackage(object):
             with Ldap_Utilities() as ldap_util:
                 email = util.Users.get_email(self.env, username, ldap_util)
             displayname = users_ldap_names[username]
-            displayname = unicode(displayname, "utf-8")
+            displayname = str(displayname)
             displayname = '"%s"' % unidecode(displayname)
             return (displayname, email)
 

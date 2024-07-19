@@ -7,8 +7,6 @@
 
 """ OpenOffice form handling """
 
-from builtins import unicode
-
 # ODFPY
 from odf.form import Form, Checkbox
 from odf.opendocument import load
@@ -226,7 +224,7 @@ class MSOFormTemplate(TicketFormTemplate):
             node = repos.get_node(template_path, self.source_rev)
             templatefile = os.fdopen(os.open(cache_name,
                                              os.O_CREAT + os.O_WRONLY + os.O_TRUNC,
-                                             0666), 'w')
+                                             666), 'w')
             shutil.copyfileobj(node.get_content(), templatefile)
             templatefile.close()
         else:
@@ -446,7 +444,7 @@ class TicketForm(object):
         # named as follows: <trac_env_name>_<datetime>_<authname>
         base_path = '%s/%s_%s_%s' % (base_dir,
                                      trac_env_name,
-                                     unicode(datetime.now(localtz).strftime(
+                                     str(datetime.now(localtz).strftime(
                                          '%Y-%m-%d_%H-%M-%S')),
                                      authname)
         if not os.access(base_path, os.F_OK):
@@ -3695,7 +3693,7 @@ class MoM(TicketAttachment):
         # <trac_env_name>_<datetime>_<authname>
         base_path = '%s/%s_%s_%s' % (
             MOM_DIRECTORY, self.trac_env_name,
-            unicode(datetime.now(localtz).strftime('%x_%X')).
+            str(datetime.now(localtz).strftime('%x_%X')).
             replace('/', '-').replace(':', '-'), self.authname)
         if not os.access(base_path, os.F_OK):
             os.mkdir(base_path)

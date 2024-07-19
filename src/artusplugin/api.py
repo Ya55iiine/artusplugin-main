@@ -1719,7 +1719,7 @@ class ArtusSystem(CComponent):
                     node = repos.get_node(tft.source_name, tft.source_rev)
                     templatefile = os.fdopen(os.open(tft.cache_name,
                                                      os.O_CREAT + os.O_WRONLY + os.O_TRUNC,
-                                                     0666), 'w')
+                                                     666), 'w')
                     shutil.copyfileobj(node.get_content(), templatefile)
                     templatefile.close()
                 else:

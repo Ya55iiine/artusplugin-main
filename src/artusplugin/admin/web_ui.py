@@ -1263,7 +1263,7 @@ class AdminInterface(CComponent):
                                       'in project configuration file'))
                 if os.access(group_file, os.F_OK):
                     os.remove(group_file)
-                targetfile = os.fdopen(os.open(group_file, flags, 0666), 'w')
+                targetfile = os.fdopen(os.open(group_file, flags, 666), 'w')
                 for profile in users.user_profiles:
                     targetfile.write("%s: %s\n" %
                                      (profile,
@@ -1330,7 +1330,7 @@ class AdminInterface(CComponent):
                 authz_file = self.config.get('trac', 'authz_file')
                 if os.access(authz_file, os.F_OK):
                     os.remove(authz_file)
-                targetfile = os.fdopen(os.open(authz_file, flags, 0666), 'w')
+                targetfile = os.fdopen(os.open(authz_file, flags, 666), 'w')
                 authz_config.write(targetfile)
                 targetfile.close()
                 for line in fileinput.input(authz_file, inplace=1):
@@ -1584,7 +1584,7 @@ class ReqtifyProject(object):
         if hasattr(os, 'O_BINARY'):
             self.flags += os.O_BINARY
 
-        targetfile = os.fdopen(os.open(self.filepath, self.flags, 0666), 'wbaseline_docs')
+        targetfile = os.fdopen(os.open(self.filepath, self.flags, 666), 'wbaseline_docs')
         shutil.copyfileobj(fileobj, targetfile)
         targetfile.close()
 
@@ -1696,7 +1696,7 @@ class ReqtifyProject(object):
         if os.access(self.filepath, os.F_OK):
             os.remove(self.filepath)
 
-        targetfile = os.fdopen(os.open(self.filepath, self.flags, 0666), 'w')
+        targetfile = os.fdopen(os.open(self.filepath, self.flags, 666), 'w')
         self.config.write(targetfile)
         targetfile.close()
 
