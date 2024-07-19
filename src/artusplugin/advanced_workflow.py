@@ -12,7 +12,6 @@ from __future__ import unicode_literals
 from future import standard_library
 standard_library.install_aliases()
 from builtins import zip
-from builtins import str
 from builtins import object
 
 # Genshi
@@ -20,6 +19,7 @@ from genshi.builder import tag
 from genshi.output import DocType
 from genshi.template import MarkupTemplate, TemplateLoader
 from genshi.template.loader import TemplateNotFound
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 # Trac
 from trac.attachment import Attachment
@@ -1431,20 +1431,36 @@ class ECM2WF(DocWF):
 
         return header
 
-    def format_html(self, data):
+    # def format_html(self, data):
 
+    #     chrome = Chrome(self.env)
+    #     dirs = []
+    #     for provider in chrome.template_providers:
+    #         dirs += provider.get_templates_dirs()
+    #     templates = TemplateLoader(dirs, variable_lookup='lenient')
+
+    #     _buffer = StringIO()
+    #     try:
+    #         template = templates.load('ecm_sending_email.html', cls=MarkupTemplate)
+    #         if template:
+    #             stream = template.generate(**data)
+    #             stream.render('xhtml', doctype=DocType.XHTML_STRICT, out=_buffer)
+    #     except TemplateNotFound:
+    #         pass
+
+    #     return _buffer.getvalue()
+    def format_html(self, data):
         chrome = Chrome(self.env)
         dirs = []
         for provider in chrome.template_providers:
             dirs += provider.get_templates_dirs()
-        templates = TemplateLoader(dirs, variable_lookup='lenient')
+        env = Environment(loader=FileSystemLoader(dirs), trim_blocks=True)
 
         _buffer = StringIO()
         try:
-            template = templates.load('ecm_sending_email.html', cls=MarkupTemplate)
+            template = env.get_template('ecm_sending_email.html')
             if template:
-                stream = template.generate(**data)
-                stream.render('xhtml', doctype=DocType.XHTML_STRICT, out=_buffer)
+                _buffer.write(template.render(**data))
         except TemplateNotFound:
             pass
 

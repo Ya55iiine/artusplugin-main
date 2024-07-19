@@ -12,7 +12,7 @@ from trac.core import Component, implements, TracError
 from trac.web import IRequestHandler
 
 # Standard lib
-from urllib import unquote
+from urllib.parse import unquote
 import os
 import re
 import stat

@@ -10,7 +10,7 @@
     cf http://mashupguide.net/1.0/html/ch17s04.xhtml (examples) """
 
 
-from StringIO import StringIO
+from io import StringIO
 from odf.dc import Title, Subject, Description
 from odf.element import Text
 from odf.form import Checkbox

@@ -7,9 +7,8 @@
 
 """ Some useful macros. """
 
-# Genshi
-from genshi.builder import tag
-from genshi.core import Markup
+from trac.util.html import html as tag
+from trac.util.html import Markup
 
 # Trac
 from trac.core import TracError
