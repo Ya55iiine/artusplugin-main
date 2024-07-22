@@ -69,7 +69,7 @@ from odf.opendocument import load
 from odf.table import Table
 
 # Announcer Plugin
-from announcerplugin.resolvers.specified import SpecifiedEmailResolver
+from artusplugin.announcer.specified import SpecifiedEmailResolver
 
 # Same package
 from artusplugin import util, model, Ooo, cache, web_ui, _, N_, tag_
