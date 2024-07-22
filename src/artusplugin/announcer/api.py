@@ -9,6 +9,27 @@ from trac.db import DatabaseManager
 from trac.env import IEnvironmentSetupParticipant
 
 
+class IAnnouncementAddressResolver(Interface):
+    """Handles mapping Trac usernames to addresses for distributors to use."""
+
+    def get_address_for_name(name, authenticated):
+        """Accepts a session name, and returns an address.
+
+        This address explicitly does not always have to mean an email address,
+        nor does it have to be an address stored within the Trac system at
+        all.
+
+        Implementations of this interface are never 'detected' automatically,
+        and must instead be specifically named for a particular distributor.
+        This way, some may find email addresses (for EmailDistributor), and
+        others may find AIM screen name.
+
+        If no address for the specified name can be found, None should be
+        returned. The next resolver will be attempted in the chain.
+        """
+
+
+
 class IAnnouncementProducer(Interface):
     """Producer converts Trac events from different subsystems, into
     AnnouncerEvents.
