@@ -42,7 +42,7 @@ from email.mime.image import MIMEImage
 from email import encoders
 from itertools import groupby, chain
 from collections import OrderedDict
-from ldap_utilities import Ldap_Utilities
+from artusplugin.ldap_utilities import Ldap_Utilities
 from io import StringIO
 import copy
 import os
