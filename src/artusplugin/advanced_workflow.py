@@ -39,7 +39,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-from email import Encoders
+from email import encoders
 from itertools import groupby, chain
 from collections import OrderedDict
 from ldap_utilities import Ldap_Utilities
@@ -1779,7 +1779,7 @@ class ECM2WF(DocWF):
         part = MIMEBase('application', "octet-stream")
         attachment = open(data['attachment_pathname'], "rb")
         part.set_payload(attachment.read())
-        Encoders.encode_base64(part)
+        encoders.encode_base64(part)
         part.add_header('Content-Disposition', 'attachment; filename="%s"' % data['attachment_name'])
         msg.attach(part)
 
@@ -2411,7 +2411,7 @@ class FEEWF(DocWF):
         part = MIMEBase('application', "octet-stream")
         attachment = open(data['attachment_pathname'], "rb")
         part.set_payload(attachment.read())
-        Encoders.encode_base64(part)
+        encoders.encode_base64(part)
         part.add_header('Content-Disposition', 'attachment; filename="%s"' % data['attachment_name'])
         msg.attach(part)
 
