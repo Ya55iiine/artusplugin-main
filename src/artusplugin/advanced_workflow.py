@@ -15,10 +15,11 @@ from builtins import zip
 from builtins import object
 
 # Genshi
-from genshi.builder import tag
-from genshi.output import DocType
-from genshi.template import MarkupTemplate, TemplateLoader
-from genshi.template.loader import TemplateNotFound
+# from genshi.builder import tag
+# from genshi.output import DocType
+# from genshi.template import MarkupTemplate, TemplateLoader
+# from genshi.template.loader import TemplateNotFound
+from trac.util.html import html as tag
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 # Trac

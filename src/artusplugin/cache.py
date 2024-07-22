@@ -8,7 +8,8 @@
 """ Caching (working copy) of configuration items """
 
 # Genshi
-from genshi.builder import tag
+# from genshi.builder import tag
+from trac.util.html import html as tag
 from genshi.output import DocType
 from genshi.template import TemplateLoader, MarkupTemplate
 from genshi.template.loader import TemplateNotFound

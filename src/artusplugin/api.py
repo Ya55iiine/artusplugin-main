@@ -8,7 +8,8 @@
 """ Central functionality for the Artus plugin """
 
 # Genshi
-from genshi.builder import tag
+# from genshi.builder import tag
+from trac.util.html import html as tag
 
 # Trac
 from trac.attachment import IAttachmentChangeListener, Attachment
