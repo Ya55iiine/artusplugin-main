@@ -47,7 +47,7 @@ import shutil
 import sys
 import syslog
 import tempfile
-import urllib2
+import urllib3
 import zipfile
 
 # Same package
@@ -729,7 +729,7 @@ EOF
                                                attachments_path,
                                                fn,
                                                attachments_path,
-                                               urllib2.unquote(fn.rsplit('.', 1)[-2]),
+                                               urllib3.unquote(fn.rsplit('.', 1)[-2]),
                                                self.env.config.get('artusplugin', 'LOo_port'))]
                         # Effective application of the list of commands
                         util.unix_cmd_apply(self.env, unix_cmd_list, util.lineno())
