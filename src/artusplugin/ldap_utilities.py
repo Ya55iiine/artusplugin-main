@@ -4,10 +4,6 @@
 # Standard lib
 # import ConfigParser
 from backports import configparser as ConfigParser
-import ldap
-import re
-import sys
-import syslog
 
 # MEGGITT and ARTUS LDAP
 from meggitt_ldap import Meggitt_Ldap
