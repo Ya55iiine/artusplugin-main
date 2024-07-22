@@ -17,7 +17,8 @@ import uuid
 from pylocker import Locker
 
 # Genshi
-from genshi.builder import tag
+# from genshi.builder import tag
+from trac.util.html import html as tag
 from genshi.util import striptags
 
 # Trac
