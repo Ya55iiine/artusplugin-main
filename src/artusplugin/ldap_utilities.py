@@ -6,8 +6,8 @@
 from backports import configparser as ConfigParser
 
 # MEGGITT and ARTUS LDAP
-from meggitt_ldap import Meggitt_Ldap
-from artus_ldap import Artus_Ldap
+from artusplugin.meggitt_ldap import Meggitt_Ldap
+from artusplugin.artus_ldap import Artus_Ldap
 
 class Ldap_Utilities(object):
 
