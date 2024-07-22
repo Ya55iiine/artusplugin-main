@@ -33,7 +33,7 @@ from unidecode import unidecode
 from time import sleep
 from threading import current_thread
 from threading import BoundedSemaphore
-from urllib import unquote_plus
+from urllib.parse import unquote_plus
 import cgi
 import codecs
 import commands
