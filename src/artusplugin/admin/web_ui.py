@@ -40,11 +40,12 @@ from trac.web.href import Href
 from trac.ticket.web_ui import TicketModule
 
 # Standard lib
-import ConfigParser
+# import ConfigParser
+from backports import configparser as ConfigParser
 import codecs
-import commands
 from datetime import datetime
-from ldap_utilities import Ldap_Utilities
+# from ldap_utilities import Ldap_Utilities
+from artusplugin.ldap_utilities import Ldap_Utilities
 from time import sleep
 import fileinput
 from collections import MutableMapping, OrderedDict
@@ -60,7 +61,7 @@ import sys
 import syslog
 import warnings
 
-from urllib import unquote
+from urllib.parse import unquote
 from xml.dom.minidom import parse
 
 # ODFPY
@@ -1798,7 +1799,7 @@ class ApacheMgmtAdminPanel(ServerMgmt):
     def _render_admin_panel(self, req, cat, page):
 
         if req.method == 'POST':
-            apache_user = commands.getoutput("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
+            apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
             apache_homedir = os.path.expanduser('~%s' % apache_user)
             if 'apache_graceful' in req.args or 'apache_forceful' in req.args:
                 # Restart Apache server

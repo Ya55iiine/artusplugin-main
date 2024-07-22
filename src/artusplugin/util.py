@@ -31,13 +31,12 @@ from email.mime.text import MIMEText
 from artusplugin.ldap_utilities import Ldap_Utilities
 from unidecode import unidecode
 from time import sleep
-from threading import current_thread
-from threading import BoundedSemaphore
+from threading import current_thread, BoundedSemaphore
 from urllib.parse import unquote_plus
 import cgi
 import codecs
-import commands
-import ConfigParser
+# import ConfigParser
+from backports import configparser as ConfigParser
 import inspect
 import os
 import pyodbc
@@ -91,7 +90,7 @@ import collections
 # Constants
 SVN_TEMPLATE_CMD = 'svn %(subcommand)s --non-interactive --username trac '
 SVNMUCC_TEMPLATE_CMD = 'svnmucc -u trac '
-apache_user = commands.getoutput("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
+apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
 apache_homedir = os.path.expanduser('~%s' % apache_user)
 
 
