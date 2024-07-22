@@ -85,9 +85,9 @@ except ImportError:
 
     def parse_query_string(query_string):
         return arg_list_to_args(parse_arg_list(query_string))
-import StringIO
+from io import StringIO
 try:
-    from cStringIO import StringIO as cStringIO
+    from io import StringIO as cStringIO
 except ImportError:
     cStringIO = StringIO
 

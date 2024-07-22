@@ -45,7 +45,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from artusplugin.ldap_utilities import Ldap_Utilities
 from unidecode import unidecode
-from StringIO import StringIO
+from io import StringIO
 from tempfile import mkdtemp
 from xml.dom.minidom import parseString, parse
 from xml.etree import ElementTree
