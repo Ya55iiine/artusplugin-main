@@ -1,5 +1,4 @@
 from trac.core import Component, implements
-from trac.util.compat import sorted
 
 from artusplugin.announcer.api import IAnnouncementAddressResolver
 from artusplugin.announcer.api import IAnnouncementPreferenceProvider
