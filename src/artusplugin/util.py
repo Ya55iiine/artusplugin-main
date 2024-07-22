@@ -58,7 +58,7 @@ import posix_ipc
 
 # Announcer Plugin
 from artusplugin.announcer.api import IAnnouncementAddressResolver
-from artusplugin.announcer.resolvers.specified import SpecifiedEmailResolver
+from artusplugin.announcer.specified import SpecifiedEmailResolver
 
 # Same package
 import artusplugin

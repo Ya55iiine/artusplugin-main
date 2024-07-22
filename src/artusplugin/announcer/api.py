@@ -1,6 +1,6 @@
 import time
 
-from announcer import db_default
+from artusplugin.announcer import db_default
 from pkg_resources import resource_filename
 from trac.config import ExtensionOption
 from trac.core import Component, ExtensionPoint, Interface, TracError, \
