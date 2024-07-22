@@ -49,7 +49,7 @@ import sys
 import syslog
 import tempfile
 import unicodedata
-import urllib2
+import urllib.request
 import zipfile
 import json
 
@@ -1408,7 +1408,7 @@ def create_fs_from_repo(path, node):
         syslog.syslog("Unexpected error: %s:%s %s" % (fname, exc_tb.tb_lineno, exc_obj))
 
 def format_img(data):
-    data_img = urllib2.urlopen('%s/htdocs/%s' % (data['host_url'], data['image'])).read()
+    data_img = urllib.request.urlopen('%s/htdocs/%s' % (data['host_url'], data['image'])).read()
     return data_img
 
 

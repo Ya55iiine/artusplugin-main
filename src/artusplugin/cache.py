@@ -38,7 +38,7 @@ import subprocess
 import sys
 import syslog
 import time
-import urllib2
+import urllib.request
 from collections import OrderedDict
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -2044,7 +2044,7 @@ class PDFPackage(object):
         return(util.unix_cmd_apply(self.env, unix_cmd_list, util.lineno()))
 
     def _format_img(self, data):
-        data_img = urllib2.urlopen('%s/htdocs/%s' % (data['host_url'], data['image'])).read()
+        data_img = urllib.request.urlopen('%s/htdocs/%s' % (data['host_url'], data['image'])).read()
         return data_img
 
     def _format_html(self, data):
