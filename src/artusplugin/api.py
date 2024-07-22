@@ -28,7 +28,8 @@ from trac.wiki.api import IWikiSyntaxProvider
 
 # Standard lib
 from datetime import datetime
-from ldap_utilities import Ldap_Utilities
+# from ldap_utilities import Ldap_Utilities
+from artusplugin.ldap_utilities import Ldap_Utilities
 import filecmp
 import glob
 import os

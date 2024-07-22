@@ -27,7 +27,8 @@ from trac.web.chrome import add_ctxtnav, Chrome
 from collections import OrderedDict
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from ldap_utilities import Ldap_Utilities
+# from ldap_utilities import Ldap_Utilities
+from artusplugin.ldap_utilities import Ldap_Utilities
 from unidecode import unidecode
 from time import sleep
 from threading import current_thread
