@@ -51,6 +51,7 @@ import tempfile
 import unicodedata
 import urllib2
 import zipfile
+import json
 
 # 3rd party modules
 import posix_ipc
@@ -68,7 +69,13 @@ import trac
 import childtickets
 
 # Authentication data
-import ARTUS_sqlserver_data
+# import ARTUS_sqlserver_data
+data = {}
+data["datasource"] = "vm09datasource"
+data["user"] = "TRAC_link_VM11"
+data["password"] = "CBmf8fkbJNyj"
+ARTUS_sqlserver_data = json.dumps(data) 
+
 
 # Compatibility Trac 0.11 => 0.12
 try:

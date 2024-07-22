@@ -3,7 +3,8 @@
 
 # Standard lib
 # import ConfigParser
-from backports import configparser as ConfigParser
+# from backports import configparser as ConfigParser
+import configparser as ConfigParser
 
 # MEGGITT and ARTUS LDAP
 from artusplugin.meggitt_ldap import Meggitt_Ldap
