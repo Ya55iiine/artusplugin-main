@@ -43,7 +43,7 @@ from collections import OrderedDict
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from artusplugin.ldap_utilities import Ldap_Utilities
+from artusplugin.ldap.ldap_utilities import Ldap_Utilities
 from unidecode import unidecode
 from io import StringIO
 from tempfile import mkdtemp

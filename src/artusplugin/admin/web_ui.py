@@ -45,7 +45,7 @@ from backports import configparser as ConfigParser
 import codecs
 from datetime import datetime
 # from ldap_utilities import Ldap_Utilities
-from artusplugin.ldap_utilities import Ldap_Utilities
+from artusplugin.ldap.ldap_utilities import Ldap_Utilities
 from time import sleep
 import fileinput
 from collections import MutableMapping, OrderedDict
