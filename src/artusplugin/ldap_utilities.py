@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Standard lib
-import ConfigParser
+# import ConfigParser
+from backports import configparser as ConfigParser
 import ldap
 import re
 import sys
