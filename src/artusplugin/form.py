@@ -19,7 +19,8 @@ from pylocker import Locker
 # Genshi
 # from genshi.builder import tag
 from trac.util.html import html as tag
-from genshi.util import striptags
+# from genshi.util import striptags
+from bs4 import BeautifulSoup
 
 # Trac
 from trac.attachment import Attachment
@@ -52,6 +53,13 @@ import zipfile
 # Same package
 from artusplugin import util, Ooo, _
 from artusplugin.model import NamingRule
+
+
+def striptags(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    for tag in soup.find_all(True):  # Find all tags
+        tag.decompose()  # Remove the tags
+    return ' '.join(soup.stripped_strings)
 
 
 class TicketFormTemplate(object):
