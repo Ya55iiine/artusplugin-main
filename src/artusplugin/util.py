@@ -102,7 +102,7 @@ apache_user = 'apache'
 apache_homedir = os.path.expanduser('~%s' % apache_user)
 
 
-class OrderedSet(collections.MutableSet):
+class OrderedSet(collections.abc.MutableSet):
 
     def __init__(self, iterable=None):
         self.end = end = []
