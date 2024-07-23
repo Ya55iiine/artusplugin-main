@@ -53,7 +53,8 @@ from datetime import datetime
 from artusplugin.ldap.ldap_utilities import Ldap_Utilities
 from time import sleep
 import fileinput
-from collections import MutableMapping, OrderedDict
+from collections import OrderedDict
+from collections.abc import MutableMapping
 import glob
 import json
 import operator
