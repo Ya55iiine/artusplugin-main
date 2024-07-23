@@ -44,7 +44,7 @@ from itertools import chain
 from email_validator import validate_email, EmailNotValidError
 
 # Tracchildtickets
-from childtickets import TracchildticketsModule
+from childtickets.web_ui import ChildTicketsModule
 
 # MasterTickets
 from mastertickets.api import IMasterObserver, MasterTicketsSystem
@@ -878,7 +878,7 @@ class ArtusSystem(CComponent):
                 # Don't know if other plugin validity check
                 # will be done before or after mine so call it now
                 # it will be done twice...
-                TracchildticketsModule(self.env).validate_ticket(req, ticket)
+                ChildTicketsModule(self.env).validate_ticket(req, ticket)
                 # Check parent ticket is CCB MOM
                 msg = None
                 try:
