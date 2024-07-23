@@ -38,7 +38,7 @@ from trac.timeline.web_ui import TimelineModule
 from trac.versioncontrol.api import RepositoryManager, NoSuchChangeset
 from trac.versioncontrol.web_ui.browser import IPropertyRenderer
 from trac.web import IRequestHandler
-from trac.web.api import ITemplateProvider
+# from trac.web.api import ITemplateStreamFilter
 from trac.web.api import HTTPNotFound #@UnresolvedImport
 from trac.web.chrome import add_script, add_stylesheet, add_ctxtnav, \
     add_warning, add_notice, INavigationContributor, ITemplateProvider, \
@@ -1084,7 +1084,7 @@ class DOC_UI(Ticket_UI):
 class ArtusModule(Component):
     """Customizations of ticket processing."""
 
-    implements(ITemplateProvider, IRequestFilter, IRequestHandler, INavigationContributor, ITemplateProvider, IPropertyRenderer)
+    implements(IRequestFilter, IRequestHandler, INavigationContributor, ITemplateProvider, IPropertyRenderer)
 
     action_controllers = OrderedExtensionsOption('ticket', 'workflow',
                                                  ITicketActionController,
@@ -1138,7 +1138,7 @@ class ArtusModule(Component):
             url_regexp_list.append('(%s)' % url.replace('/', '\/').replace('.', '\.'))
         self.url_regexp = '(?:' + '|'.join(url_regexp_list) + ')'
 
-    # ITemplateProvider
+    # ITemplateStreamFilter
 
     def filter_stream(self, req, method, filename, stream, data):
         """ The modifications applied to the TRAC ticket form """

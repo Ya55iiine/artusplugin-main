@@ -37,7 +37,7 @@ from trac.util.datefmt import utc, format_datetime, \
 from trac.util.text import exception_to_unicode, unicode_quote, unicode_from_base64
 from trac.versioncontrol.api import NoSuchNode
 from trac.web import IRequestHandler
-from trac.web.api import ITemplateProvider, IRequestFilter, parse_arg_list
+from trac.web.api import IRequestFilter, parse_arg_list
 from trac.web.auth import LoginModule
 from trac.web.chrome import add_script, add_notice, add_ctxtnav, \
     Chrome, add_warning, add_stylesheet
@@ -563,8 +563,8 @@ class ConfigDict(MutableMapping):
 class AdminInterface(CComponent):
     """Web administration interface filters."""
 
-    implements(ITemplateProvider, IRequestFilter,
-               IRequestHandler, ITimelineEventProvider)
+    implements(#ITemplateStreamFilter, 
+               IRequestFilter, IRequestHandler, ITimelineEventProvider)
 
     def __init__(self):
         CComponent.__init__(self)
@@ -572,7 +572,7 @@ class AdminInterface(CComponent):
         self.trac_env_name = program_data['trac_env_name']
         self.program_name = program_data['program_name']
 
-    # ITemplateProvider methods
+    # ITemplateStreamFilter methods
 
     def filter_stream(self, req, method, filename, stream, data):
         """ The modifications applied to the TRAC browser for admin panels """
