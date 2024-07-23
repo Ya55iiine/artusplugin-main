@@ -1799,7 +1799,8 @@ class ApacheMgmtAdminPanel(ServerMgmt):
     def _render_admin_panel(self, req, cat, page):
 
         if req.method == 'POST':
-            apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
+            # apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
+            apache_user = subprocess.check_output("grep -Po '^User\s+\K.+' /etc/httpd/conf/httpd.conf")
             apache_homedir = os.path.expanduser('~%s' % apache_user)
             if 'apache_graceful' in req.args or 'apache_forceful' in req.args:
                 # Restart Apache server

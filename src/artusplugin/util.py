@@ -97,7 +97,8 @@ import collections
 # Constants
 SVN_TEMPLATE_CMD = 'svn %(subcommand)s --non-interactive --username trac '
 SVNMUCC_TEMPLATE_CMD = 'svnmucc -u trac '
-apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
+# apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
+apache_user = subprocess.check_output("grep -Po '^User\s+\K.+' /etc/httpd/conf/httpd.conf")
 apache_homedir = os.path.expanduser('~%s' % apache_user)
 
 
