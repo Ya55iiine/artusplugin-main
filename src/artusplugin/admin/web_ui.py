@@ -30,7 +30,8 @@ from trac.ticket import Ticket
 from trac.ticket.model import Version, Milestone, Component, Type
 from trac.ticket.admin import VersionAdminPanel, MilestoneAdminPanel
 from trac.timeline.api import ITimelineEventProvider
-from trac.util.compat import partial
+# from trac.util.compat import partial
+from functools import partial
 from trac.util.datefmt import utc, format_datetime, \
     to_utimestamp, from_utimestamp
 from trac.util.text import exception_to_unicode, unicode_quote, unicode_from_base64

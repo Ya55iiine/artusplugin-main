@@ -29,7 +29,8 @@ from trac.ticket.api import TicketSystem, ITicketActionController
 from trac.ticket.model import Type, Milestone
 from trac.ticket.web_ui import TicketModule
 from trac.util import pathjoin, get_reporter_id
-from trac.util.compat import partial
+# from trac.util.compat import partial
+from functools import partial
 from trac.util.datefmt import localtz, pretty_timedelta, \
     get_date_format_hint, user_time, format_datetime, utc, to_utimestamp
 from trac.util.text import unicode_quote, unicode_unquote
