@@ -20,7 +20,8 @@ from genshi.output import TextSerializer
 from trac.attachment import Attachment, AttachmentModule, InvalidAttachment
 from trac.config import OrderedExtensionsOption
 from trac.core import Component, implements, TracError
-from trac.mimeview import Context
+# from trac.mimeview import Context
+from trac.web.chrome import web_context
 from trac.perm import PermissionSystem
 from trac.resource import get_resource_url, ResourceNotFound
 from trac.ticket import Ticket
@@ -4870,7 +4871,8 @@ class ArtusModule(Component):
                 application = req.args.get('application')
                 # Get list of Items(s) from SQL Server View
                 wiki_to_html = partial(format_to_html, self.env)
-                context = Context.from_request(req, Ticket(self.env).resource)
+                # context = Context.from_request(req, Ticket(self.env).resource)
+                context = web_context(req, Ticket(self.env).resource)
                 wiki = "||=  '''Article'''  =||=  '''PN produit fini'''  =||=  '''Amendement'''  =||\n"
                 for row in util.SqlServerView().get_items(evolref, customer, program, application):
                     wiki += "||=  %s  =||=  %s  =||=  %s  =||\n" % (row[0], row[1], row[2])

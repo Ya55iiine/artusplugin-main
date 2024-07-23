@@ -22,7 +22,8 @@ from cssify import cssify
 from trac.admin import IAdminPanelProvider
 from trac.attachment import AttachmentModule
 from trac.core import Component as CComponent, implements, TracError
-from trac.mimeview import Context
+# from trac.mimeview import Context
+from trac.web.chrome import web_context
 from trac.perm import IPermissionRequestor
 from trac.resource import ResourceNotFound
 from trac.ticket import Ticket
@@ -1187,7 +1188,8 @@ class AdminInterface(CComponent):
                     add_ctxtnav(req, _('View Associated Milestone Tags'),
                                 href='%s/admin/tags_mgmt/milestone_tags?filter_value=%s' %
                                 (req.base_path, milestone))
-                    context = Context.from_request(req,
+                    # context = Context.from_request(req,
+                    context = web_context(req,
                                                    Milestone(self.env,
                                                              milestone).resource)
                     data['attachments'] = AttachmentModule(self.env).attachment_data(context)
