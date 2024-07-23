@@ -9,7 +9,8 @@
 
 
 # Genshi
-from genshi.builder import tag
+# from genshi.builder import tag
+from trac.util.html import html as tag
 from genshi.core import TEXT
 from genshi.filters.transform import Transformer
 from genshi.util import plaintext

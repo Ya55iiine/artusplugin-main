@@ -12,8 +12,11 @@ from __future__ import print_function
 
 
 # Genshi
-from genshi.builder import tag
-from genshi.filters.transform import Transformer
+# from genshi.builder import tag
+from trac.util.html import html as tag
+# from genshi.filters.transform import Transformer
+from artusplugin.jtransformer import JTransformer
+from cssify import cssify
 
 # Trac
 from trac.admin import IAdminPanelProvider
@@ -592,7 +595,8 @@ class AdminInterface(CComponent):
             re_frmtpl = r"\A(%s)_(%s)\Z" % ('|'.join(skills), '|'.join(re_ticket_types))
 
             def branch_segregation_notification_display(stream, button_label):
-                stream |= Transformer('//div[@id="anydiff"]/form/div[@class="buttons"]').after(
+                # stream |= Transformer('//div[@id="anydiff"]/form/div[@class="buttons"]').after(
+                stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div[@class="buttons"]')).after(
                     tag.div(tag.p(tag.strong('Note: '),
                         _("Choose another branch with an id greater or equal to the <branch_segregation_first_branch> parameter value "
                         "to gain access to the <%s> button" % button_label),
@@ -628,17 +632,17 @@ class AdminInterface(CComponent):
                                                                   caller=req.args.get('caller'),
                                                                   selected_url='%s?rev=%s'
                                                                   % (selected_url, revision))
-                                    stream |= Transformer('//div[@id="anydiff"]/form/div/input[@type="submit"]').after(
+                                    stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div/input[@type="submit"]')).after(
                                         tag.div(tag.input(value_="Back to Templates...",
                                                           name_='Form_Templates_view',
                                                           title_="Set form template(s) path and revision",
                                                           type_='button',
                                                           class_='buttons'),
                                                 style_='margin-left:10px;'))
-                                    stream |= Transformer('//input[@name="Form_Templates_view"]').attr(
+                                    stream |= JTransformer(cssify('//input[@name="Form_Templates_view"]')).attr(
                                         'onclick', 'location.href="%s"' % url_form_template)
                                 else:
-                                    stream |= Transformer('//div[@id="anydiff"]/form/div[@class="buttons"]').after(
+                                    stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div[@class="buttons"]')).after(
                                         tag.div(tag.strong('Note: '),
                                                 _("Browse to display the content of the directory with the expected template %s" % template_filename),
                                                 id_='help', style_='margin-left: 1em;'))
@@ -660,7 +664,7 @@ class AdminInterface(CComponent):
 
                         if 'VERSION_TAG_VIEW' in req.perm:
                             # 'Manage Version Tags...'
-                            stream |= Transformer('//div[@id="anydiff"]/form/div/input[@type="submit"]').after(
+                            stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div/input[@type="submit"]')).after(
                                 tag.div(tag.input(value_="Manage Version Tags...",
                                                   name_='Version_Tag_view',
                                                   title_="Direct access to Version Tag data",
@@ -672,7 +676,7 @@ class AdminInterface(CComponent):
                                                      'version_tags',
                                                      selected_item=tagname,
                                                      filter_value=tagname)
-                            stream |= Transformer('//input[@name="Version_Tag_view"]').attr(
+                            stream |= JTransformer(cssify('//input[@name="Version_Tag_view"]')).attr(
                                 'onclick', 'location.href="%s"' % url_tag_view)
 
                             if 'caller' in req.args and isinstance(req.args.get('caller'), str):
@@ -689,7 +693,7 @@ class AdminInterface(CComponent):
                                                                       util.unicode_unquote_plus(href),
                                                                       regular_expression)
                                     # 'Back to version tag...'
-                                    stream |= Transformer('//div[@id="anydiff"]/form/div/input[@type="submit"]').after(
+                                    stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div/input[@type="submit"]')).after(
                                         tag.div(tag.input(value_="Back to version tag ...",
                                                           name_='version_modification',
                                                           title_='Back to version tag %s' % caller,
@@ -701,13 +705,13 @@ class AdminInterface(CComponent):
                                                                          'version_tags',
                                                                          caller,
                                                                          ci_source_url=source_url)
-                                    stream |= Transformer('//input[@name="version_modification"]').attr(
+                                    stream |= JTransformer(cssify('//input[@name="version_modification"]')).attr(
                                         'onclick',
                                         'location.href="%s"' % url_version_modification)
 
                         if 'BRANCH_CREATE' in req.perm and 'caller' not in req.args:
-                            stream |= Transformer('//div[@id="anydiff"]/form'
-                                                  '/div/input[@type="submit"]').after(
+                            stream |= JTransformer(cssify('//div[@id="anydiff"]/form'
+                                                  '/div/input[@type="submit"]')).after(
                                 tag.div(tag.input(value_="Create branch ...",
                                                   name_='branch_creation',
                                                   title_=("The branch will be created "
@@ -719,8 +723,8 @@ class AdminInterface(CComponent):
                             url_branch_creation = url.admin('tags_mgmt',
                                                             'branches',
                                                             ci_source_tag=tagname)
-                            stream |= Transformer('//input[@name='
-                                                  '"branch_creation"]').attr(
+                            stream |= JTransformer(cssify('//input[@name='
+                                                  '"branch_creation"]')).attr(
                                 'onclick',
                                 ('location.href="%s"' % url_branch_creation))
 
@@ -728,7 +732,7 @@ class AdminInterface(CComponent):
 
                         if 'MILESTONE_TAG_VIEW' in req.perm:
                             # 'Manage Milestone Tags...'
-                            stream |= Transformer('//div[@id="anydiff"]/form/div/input[@type="submit"]').after(
+                            stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div/input[@type="submit"]')).after(
                                 tag.div(tag.input(value_="Manage Milestone Tags...",
                                                   name_='Milestone_Tag_view',
                                                   title_="Direct access to Milestone Tag data",
@@ -740,7 +744,7 @@ class AdminInterface(CComponent):
                                                      'milestone_tags',
                                                      selected_item=tagname,
                                                      filter_value=tagname)
-                            stream |= Transformer('//input[@name="Milestone_Tag_view"]').attr(
+                            stream |= JTransformer(cssify('//input[@name="Milestone_Tag_view"]')).attr(
                                 'onclick', 'location.href="%s"' % url_tag_view)
 
             elif ('/trunk/' in req.path_info or '/branches/' in req.path_info or
@@ -820,8 +824,8 @@ class AdminInterface(CComponent):
                                 NamingRule.is_tag_name(self.env, caller,
                                                        self.program_name)):
                                 # 'Back to version tag...'
-                                stream |= Transformer('//div[@id="anydiff"]/form'
-                                                      '/div/input[@type="submit"]').after(
+                                stream |= JTransformer(cssify('//div[@id="anydiff"]/form'
+                                                      '/div/input[@type="submit"]')).after(
                                     tag.div(tag.input(value_=_("Back to version tag ..."),
                                                       name_='version_modification',
                                                       title_=_("Back to version tag %s" %
@@ -834,8 +838,8 @@ class AdminInterface(CComponent):
                                     'tags_mgmt',
                                     'version_tags', caller,
                                     ci_source_url=source_url)
-                                stream |= Transformer('//input[@name='
-                                                      '"version_modification"]').attr(
+                                stream |= JTransformer(cssify('//input[@name='
+                                                      '"version_modification"]')).attr(
                                     'onclick', ('location.href="%s"' %
                                                 url_version_modification))
 
@@ -848,8 +852,8 @@ class AdminInterface(CComponent):
 
                                 if not branch_segregation_activated or path[0] == 'trunk' or int(path[1][1:]) >= int(branch_segregation_first_branch[1:]):
                                     # 'Create version tag...'
-                                    stream |= Transformer('//div[@id="anydiff"]/form'
-                                                          '/div/input[@type="submit"]').after(
+                                    stream |= JTransformer(cssify('//div[@id="anydiff"]/form'
+                                                          '/div/input[@type="submit"]')).after(
                                         tag.div(tag.input(value_="Create version tag ...",
                                                           name_='version_creation',
                                                           title_=("The version tag will be "
@@ -866,7 +870,7 @@ class AdminInterface(CComponent):
                                                                      ci_source_url= None if row else source_url,
                                                                      ci_type=ci_type,
                                                                      version_type=version_type)
-                                    stream |= Transformer('//input[@name='
+                                    stream |= JTransformer('//input[@name='
                                                           '"version_creation"]').attr(
                                         'onclick', 'location.href="%s"' % url_version_creation)
                                 else:
@@ -877,7 +881,7 @@ class AdminInterface(CComponent):
                                 DOC_report = self.env.config.get('artusplugin', 'DOC_report')
                                 doc_query_string = util.get_doc_query_string(self.env, skill, dir_name)
                                 if doc_query_string:
-                                    stream |= Transformer('//div[@id="anydiff"]/form/div[@class="buttons"]').after(
+                                    stream |= JTransformer(cssify('//div[@id="anydiff"]/form/div[@class="buttons"]')).after(
                                         tag.div(tag.strong("Note: "),
                                                 _("To create a new version tag on this document "
                                                 "either create a DOC ticket or use an existing one - see report "),
@@ -901,8 +905,8 @@ class AdminInterface(CComponent):
                                         model.Branch(self.env, branchname[1:]).source_tag)
 
                         # 'Manage Branches...'
-                        stream |= Transformer('//div[@id="anydiff"]/form'
-                                              '/div/input[@type="submit"]').after(
+                        stream |= JTransformer(cssify('//div[@id="anydiff"]/form'
+                                              '/div/input[@type="submit"]')).after(
                             tag.div(tag.input(value_="Manage Branches...",
                                               name_='Branch_view',
                                               title_="Direct access to Branch data",
@@ -914,8 +918,8 @@ class AdminInterface(CComponent):
                                                     'branches',
                                                     selected_item=branchname,
                                                     filter_value=branchsource)
-                        stream |= Transformer('//input[@name='
-                                              '"Branch_view"]').attr('onclick',
+                        stream |= JTransformer(cssify('//input[@name='
+                                              '"Branch_view"]')).attr('onclick',
                                                                      'location.href="%s"' %
                                                                      url_branch_view)
 
@@ -938,8 +942,8 @@ class AdminInterface(CComponent):
 
                             if branch.exists:
                                 # 'Back to branch...'
-                                stream |= Transformer('//div[@id="anydiff"]/form'
-                                                      '/div/input[@type="submit"]').after(
+                                stream |= JTransformer(cssify('//div[@id="anydiff"]/form'
+                                                      '/div/input[@type="submit"]')).after(
                                     tag.div(tag.input(value_="Back to branch ...",
                                                       name_='branch_modification',
                                                       title_=('Back to branch %s' %
@@ -952,14 +956,14 @@ class AdminInterface(CComponent):
                                                                     'branches',
                                                                     branch_id,
                                                                     ci_source_url=source_url)
-                                stream |= Transformer('//input[@name='
-                                                      '"branch_modification"]').attr(
+                                stream |= JTransformer(cssify('//input[@name='
+                                                      '"branch_modification"]')).attr(
                                     'onclick', ('location.href="%s"' % url_branch_modification))
 
                     if 'BRANCH_CREATE' in req.perm and 'caller' not in req.args:
                         # 'Create branch...'
-                        stream |= Transformer('//div[@id="anydiff"]/form'
-                                              '/div/input[@type="submit"]').after(
+                        stream |= JTransformer(cssify('//div[@id="anydiff"]/form'
+                                              '/div/input[@type="submit"]')).after(
                             tag.div(tag.input(value_="Create branch ...",
                                               name_='branch_creation',
                                               title_=("The branch will be created "
@@ -972,8 +976,8 @@ class AdminInterface(CComponent):
                         url_branch_creation = url.admin('tags_mgmt',
                                                         'branches',
                                                         ci_source_url=source_url)
-                        stream |= Transformer('//input[@name='
-                                              '"branch_creation"]').attr(
+                        stream |= JTransformer(cssify('//input[@name='
+                                              '"branch_creation"]')).attr(
                             'onclick',
                             ('location.href="%s"' % url_branch_creation))
 
