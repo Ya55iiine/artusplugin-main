@@ -1800,7 +1800,7 @@ class ApacheMgmtAdminPanel(ServerMgmt):
 
         if req.method == 'POST':
             # apache_user = subprocess.check_output("grep -Po '\AUser\s+\K.+' /etc/httpd/conf/httpd.conf")
-            apache_user = subprocess.check_output("grep -Po '^User\s+\K.+' /etc/httpd/conf/httpd.conf")
+            apache_user = 'apache'
             apache_homedir = os.path.expanduser('~%s' % apache_user)
             if 'apache_graceful' in req.args or 'apache_forceful' in req.args:
                 # Restart Apache server
