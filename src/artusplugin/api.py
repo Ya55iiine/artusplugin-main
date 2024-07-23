@@ -44,7 +44,7 @@ from itertools import chain
 from email_validator import validate_email, EmailNotValidError
 
 # Tracchildtickets
-from childtickets.childtickets import TracchildticketsModule
+from childtickets import TracchildticketsModule
 
 # MasterTickets
 from mastertickets.api import IMasterObserver, MasterTicketsSystem
