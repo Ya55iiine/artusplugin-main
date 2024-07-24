@@ -1773,7 +1773,7 @@ class ServerMgmt(CComponent):
     def render_admin_panel(self, req, cat, page, path_info):
         # Trap AssertionErrors and convert them to TracErrors
         try:
-            my_script_list = glob.glob('%s/../htdocs/stamped/admin_*' % os.path.dirname(os.path.realpath(__file__)))
+            my_script_list = glob.glob('%s/htdocs/stamped/admin_*' % os.path.dirname(os.path.realpath(__file__)))
             if len(my_script_list) != 1:
                 raise TracError(_("More than one admin.js script or none."))
             else:
@@ -1859,7 +1859,7 @@ class TagsMgmt(CComponent):
     def render_admin_panel(self, req, cat, page, path_info):
         # Trap AssertionErrors and convert them to TracErrors
         try:
-            my_script_list = glob.glob('%s/../htdocs/stamped/admin_*' % os.path.dirname(os.path.realpath(__file__)))
+            my_script_list = glob.glob('%s/htdocs/stamped/admin_*' % os.path.dirname(os.path.realpath(__file__)))
             if len(my_script_list) != 1:
                 raise TracError(_("More than one admin.js script or none."))
             else:
