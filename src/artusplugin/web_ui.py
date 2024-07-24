@@ -51,7 +51,7 @@ from trac.web.main import IRequestFilter
 from trac.wiki.formatter import format_to, format_to_html
 
 # Standard lib
-import re, pcre
+import re, pcre2
 import syslog
 import os
 import glob
@@ -2315,8 +2315,8 @@ class ArtusModule(Component):
                                 for st in source_types:
                                     regexp = source_types[st].split('||')[4].strip()
                                     if regexp:
-                                        # pcre supports lookahead conditional (required for ATP), re doesn't
-                                        match = pcre.search(regexp, configurationitem)
+                                        # pcre2 supports lookahead conditional (required for ATP), re doesn't
+                                        match = pcre2.search(regexp, configurationitem)
                                         if match:
                                             sourcetype = st
                                             break
@@ -4987,7 +4987,7 @@ class ArtusModule(Component):
                         # default value set from CI
                         for st in source_types:
                             regexp = source_types[st].split('||')[4].strip()
-                            if regexp and pcre.search(regexp, ci_name):
+                            if regexp and pcre2.search(regexp, ci_name):
                                 st_default = st
                                 break
                         st_values = [
