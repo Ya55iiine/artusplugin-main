@@ -20,7 +20,7 @@ from cssify import cssify
 from trac.util.html import Markup
 
 # Trac
-from trac.attachment import Attachment, AttachmentModule, InvalidAttachment
+from trac.attachment import Attachment, AttachmentModule
 from trac.config import OrderedExtensionsOption
 from trac.core import Component, implements, TracError
 # from trac.mimeview import Context
@@ -69,7 +69,7 @@ from artusplugin import util, model, form, _
 import artusplugin.cache as cache
 
 import six
-from six.moves import html_entities as entities
+from six.moves import html_entities
 def striptags(html):
     return re.compile(r'(<!--.*?-->|<[^>]*>)').sub('', html)
 def stripentities(text):
@@ -84,7 +84,7 @@ def stripentities(text):
         else: # character entity
             ref = match.group(2)
             try:
-                return six.unichr(entities.name2codepoint[ref])
+                return six.unichr(html_entities.name2codepoint[ref])
             except KeyError:
                 return ref
     return re.compile(r'&(?:#((?:\d+)|(?:[xX][0-9a-fA-F]+));?|(\w+);)').sub(_replace_entity, text)
@@ -4274,12 +4274,12 @@ class ArtusModule(Component):
                             for manipulator in AttachmentModule(self.env).manipulators:
                                 for field, message in manipulator.validate_attachment(req, attachment):
                                     if field:
-                                        raise InvalidAttachment(_(
+                                        raise TracError(_(
                                             'Attachment field %(field)s is '
                                             'invalid: %(message)s',
                                             field=field, message=message))
                                     else:
-                                        raise InvalidAttachment(_('Invalid attachment: %(message)s',
+                                        raise TracError(_('Invalid attachment: %(message)s',
                                                                   message=message))
 
                             if data['attachment_source'] == 'repository':
