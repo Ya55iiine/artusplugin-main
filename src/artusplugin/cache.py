@@ -10,9 +10,10 @@
 # Genshi
 # from genshi.builder import tag
 from trac.util.html import html as tag
-from genshi.output import DocType
-from genshi.template import TemplateLoader, MarkupTemplate
-from genshi.template.loader import TemplateNotFound
+# from genshi.output import DocType
+# from genshi.template import TemplateLoader, MarkupTemplate
+# from genshi.template.loader import TemplateNotFound
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 # Trac
 from trac.attachment import Attachment
@@ -2047,19 +2048,35 @@ class PDFPackage(object):
         data_img = urllib.request.urlopen('%s/htdocs/%s' % (data['host_url'], data['image'])).read()
         return data_img
 
-    def _format_html(self, data):
+    # def _format_html(self, data):
+    #     chrome = Chrome(self.env)
+    #     dirs = []
+    #     for provider in chrome.template_providers:
+    #         dirs += provider.get_templates_dirs()
+    #     templates = TemplateLoader(dirs, variable_lookup='lenient')
+
+    #     _buffer = StringIO()
+    #     try:
+    #         template = templates.load('pdf_packaging_job.html', cls=MarkupTemplate)
+    #         if template:
+    #             stream = template.generate(**data)
+    #             stream.render('xhtml', doctype=DocType.XHTML_STRICT, out=_buffer)
+    #     except TemplateNotFound:
+    #         pass
+
+    #     return _buffer.getvalue()
+    def format_html(self, data):
         chrome = Chrome(self.env)
         dirs = []
         for provider in chrome.template_providers:
             dirs += provider.get_templates_dirs()
-        templates = TemplateLoader(dirs, variable_lookup='lenient')
+        env = Environment(loader=FileSystemLoader(dirs), trim_blocks=True)
 
         _buffer = StringIO()
         try:
-            template = templates.load('pdf_packaging_job.html', cls=MarkupTemplate)
+            template = env.get_template('pdf_packaging_job.html')
             if template:
-                stream = template.generate(**data)
-                stream.render('xhtml', doctype=DocType.XHTML_STRICT, out=_buffer)
+                _buffer.write(template.render(**data))
         except TemplateNotFound:
             pass
 
