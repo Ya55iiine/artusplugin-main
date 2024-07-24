@@ -11,7 +11,7 @@
 # Genshi
 # from genshi.builder import tag
 from trac.util.html import html as tag
-from genshi.core import TEXT
+# from genshi.core import TEXT
 # from genshi.filters.transform import Transformer
 from artusplugin.jtransformer import JTransformer as Transformer
 from cssify import cssify
@@ -102,6 +102,16 @@ class TextSerializer(object):
                 if strip_markup and type(data) is Markup:
                     data = data.striptags().stripentities()
                 yield six.text_type(data)
+class StreamEventKind(str):
+    """A kind of event on a markup stream."""
+    __slots__ = []
+    _instances = {}
+
+    def __new__(cls, val):
+        return cls._instances.setdefault(val, str.__new__(cls, val))
+class Stream:
+    TEXT = StreamEventKind('TEXT')
+TEXT = Stream.TEXT
 
 class Ticket_UI(object):
 
