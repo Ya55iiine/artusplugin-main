@@ -3675,11 +3675,12 @@ class TicketWorkflowOpTriage(Component):
 
         # New status
         for attributes in list(parsed_actions.values()):
-            triage_status = dict([(t[0].strip(), t[1].strip()) for t in [item.split('->') for item in (x.strip() for x in attributes['triage_status'].split('//'))]])
-            for ticket_type in list(triage_status.keys()):
-                status = triage_status[ticket_type]
-                if status != '*':
-                    all_status_by_type[ticket_type].add(status)
+            if 'triage_status' in attributes:
+                triage_status = dict([(t[0].strip(), t[1].strip()) for t in [item.split('->') for item in (x.strip() for x in attributes['triage_status'].split('//'))]])
+                for ticket_type in list(triage_status.keys()):
+                    status = triage_status[ticket_type]
+                    if status != '*':
+                        all_status_by_type[ticket_type].add(status)
 
         # For legacy support: state 02-described removed for RF/PRF
         for ticket_type in ('RF', 'PRF'):
